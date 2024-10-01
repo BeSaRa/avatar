@@ -10,8 +10,7 @@
     "serve:ssr:avatar": "node dist/avatar/server/server.mjs",
     "lint": "ng lint",
     "prepare": "husky install",
-    "version": "node bin/version.js",
-    "deploy": "ng deploy"
+    "version": "node bin/version.js"
   },
   "private": true,
   "dependencies": {
