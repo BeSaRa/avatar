@@ -22,7 +22,78 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@/models/*": [
+        "./src/models/*"
+      ],
+      "@/inits/*": [
+        "./src/inits"
+      ],
+      "@/abstracts/*": [
+        "./src/abstracts/*"
+      ],
+      "@/animations/*": [
+        "./src/animations/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/configs/*": [
+        "./src/app-configs/*"
+      ],
+      "@/constants/*": [
+        "./src/constants/*"
+      ],
+      "@/contracts/*": [
+        "./src/contracts/*"
+      ],
+      "@/control-value-accessors/*": [
+        "./src/control-value-accessors/*"
+      ],
+      "@/enums/*": [
+        "./src/enums/*"
+      ],
+      "@/guards/*": [
+        "./src/guards/*"
+      ],
+      "@/http-contexts/*": [
+        "./src/http-contexts/*"
+      ],
+      "@/http-interceptors/*": [
+        "./src/http-interceptors/*"
+      ],
+      "@/mixins/*": [
+        "./src/mixins/*"
+      ],
+      "@/model-interceptors/*": [
+        "./src/model-interceptors/*"
+      ],
+      "@/pipes/*": [
+        "./src/pipes/*"
+      ],
+      "@/resolvers/*": [
+        "./src/resolvers/*"
+      ],
+      "@/routes/*": [
+        "./src/routes/*"
+      ],
+      "@/services/*": [
+        "./src/services/*"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/validators/*": [
+        "./src/validators/*"
+      ],
+      "@/views/*": [
+        "./src/views/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

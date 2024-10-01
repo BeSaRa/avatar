@@ -1,0 +1,7 @@
+{
+  "ENVIRONMENTS_URLS": {
+    "DEV": "http://localhost:3000"
+  },
+  "API_VERSION": "",
+  "BASE_ENVIRONMENT": "DEV"
+}
