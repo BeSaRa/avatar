@@ -1,7 +1,7 @@
 {
   "ENVIRONMENTS_URLS": {
-    "DEV": "http://localhost:3000"
+    "DEV": "https://ebla-ai-demo-002.azurewebsites.net/api"
   },
-  "API_VERSION": "",
+  "API_VERSION": "v1",
   "BASE_ENVIRONMENT": "DEV"
 }

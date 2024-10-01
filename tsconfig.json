@@ -24,6 +24,9 @@
       "dom"
     ],
     "paths": {
+      "@/stores/*": [
+        "./src/stores/*"
+      ],
       "@/models/*": [
         "./src/models/*"
       ],

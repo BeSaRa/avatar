@@ -1,6 +1,6 @@
 export const EndPoints = {
   BASE_URL: '',
-  EXAMPLES: '/examples',
+  SPEECH_TOKEN: 'common/speech/token',
 }
 
 export type EndpointsType = typeof EndPoints
