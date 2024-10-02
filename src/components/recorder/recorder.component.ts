@@ -11,11 +11,12 @@ import {
 import { AppStore } from '@/stores/app.store'
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { NgClass } from '@angular/common'
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-recorder',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, CdkDrag, CdkDragHandle],
   templateUrl: './recorder.component.html',
   styleUrl: './recorder.component.scss',
   animations: [
