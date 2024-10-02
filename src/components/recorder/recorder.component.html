@@ -1,0 +1,30 @@
+<div class="flex flex-col items-center justify-center">
+  <div class="absolute bg-black/50 text-white bottom-0 z-40">{{ recognizedText() }}</div>
+  <div class="rounded-full bg-white size-80 shadow-2xl overflow-hidden relative">
+    <div
+      [@recordButton]="recordStatus()"
+      class="w-[calc(100%-10px)] h-[calc(100%-10px)] mt-[5px] ml-[5px] rounded-full absolute z-20 top-0 bg-red-800"></div>
+    <div
+      [ngClass]="{ hidden: !isStarted() }"
+      class="w-full pointer-events-none h-full opacity-90 z-50 relative"
+      #waves></div>
+    <button
+      class="h-full w-full text-4xl font-black rounded-full absolute z-30 top-0"
+      [ngClass]="{ 'text-white': isStarted() }"
+      (pointerdown)="toggleRecord()"
+      (pointerup)="toggleRecord()"
+      (contextmenu)="$event.preventDefault()">
+      @switch (recordStatus()) {
+        @case ('InProgress') {
+          {{ 'LOADING' }}
+        }
+        @case ('Started') {
+          {{ 'RECORDING' }}
+        }
+        @case ('Stopped') {
+          {{ 'PRESS' }}
+        }
+      }
+    </button>
+  </div>
+</div>

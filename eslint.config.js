@@ -24,6 +24,7 @@ module.exports = tsEsLint.config(
     rules: {
       'max-len': ['error', 120],
       'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
