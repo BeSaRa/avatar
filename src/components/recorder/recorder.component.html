@@ -14,17 +14,19 @@
       (pointerdown)="toggleRecord()"
       (pointerup)="toggleRecord()"
       (contextmenu)="$event.preventDefault()">
-      @switch (recordStatus()) {
-        @case ('InProgress') {
-          {{ 'LOADING' }}
+      <span class="pointer-events-none">
+        @switch (recordStatus()) {
+          @case ('InProgress') {
+            {{ 'LOADING' }}
+          }
+          @case ('Started') {
+            {{ 'RECORDING' }}
+          }
+          @case ('Stopped') {
+            {{ 'PRESS' }}
+          }
         }
-        @case ('Started') {
-          {{ 'RECORDING' }}
-        }
-        @case ('Stopped') {
-          {{ 'PRESS' }}
-        }
-      }
+      </span>
     </button>
   </div>
 </div>
