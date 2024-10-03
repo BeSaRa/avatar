@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing'
 
-import { CommonService } from './common.service'
+import { AvatarService } from './avatar.service'
 
-describe('CommonService', () => {
-  let service: CommonService
+describe('AvatarService', () => {
+  let service: AvatarService
 
   beforeEach(() => {
     TestBed.configureTestingModule({})
-    service = TestBed.inject(CommonService)
+    service = TestBed.inject(AvatarService)
   })
 
   it('should be created', () => {

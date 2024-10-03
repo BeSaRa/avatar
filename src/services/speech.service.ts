@@ -8,7 +8,7 @@ import { AppStore } from '@/stores/app.store'
 @Injectable({
   providedIn: 'root',
 })
-export class CommonService {
+export class SpeechService {
   private readonly http = inject(HttpClient)
   private urlService = inject(UrlService)
   private readonly appStore = inject(AppStore)

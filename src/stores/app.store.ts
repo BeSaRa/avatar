@@ -4,6 +4,7 @@ import { computed } from '@angular/core'
 
 interface AppStore {
   speechToken: SpeechTokenContract
+  streamId: string
 }
 
 const initialState: AppStore = {
@@ -11,6 +12,7 @@ const initialState: AppStore = {
     token: '',
     region: '',
   },
+  streamId: '',
 }
 
 export const AppStore = signalStore(
@@ -23,6 +25,9 @@ export const AppStore = signalStore(
   withMethods(store => ({
     updateSpeechToken: (token: SpeechTokenContract = { token: '', region: '' }) => {
       patchState(store, { speechToken: token })
+    },
+    updateStreamId: (streamId: string) => {
+      patchState(store, { streamId })
     },
   }))
 )

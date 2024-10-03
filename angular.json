@@ -38,7 +38,8 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/perfect-scrollbar/css/perfect-scrollbar.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",

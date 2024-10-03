@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import { Component, computed, ElementRef, inject, OnInit, output, signal, viewChild } from '@angular/core'
 import WaveSurfer from 'wavesurfer.js'
 import RecordPlugin from 'wavesurfer.js/plugins/record'
 import {
@@ -68,6 +68,8 @@ export class RecorderComponent implements OnInit {
   recognizedText = signal<string>('')
   audioConfig?: AudioConfig
   langDetection?: AutoDetectSourceLanguageConfig
+  recognizing$ = output<string>()
+  pressDone$ = output<string>()
 
   async ngOnInit(): Promise<void> {
     this.stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -93,12 +95,16 @@ export class RecorderComponent implements OnInit {
     this.recognizer.recognizing = (_rec, event) => {
       if (event.result.reason === ResultReason.RecognizingSpeech) {
         this.recognizedText.set(event.result.text)
+        this.recognizing$.emit(event.result.text)
       }
     }
     // recognized event
     this.recognizer.recognized = (_rec, event) => {
-      if (event.result.reason === ResultReason.RecognizedSpeech) {
+      if (event.result.reason === ResultReason.RecognizedSpeech && this.recordStatus() === 'Started') {
+        this.recognizedText.update(text => text + ' ' + event.result.text)
+      } else if (event.result.reason === ResultReason.RecognizedSpeech && this.recordStatus() === 'Stopped') {
         this.recognizedText.set(event.result.text)
+        this.pressDone$.emit(this.recognizedText())
       }
     }
   }

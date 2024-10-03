@@ -1,0 +1,40 @@
+<div id="chat-container" class="flex flex-col bg-black/40 max-h-80 w-screen absolute overflow-hidden bottom-0 left-0">
+  <div
+    #container
+    class="min-h-0 px-6 py-4 flex-auto flex flex-col w-full h-full relative overflow-hidden space-y-4 [&>.message.user]:justify-end [&>.message]:text-white">
+    @for (message of service.messages(); track message.id) {
+      <div class="message {{ message.role }}">
+        @if (message.role === 'assistant') {
+          <div appTextWriterAnimator class="whitespace-pre-wrap break-words" [text]="message.content"></div>
+        } @else {
+          <div class="whitespace-pre break-words" [innerHtml]="message.content"></div>
+        }
+
+        @if (message.context && message.context.citations.length) {
+          <div>
+            <div class="icon-with-title" (click)="linkRef.hidden = !linkRef.hidden">
+              <i
+                class="mdi"
+                [ngClass]="{
+                  'mdi-chevron-down': linkRef.hidden,
+                  'mdi-chevron-up': !linkRef.hidden,
+                }"></i>
+              <span class="title">References</span>
+            </div>
+            <div #linkRef hidden>
+              @for (link of message.context.citations; track link.filepath) {
+                <div dir="auto">
+                  <div class="d-inline">
+                    <small class="px-1 text-primary"> doc {{ $index + 1 }} <i class="mdi mdi-link-variant"></i></small>
+                  </div>
+                  <!--                    (click)="openDocModal(docModal, link)" -->
+                  <a class="d-inline citation-link" style="cursor: pointer">{{ link.filepath }}</a>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -36,7 +36,6 @@ export function ignoreErrors<T>(debug = false): MonoTypeOperatorFunction<T> {
     return source
       .pipe(
         catchError(error => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           debug && console.log(error)
           return of('CUSTOM_ERROR' as T)
         })
@@ -186,3 +185,14 @@ export function chunks<T>(arr: T[], n: number): T[][] {
 }
 
 export const range = (start: number, stop: number) => Array.from({ length: stop - start + 1 }, (_, i) => start + i)
+
+export function isRTL(str: string) {
+  return /[\u0600-\u06FF]+/.test(str)
+}
+export const formatString = (text: string) => {
+  text
+    .split(' ')
+    .map(word => (isRTL(word) ? '\u202A' : '\u202C') + word)
+    .join(' ')
+  return text
+}
