@@ -105,6 +105,7 @@ export class RecorderComponent implements OnInit {
       } else if (event.result.reason === ResultReason.RecognizedSpeech && this.recordStatus() === 'Stopped') {
         this.recognizedText.set(event.result.text)
         this.pressDone$.emit(this.recognizedText())
+        this.recognizedText.set('')
       }
     }
   }
