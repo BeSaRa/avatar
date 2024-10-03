@@ -5,7 +5,11 @@
     @for (message of service.messages(); track message.id) {
       <div class="message {{ message.role }}">
         @if (message.role === 'assistant') {
-          <div appTextWriterAnimator class="whitespace-pre-wrap break-words" [text]="message.content"></div>
+          <div
+            appTextWriterAnimator
+            (animating)="animationStatus.set($event)"
+            class="whitespace-pre-wrap break-words"
+            [text]="message.content"></div>
         } @else {
           <div class="whitespace-pre break-words" [innerHtml]="message.content"></div>
         }
