@@ -19,11 +19,6 @@ export default class AvatarComponent {
   chatService = inject(ChatService)
   element: ElementRef<HTMLDivElement> = inject(ElementRef)
 
-  pressDoneCallback(value: string): void {
-    this.text.set(value)
-    this.chatService.sendMessage(value).subscribe()
-  }
-
   recognizing(value: string) {
     this.text.set(value)
   }

@@ -1,7 +1,9 @@
 <app-avatar-video #avatarVideoComponent />
-<!--<app-recorder (recognizing$)="recognizing($event)" (pressDone$)="pressDoneCallback($event)" class="absolute" />-->
-<app-overlay-chat />
+<app-overlay-chat #overlayChatComponent />
 <app-screen-control
+  (recognizing$)="recognizing($event)"
+  [overlayChatComponent]="overlayChatComponent"
   (fullscreen)="toggleFullScreen()"
   [avatarVideoComponent]="avatarVideoComponent"
   class="absolute top-10 right-10 size-28" />
+<div class="bg-black/40 absolute top-1/2 text-white font-sans left-1/2 -translate-x-1/2">{{ text() }}</div>

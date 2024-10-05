@@ -1,4 +1,16 @@
-import { Component, ElementRef, inject, OnInit, signal, viewChild, effect, output, input } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+  output,
+  input,
+  effect,
+  Injector,
+  computed,
+} from '@angular/core'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { AppStore } from '@/stores/app.store'
 import { animate, state, style, transition, trigger } from '@angular/animations'
@@ -15,6 +27,8 @@ import {
 import { ChatService } from '@/services/chat.service'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { MatRipple } from '@angular/material/core'
+import { delay, take } from 'rxjs'
+import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 
 @Component({
   selector: 'app-screen-control',
@@ -50,9 +64,11 @@ import { MatRipple } from '@angular/material/core'
 })
 export class ScreenControlComponent implements OnInit {
   avatarVideoComponent = input.required<AvatarVideoComponent>()
+  overlayChatComponent = input.required<OverlayChatComponent>()
   waves = viewChild.required<ElementRef>('waves')
   store = inject(AppStore)
   chatService = inject(ChatService)
+  injector = inject(Injector)
   declare recordingStream: MediaStream
   declare waveSurfer: WaveSurfer
   declare recorder: RecordPlugin
@@ -60,13 +76,8 @@ export class ScreenControlComponent implements OnInit {
   fullscreen = output<void>()
   recognizedText = signal<string>('')
   recognizingText = signal<string>('')
-
+  noRecognized = computed(() => !this.recognizedText().length)
   recognizing$ = output<string>()
-
-  effect = effect(() => {
-    console.log('REC', this.recognizingText())
-    // console.log('REC', this.recognizedText())
-  })
 
   async ngOnInit(): Promise<void> {
     this.recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
@@ -91,7 +102,8 @@ export class ScreenControlComponent implements OnInit {
     // recognizing event
     this.recognizer.recognizing = (_rec, event) => {
       if (event.result.reason === ResultReason.RecognizingSpeech) {
-        this.recognizingText.set(event.result.text)
+        this.recognizingText.set(this.recognizedText() + ' ' + event.result.text)
+        this.recognizing$.emit(this.recognizingText())
       }
     }
     // recognized event
@@ -125,22 +137,40 @@ export class ScreenControlComponent implements OnInit {
 
   toggleRecording() {
     if (this.store.isRecordingStarted()) {
-      this.stopRecording()
+      this.acceptText()
     } else {
       this.startRecording()
     }
   }
 
   acceptText() {
-    this.chatService.sendMessage(this.recognizedText()).subscribe()
+    this.chatService
+      .sendMessage(this.recognizedText())
+      .pipe(take(1))
+      .pipe(delay(200))
+      .subscribe(() => {
+        const assistantList = this.overlayChatComponent().container().nativeElement.querySelectorAll('.assistant')
+        const intervalId = setInterval(() => assistantList[assistantList.length - 1].scrollIntoView(false), 200)
+        const effectCallback = effect(
+          () => {
+            if (!this.overlayChatComponent().animationStatus()) {
+              clearInterval(intervalId)
+              effectCallback.destroy()
+            }
+          },
+          { injector: this.injector }
+        )
+      })
     this.recognizedText.set('')
     this.recognizingText.set('')
+    this.recognizing$.emit('')
     this.stopRecording()
   }
 
   rejectText() {
     this.recognizingText.set('')
     this.recognizedText.set('')
+    this.recognizing$.emit('')
     this.stopRecording()
   }
 }
