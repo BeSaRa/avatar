@@ -3,11 +3,12 @@ import { RecorderComponent } from '@/components/recorder/recorder.component'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 import { ChatService } from '@/services/chat.service'
+import { ScreenControlComponent } from '@/components/screen-control/screen-control.component'
 
 @Component({
   selector: 'app-avatar',
   standalone: true,
-  imports: [RecorderComponent, AvatarVideoComponent, OverlayChatComponent],
+  imports: [RecorderComponent, AvatarVideoComponent, OverlayChatComponent, ScreenControlComponent],
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss',
 })

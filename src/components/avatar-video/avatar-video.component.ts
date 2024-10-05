@@ -1,8 +1,10 @@
-import { Component, ElementRef, inject, OnInit, viewChild, OnDestroy, HostBinding } from '@angular/core'
+import { Component, ElementRef, inject, OnInit, viewChild, OnDestroy, HostBinding, AfterViewInit } from '@angular/core'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
 import { from, map, merge, Observable, ReplaySubject, switchMap, takeUntil } from 'rxjs'
 import { AsyncPipe } from '@angular/common'
+import { ignoreErrors } from '@/utils/utils'
+import { AppStore } from '@/stores/app.store'
 
 @Component({
   selector: 'app-avatar-video',
@@ -11,17 +13,20 @@ import { AsyncPipe } from '@angular/common'
   templateUrl: './avatar-video.component.html',
   styleUrl: './avatar-video.component.scss',
 })
-export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements OnInit, OnDestroy {
+export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements OnInit, OnDestroy, AfterViewInit {
   @HostBinding('attr.class')
   fullWidth = 'w-full h-full block '
   video = viewChild.required<ElementRef<HTMLVideoElement>>('video')
+  idleVideo = viewChild.required<ElementRef<HTMLVideoElement>>('idleVideo')
   avatarService = inject(AvatarService)
   start$ = new ReplaySubject<void>(1)
+  stop$ = new ReplaySubject<void>(1)
   declare pc: RTCPeerConnection
+  store = inject(AppStore)
   init$: Observable<unknown> = this.start$
     .asObservable()
     .pipe(takeUntil(this.destroy$))
-    .pipe(switchMap(() => this.avatarService.startStream()))
+    .pipe(switchMap(() => this.avatarService.startStream().pipe(ignoreErrors())))
     .pipe(
       switchMap(response => {
         const {
@@ -67,15 +72,26 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
 
   async ngOnInit(): Promise<void> {
     // trigger the start of stream
-    this.start$.next()
-
+    // this.start$.next()
     // close when destroy component
     merge(this.destroy$)
       .pipe(switchMap(() => this.avatarService.closeStream()))
       .subscribe()
+
+    this.stop$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap(() => this.avatarService.closeStream()))
+      .subscribe(() => {
+        this.idleVideo().nativeElement.src = 'assets/videos/idle-full.webm'
+        this.idleVideo().nativeElement.muted = true
+        this.idleVideo().nativeElement.loop = true
+        this.idleVideo().nativeElement.play().then()
+      })
   }
 
-  async fullScreen() {
-    this.video().nativeElement.parentElement?.requestFullscreen()
+  ngAfterViewInit(): void {
+    this.idleVideo().nativeElement.muted = true
+    this.idleVideo().nativeElement.loop = true
+    this.idleVideo().nativeElement.play().then()
   }
 }

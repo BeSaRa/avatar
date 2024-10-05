@@ -29,11 +29,7 @@ export class AvatarService {
 
   closeStream(): Observable<StreamResultContract> {
     return this.http
-      .delete<StreamResultContract>(this.urlService.URLS.AVATAR + '/close-stream', {
-        params: {
-          stream_id: this.store.streamId(),
-        },
-      })
+      .delete<StreamResultContract>(this.urlService.URLS.AVATAR + `/close-stream/${this.store.streamId()}`)
       .pipe(tap(() => this.store.updateStreamId('')))
   }
 

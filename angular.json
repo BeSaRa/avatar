@@ -35,6 +35,7 @@
                 "input": "public"
               },
               "src/resources",
+              "src/assets",
               "src/favicon.ico"
             ],
             "styles": [

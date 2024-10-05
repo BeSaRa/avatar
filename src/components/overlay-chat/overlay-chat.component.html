@@ -26,7 +26,7 @@
               <span class="title">References</span>
             </div>
             <div #linkRef hidden>
-              @for (link of message.context.citations; track link.filepath) {
+              @for (link of message.context.citations; track $index) {
                 <div dir="auto">
                   <div class="d-inline">
                     <small class="px-1 text-primary"> doc {{ $index + 1 }} <i class="mdi mdi-link-variant"></i></small>
