@@ -1,7 +1,7 @@
 <div id="chat-container" class="flex flex-col bg-black/40 max-h-80 w-screen absolute overflow-hidden bottom-0 left-0">
   <div
     #container
-    class="min-h-0 px-6 py-4 flex-auto flex flex-col w-full h-full relative overflow-hidden space-y-4 [&>.message.user]:justify-end [&>.message]:text-white">
+    class="min-h-0 px-6 py-6 flex-auto flex flex-col w-full h-full relative overflow-hidden space-y-4 [&>.message.user]:justify-end [&>.message]:text-white">
     @for (message of service.messages(); track message.id) {
       <div class="message {{ message.role }}">
         @if (message.role === 'assistant') {

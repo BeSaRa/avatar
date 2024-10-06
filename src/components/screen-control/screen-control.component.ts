@@ -7,9 +7,9 @@ import {
   viewChild,
   output,
   input,
-  effect,
   Injector,
   computed,
+  effect,
 } from '@angular/core'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { AppStore } from '@/stores/app.store'
@@ -27,8 +27,9 @@ import {
 import { ChatService } from '@/services/chat.service'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { MatRipple } from '@angular/material/core'
-import { delay, take } from 'rxjs'
+import { delay, exhaustMap, map, Subject, takeUntil, tap } from 'rxjs'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 
 @Component({
   selector: 'app-screen-control',
@@ -62,7 +63,7 @@ import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.com
     ]),
   ],
 })
-export class ScreenControlComponent implements OnInit {
+export class ScreenControlComponent extends OnDestroyMixin(class {}) implements OnInit {
   avatarVideoComponent = input.required<AvatarVideoComponent>()
   overlayChatComponent = input.required<OverlayChatComponent>()
   waves = viewChild.required<ElementRef>('waves')
@@ -79,7 +80,15 @@ export class ScreenControlComponent implements OnInit {
   noRecognized = computed(() => !this.recognizedText().length)
   recognizing$ = output<string>()
 
+  accept$ = new Subject<void>()
+
   async ngOnInit(): Promise<void> {
+    this.listenToAccept()
+    await this.prepareRecorder()
+  }
+
+  private async prepareRecorder() {
+    console.log('PREPARING RECOGNIZER')
     this.recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     this.waveSurfer = new WaveSurfer({
       waveColor: 'white',
@@ -116,9 +125,15 @@ export class ScreenControlComponent implements OnInit {
 
   startRecording() {
     this.store.recordingInProgress()
-    this.recognizer.startContinuousRecognitionAsync(() => {
-      this.store.recordingStarted()
-    })
+    this.recognizer.startContinuousRecognitionAsync(
+      () => {
+        this.store.recordingStarted()
+      },
+      error => {
+        console.log('error', error)
+        this.prepareRecorder().then()
+      }
+    )
   }
 
   stopRecording() {
@@ -144,9 +159,37 @@ export class ScreenControlComponent implements OnInit {
   }
 
   acceptText() {
-    this.chatService
-      .sendMessage(this.recognizedText())
-      .pipe(take(1))
+    this.accept$.next()
+  }
+
+  rejectText() {
+    this.recognizingText.set('')
+    this.recognizedText.set('')
+    this.recognizing$.emit('')
+    this.stopRecording()
+  }
+
+  private goToEndOfChat() {
+    setTimeout(() => {
+      const messagesList = this.overlayChatComponent().container().nativeElement.querySelectorAll('.user')
+      messagesList[messagesList.length - 1].scrollIntoView(true)
+    }, 100)
+  }
+
+  private listenToAccept() {
+    this.accept$
+      .pipe(map(() => this.recognizedText()))
+      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        tap(() => {
+          this.recognizedText.set('')
+          this.recognizingText.set('')
+          this.recognizing$.emit('')
+          this.stopRecording()
+        })
+      )
+      .pipe(tap(() => this.goToEndOfChat()))
+      .pipe(exhaustMap(value => this.chatService.sendMessage(value)))
       .pipe(delay(200))
       .subscribe(() => {
         const assistantList = this.overlayChatComponent().container().nativeElement.querySelectorAll('.assistant')
@@ -161,16 +204,9 @@ export class ScreenControlComponent implements OnInit {
           { injector: this.injector }
         )
       })
-    this.recognizedText.set('')
-    this.recognizingText.set('')
-    this.recognizing$.emit('')
-    this.stopRecording()
   }
 
-  rejectText() {
-    this.recognizingText.set('')
-    this.recognizedText.set('')
-    this.recognizing$.emit('')
-    this.stopRecording()
+  clearChat() {
+    this.chatService.messages.set([])
   }
 }

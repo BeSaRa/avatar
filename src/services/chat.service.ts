@@ -36,8 +36,6 @@ export class ChatService {
         map(res => {
           res.message.content = formatString(this.formatText(res.message.content))
           res.message = new Message().clone(res.message)
-
-          console.log('Message', res.message)
           this.messages.update(messages => [...messages, res.message])
           return res
         })

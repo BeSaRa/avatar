@@ -15,7 +15,6 @@ export class Message extends ClonerMixin(class {}) {
   ) {
     super()
     this.id = generateUUID()
-    console.log('HERER')
   }
 }
 

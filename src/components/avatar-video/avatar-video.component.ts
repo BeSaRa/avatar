@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, OnInit, viewChild, OnDestroy, HostBinding, AfterViewInit } from '@angular/core'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
-import { from, map, merge, Observable, ReplaySubject, switchMap, takeUntil } from 'rxjs'
+import { exhaustMap, filter, from, map, merge, Observable, ReplaySubject, switchMap, takeUntil } from 'rxjs'
 import { AsyncPipe } from '@angular/common'
 import { ignoreErrors } from '@/utils/utils'
 import { AppStore } from '@/stores/app.store'
@@ -26,7 +26,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
   init$: Observable<unknown> = this.start$
     .asObservable()
     .pipe(takeUntil(this.destroy$))
-    .pipe(switchMap(() => this.avatarService.startStream().pipe(ignoreErrors())))
+    .pipe(exhaustMap(() => this.avatarService.startStream().pipe(ignoreErrors())))
     .pipe(
       switchMap(response => {
         const {
@@ -50,14 +50,17 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
             (event.target as unknown as RTCPeerConnection).iceGatheringState == 'complete' &&
             this.video().nativeElement.paused
           ) {
-            console.log('icegatheringstatechange')
             this.video().nativeElement.play().then()
           }
         })
 
         this.pc.addEventListener('track', event => {
-          console.log('track', event)
           this.video().nativeElement.srcObject = event.streams[0]
+          event.streams[0].getTracks().forEach(track => {
+            track.onmute = () => {
+              this.stop$.next()
+            }
+          })
         })
 
         return from(
@@ -79,17 +82,18 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
       .subscribe()
 
     this.stop$
+      .pipe(filter(() => this.store.hasStream()))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(() => this.avatarService.closeStream()))
-      .subscribe(() => {
-        this.idleVideo().nativeElement.src = 'assets/videos/idle-full.webm'
-        this.idleVideo().nativeElement.muted = true
-        this.idleVideo().nativeElement.loop = true
-        this.idleVideo().nativeElement.play().then()
-      })
+      .subscribe()
   }
 
   ngAfterViewInit(): void {
+    this.playIdle()
+  }
+
+  private playIdle(): void {
+    this.idleVideo().nativeElement.src = 'assets/videos/idle-full.webm'
     this.idleVideo().nativeElement.muted = true
     this.idleVideo().nativeElement.loop = true
     this.idleVideo().nativeElement.play().then()

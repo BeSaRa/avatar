@@ -28,9 +28,9 @@ export class AvatarService {
   }
 
   closeStream(): Observable<StreamResultContract> {
-    return this.http
-      .delete<StreamResultContract>(this.urlService.URLS.AVATAR + `/close-stream/${this.store.streamId()}`)
-      .pipe(tap(() => this.store.updateStreamId('')))
+    const streamId = this.store.streamId()
+    this.store.updateStreamId('')
+    return this.http.delete<StreamResultContract>(this.urlService.URLS.AVATAR + `/close-stream/${streamId}`)
   }
 
   sendCandidate(candidate: RTCIceCandidate): Observable<StreamResultContract> {

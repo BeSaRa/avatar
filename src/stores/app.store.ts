@@ -6,6 +6,7 @@ interface AppStore {
   speechToken: SpeechTokenContract
   streamId: string
   recording: 'Started' | 'InProgress' | 'Stopped'
+  streamReady: boolean
 }
 
 const initialState: AppStore = {
@@ -15,6 +16,7 @@ const initialState: AppStore = {
   },
   streamId: '',
   recording: 'Stopped',
+  streamReady: false,
 }
 
 export const AppStore = signalStore(
@@ -43,6 +45,9 @@ export const AppStore = signalStore(
     },
     recordingInProgress: () => {
       patchState(store, { recording: 'InProgress' })
+    },
+    updateStreamReady: (ready: boolean) => {
+      patchState(store, { streamReady: ready })
     },
   }))
 )
