@@ -1,15 +1,14 @@
 import {
   Component,
+  effect,
   ElementRef,
   inject,
+  Injector,
+  input,
   OnInit,
+  output,
   signal,
   viewChild,
-  output,
-  input,
-  Injector,
-  computed,
-  effect,
 } from '@angular/core'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { AppStore } from '@/stores/app.store'
@@ -27,9 +26,10 @@ import {
 import { ChatService } from '@/services/chat.service'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { MatRipple } from '@angular/material/core'
-import { delay, exhaustMap, map, Subject, takeUntil, tap } from 'rxjs'
+import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap, withLatestFrom } from 'rxjs'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { SpeechService } from '@/services/speech.service'
 
 @Component({
   selector: 'app-screen-control',
@@ -77,10 +77,11 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   fullscreen = output<void>()
   recognizedText = signal<string>('')
   recognizingText = signal<string>('')
-  noRecognized = computed(() => !this.recognizedText().length)
+  speechService = inject(SpeechService)
   recognizing$ = output<string>()
-
+  recognized$ = new Subject<void>()
   accept$ = new Subject<void>()
+  stillRecognizing = signal<boolean>(false)
 
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
@@ -88,7 +89,6 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   }
 
   private async prepareRecorder() {
-    console.log('PREPARING RECOGNIZER')
     this.recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     this.waveSurfer = new WaveSurfer({
       waveColor: 'white',
@@ -119,21 +119,29 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
     this.recognizer.recognized = (_rec, event) => {
       if (event.result.reason === ResultReason.RecognizedSpeech && this.store.isRecordingStarted()) {
         this.recognizedText.update(text => text + event.result.text)
+        this.recognized$.next()
       }
+    }
+
+    this.recognizer.canceled = () => {
+      this.store.recordingInProgress()
+      this.speechService
+        .generateSpeechToken()
+        .pipe(take(1))
+        .subscribe(() => {
+          this.prepareRecorder().then(() => this.startRecording())
+        })
     }
   }
 
   startRecording() {
+    this.stillRecognizing.set(true)
     this.store.recordingInProgress()
-    this.recognizer.startContinuousRecognitionAsync(
-      () => {
+    this.recognizer.startContinuousRecognitionAsync(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(this.recognizer.internalData as unknown as any).privConnectionPromise.__zone_symbol__state === true &&
         this.store.recordingStarted()
-      },
-      error => {
-        console.log('error', error)
-        this.prepareRecorder().then()
-      }
-    )
+    })
   }
 
   stopRecording() {
@@ -151,6 +159,9 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   }
 
   toggleRecording() {
+    if (this.store.isRecordingLoading()) {
+      return
+    }
     if (this.store.isRecordingStarted()) {
       this.acceptText()
     } else {
@@ -178,7 +189,9 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   private listenToAccept() {
     this.accept$
+      .pipe(withLatestFrom(this.recognized$))
       .pipe(map(() => this.recognizedText()))
+      .pipe(filter(value => !!value))
       .pipe(takeUntil(this.destroy$))
       .pipe(
         tap(() => {

@@ -28,7 +28,7 @@
     (contextmenu)="$event.preventDefault()"
     class="absolute top-8 left-1/2 disabled:bg-gray-400 -translate-x-1/2 flex p-2 bg-white size-28 overflow-hidden rounded-full"
     aria-label="record">
-    <div [@recordButton]="store.recording()" class="size-24 bg-red-500 rounded-full">
+    <div [@recordButton]="store.recording()" class="size-24 bg-red-500 overflow-hidden rounded-full">
       <div
         [ngClass]="{ hidden: !store.isRecordingStarted() }"
         class="w-full pointer-events-none h-full opacity-90 relative"
