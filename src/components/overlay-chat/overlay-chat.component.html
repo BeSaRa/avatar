@@ -11,7 +11,7 @@
             class="whitespace-pre-wrap break-words"
             [text]="message.content"></div>
         } @else {
-          <div class="whitespace-pre break-words" [innerHtml]="message.content"></div>
+          <div class="whitespace-pre-wrap break-words" [innerHtml]="message.content"></div>
         }
 
         @if (message.context && message.context.citations.length) {

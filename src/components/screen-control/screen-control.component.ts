@@ -26,7 +26,7 @@ import {
 import { ChatService } from '@/services/chat.service'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { MatRipple } from '@angular/material/core'
-import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap, withLatestFrom } from 'rxjs'
+import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap } from 'rxjs'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { SpeechService } from '@/services/speech.service'
@@ -50,7 +50,6 @@ import { SpeechService } from '@/services/speech.service'
         'Started',
         style({
           transform: 'scale(1)',
-          backgroundColor: 'red',
         })
       ),
       state(
@@ -81,7 +80,12 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   recognizing$ = output<string>()
   recognized$ = new Subject<void>()
   accept$ = new Subject<void>()
-  stillRecognizing = signal<boolean>(false)
+  recognizingStatus = signal<boolean>(false)
+
+  clickToSpeech = 'اضغط للتحدث'
+  loading = 'جاري التحميل'
+  listeningOngoing = 'جارى الاستماع'
+  clickToSend = 'أضغط للأرسال'
 
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
@@ -113,13 +117,15 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
       if (event.result.reason === ResultReason.RecognizingSpeech) {
         this.recognizingText.set(this.recognizedText() + ' ' + event.result.text)
         this.recognizing$.emit(this.recognizingText())
+        this.recognizingStatus.set(true)
       }
     }
     // recognized event
     this.recognizer.recognized = (_rec, event) => {
       if (event.result.reason === ResultReason.RecognizedSpeech && this.store.isRecordingStarted()) {
-        this.recognizedText.update(text => text + event.result.text)
+        this.recognizedText.update(text => text + ' ' + event.result.text)
         this.recognized$.next()
+        this.recognizingStatus.set(false)
       }
     }
 
@@ -135,12 +141,12 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   }
 
   startRecording() {
-    this.stillRecognizing.set(true)
     this.store.recordingInProgress()
     this.recognizer.startContinuousRecognitionAsync(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(this.recognizer.internalData as unknown as any).privConnectionPromise.__zone_symbol__state === true &&
         this.store.recordingStarted()
+      this.recognizingStatus.set(true)
     })
   }
 
@@ -177,6 +183,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
     this.recognizingText.set('')
     this.recognizedText.set('')
     this.recognizing$.emit('')
+    this.recognizingStatus.set(false)
     this.stopRecording()
   }
 
@@ -189,7 +196,6 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   private listenToAccept() {
     this.accept$
-      .pipe(withLatestFrom(this.recognized$))
       .pipe(map(() => this.recognizedText()))
       .pipe(filter(value => !!value))
       .pipe(takeUntil(this.destroy$))
@@ -197,6 +203,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
         tap(() => {
           this.recognizedText.set('')
           this.recognizingText.set('')
+          this.recognizingStatus.set(false)
           this.recognizing$.emit('')
           this.stopRecording()
         })

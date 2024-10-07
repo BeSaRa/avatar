@@ -23,16 +23,33 @@
   </div>
 
   <button
-    [disabled]="store.isRecordingLoading()"
+    [disabled]="store.isRecordingLoading() || recognizingStatus()"
     (pointerdown)="toggleRecording()"
     (contextmenu)="$event.preventDefault()"
-    class="absolute top-8 left-1/2 disabled:bg-gray-400 -translate-x-1/2 flex p-2 bg-white size-28 overflow-hidden rounded-full"
+    class="absolute top-8 left-1/2 disabled:bg-gray-400 -translate-x-1/2 flex flex-col p-2 bg-white size-28 overflow-hidden rounded-full"
     aria-label="record">
-    <div [@recordButton]="store.recording()" class="size-24 bg-red-500 overflow-hidden rounded-full">
+    <div class="relative flex items-center justify-center">
+      @if (store.isRecordingLoading()) {
+        <span class="absolute z-20 font-semibold text-white">{{ loading }}</span>
+      }
+      @if (store.isRecordingStopped()) {
+        <span class="absolute z-20 font-semibold text-black">{{ clickToSpeech }}</span>
+      }
+      @if (store.isRecordingStarted() && recognizingStatus()) {
+        <span class="absolute z-20 font-semibold text-white">{{ listeningOngoing }}</span>
+      }
+      @if (store.isRecordingStarted() && !recognizingStatus()) {
+        <span class="absolute z-20 font-semibold text-white">{{ clickToSend }}</span>
+      }
       <div
-        [ngClass]="{ hidden: !store.isRecordingStarted() }"
-        class="w-full pointer-events-none h-full opacity-90 relative"
-        #waves></div>
+        [@recordButton]="store.recording()"
+        [ngClass]="{ 'bg-red-500': recognizingStatus(), 'bg-green-500': !recognizingStatus() }"
+        class="size-24 overflow-hidden transition-all rounded-full relative">
+        <div
+          [ngClass]="{ hidden: !store.isRecordingStarted() }"
+          class="w-full mt-5 pointer-events-none h-full opacity-90"
+          #waves></div>
+      </div>
     </div>
   </button>
 
