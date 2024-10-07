@@ -149,7 +149,6 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
       ;(this.recognizer.internalData as unknown as any).privConnectionPromise.__zone_symbol__state === true &&
         this.store.recordingStarted()
       this.recognizingStatus.set(true)
-      this.avatarService.interruptAvatar().pipe(take(1)).subscribe()
     })
   }
 
@@ -231,5 +230,9 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   clearChat() {
     this.chatService.messages.set([])
+  }
+
+  interruptAvatar() {
+    this.avatarService.interruptAvatar().pipe(take(1)).subscribe()
   }
 }
