@@ -46,6 +46,10 @@ export class AvatarService {
     })
   }
 
+  interruptAvatar(): Observable<StreamResultContract> {
+    return this.http.delete<StreamResultContract>(this.urlService.URLS.AVATAR + `/stop-render/${this.store.streamId()}`)
+  }
+
   renderText(): Observable<unknown> {
     return this.http.post(this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`, {})
   }

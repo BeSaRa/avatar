@@ -30,6 +30,7 @@ import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap } from 'r
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { SpeechService } from '@/services/speech.service'
+import { AvatarService } from '@/services/avatar.service'
 
 @Component({
   selector: 'app-screen-control',
@@ -68,6 +69,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   waves = viewChild.required<ElementRef>('waves')
   store = inject(AppStore)
   chatService = inject(ChatService)
+  avatarService = inject(AvatarService)
   injector = inject(Injector)
   declare recordingStream: MediaStream
   declare waveSurfer: WaveSurfer
@@ -147,6 +149,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
       ;(this.recognizer.internalData as unknown as any).privConnectionPromise.__zone_symbol__state === true &&
         this.store.recordingStarted()
       this.recognizingStatus.set(true)
+      this.avatarService.interruptAvatar().pipe(take(1)).subscribe()
     })
   }
 
