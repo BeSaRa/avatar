@@ -1,9 +1,10 @@
 {
   "ENVIRONMENTS_URLS": {
     "DEV": "https://ebla-ai-demo-002.azurewebsites.net/api",
-    "NEW": "https://afnqcscbai01.azurewebsites.net/api",
+    "AQARAT_STG": "https://afnqcscbai01.azurewebsites.net/api",
     "AZURE": "https://rera-api.azurewebsites.net/api"
   },
   "API_VERSION": "v1",
-  "BASE_ENVIRONMENT": "DEV"
+  "BASE_ENVIRONMENT": "AQARAT_STG",
+  "KUNA": "i-mEGilYdirGxQO_579aS_Y226Qq8Bi1SCwBehnp_jK_AzFu9Lhwig=="
 }
