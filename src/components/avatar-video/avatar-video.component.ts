@@ -1,15 +1,37 @@
-import { Component, ElementRef, inject, OnInit, viewChild, OnDestroy, HostBinding, AfterViewInit } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  viewChild,
+  OnDestroy,
+  HostBinding,
+  AfterViewInit,
+  computed,
+} from '@angular/core'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
-import { exhaustMap, filter, from, map, merge, Observable, ReplaySubject, switchMap, takeUntil } from 'rxjs'
-import { AsyncPipe } from '@angular/common'
+import {
+  catchError,
+  exhaustMap,
+  filter,
+  from,
+  map,
+  merge,
+  Observable,
+  ReplaySubject,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs'
+import { AsyncPipe, NgClass } from '@angular/common'
 import { ignoreErrors } from '@/utils/utils'
 import { AppStore } from '@/stores/app.store'
 
 @Component({
   selector: 'app-avatar-video',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, NgClass],
   templateUrl: './avatar-video.component.html',
   styleUrl: './avatar-video.component.scss',
 })
@@ -25,8 +47,21 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
   store = inject(AppStore)
   init$: Observable<unknown> = this.start$
     .asObservable()
+    .pipe(tap(() => this.store.updateStreamStatus('InProgress')))
     .pipe(takeUntil(this.destroy$))
-    .pipe(exhaustMap(() => this.avatarService.startStream().pipe(ignoreErrors())))
+    .pipe(
+      exhaustMap(() =>
+        this.avatarService
+          .startStream()
+          .pipe(
+            catchError(err => {
+              this.store.updateStreamStatus('Stopped')
+              throw err
+            })
+          )
+          .pipe(ignoreErrors())
+      )
+    )
     .pipe(
       switchMap(response => {
         const {
@@ -51,6 +86,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
             this.video().nativeElement.paused
           ) {
             this.video().nativeElement.play().then()
+            this.store.updateStreamStatus('Started')
           }
         })
 
@@ -58,10 +94,12 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
           this.video().nativeElement.srcObject = event.streams[0]
           event.streams[0].getTracks().forEach(track => {
             track.onmute = () => {
-              this.stop$.next()
+              this.store.updateStreamId('')
             }
           })
         })
+
+        this.store.updateStreamStatus('Started')
 
         return from(
           this.pc.setRemoteDescription(new RTCSessionDescription(offer as unknown as RTCSessionDescriptionInit))
@@ -73,19 +111,34 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
     )
     .pipe(map(() => ''))
 
+  onlineStatus = computed(() => {
+    switch (this.store.streamingStatus()) {
+      case 'Started':
+        return 'متصل'
+      case 'InProgress':
+        return 'جاري الاتصال'
+      default:
+        return 'غير متصل'
+    }
+  })
+
   async ngOnInit(): Promise<void> {
     // trigger the start of stream
     // this.start$.next()
     // close when destroy component
     merge(this.destroy$)
-      .pipe(switchMap(() => this.avatarService.closeStream()))
+      .pipe(tap(() => this.store.updateStreamStatus('Stopped')))
+      .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
       .subscribe()
 
     this.stop$
       .pipe(filter(() => this.store.hasStream()))
+      .pipe(tap(() => this.store.updateStreamStatus('Stopped')))
       .pipe(takeUntil(this.destroy$))
-      .pipe(switchMap(() => this.avatarService.closeStream()))
-      .subscribe()
+      .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
+      .subscribe(() => {
+        console.log('CLOSED')
+      })
   }
 
   ngAfterViewInit(): void {

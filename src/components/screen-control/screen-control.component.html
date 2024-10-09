@@ -53,31 +53,6 @@
     </div>
   </button>
 
-  @if (store.hasStream()) {
-    <button matRipple (click)="stopStream()" class="text-white">
-      <svg fill="currentColor" class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <title>video-off</title>
-        <path
-          d="M3.27,2L2,3.27L4.73,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16C16.2,18 16.39,17.92 16.54,17.82L19.73,21L21,19.73M21,6.5L17,10.5V7A1,1 0 0,0 16,6H9.82L21,17.18V6.5Z" />
-      </svg>
-    </button>
-  } @else {
-    <button matRipple (click)="startStream()" class="text-white">
-      <svg fill="currentColor" class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <title>video</title>
-        <path
-          d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z" />
-      </svg>
-    </button>
-  }
-
-  <button matRipple (click)="fullscreen.emit()" class="text-white">
-    <svg fill="currentColor" class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <title>fullscreen</title>
-      <path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
-    </svg>
-  </button>
-
   <button matRipple (click)="clearChat()" class="text-white">
     <svg fill="currentColor" class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <title>remove chat</title>
@@ -110,4 +85,45 @@
         d="M50.25,9.33c-22.472,0-40.753,18.282-40.753,40.753S27.778,90.835,50.25,90.835s40.753-18.282,40.753-40.753  S72.722,9.33,50.25,9.33z M85.003,50.083c0,8.496-3.068,16.285-8.149,22.329L27.898,23.499c6.048-5.093,13.846-8.169,22.352-8.169  C69.413,15.33,85.003,30.92,85.003,50.083z M15.497,50.083c0-8.501,3.073-16.295,8.16-22.341l48.956,48.914  c-6.049,5.099-13.852,8.18-22.363,8.18C31.087,84.835,15.497,69.245,15.497,50.083z" />
     </svg>
   </button>
+</div>
+
+<div
+  class="bg-black/50 fixed right-0 rounded p-4 transition-transform"
+  [ngClass]="{ 'translate-x-full': !settingsOpened }"
+  id="settings">
+  <div class="relative flex flex-col">
+    <button
+      (click)="toggleSettings()"
+      class="absolute -top-2 -left-14 z-20 bg-black/50 rounded-l text-white"
+      aria-label="Settings">
+      <svg class="size-10 animate-spin" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <title>cog</title>
+        <path
+          d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+      </svg>
+    </button>
+    @if (store.isStreamLoading()) {
+      <button aria-label="close stream" class="text-white cursor-progress size-20 bg-orange-500 rounded-full">
+        <div class="pulse rounded-full w-full h-full bg-primary flex justify-center items-center">
+          <span>{{ avatarVideoComponent().onlineStatus() }}</span>
+        </div>
+      </button>
+    } @else {
+      <button
+        matRipple
+        (click)="toggleStream()"
+        aria-label="close stream"
+        [ngClass]="{ 'bg-green-700': store.isStreamStarted(), 'bg-red-600': store.isStreamStopped() }"
+        class="text-white size-20 rounded-full">
+        {{ avatarVideoComponent().onlineStatus() }}
+      </button>
+    }
+
+    <button matRipple (click)="fullscreen.emit()" class="text-white">
+      <svg fill="currentColor" class="size-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <title>fullscreen</title>
+        <path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
+      </svg>
+    </button>
+  </div>
 </div>

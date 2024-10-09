@@ -1,5 +1,22 @@
 <div id="video-wrapper" class="flex items-center w-full h-full justify-center">
   <div class="flex flex-col items-center w-full h-full justify-center">
+    <div class="flex gap-1 shadow-2xl shadow-white bg-black/20 p-1 mt-2 absolute z-50 top-0 rounded-md">
+      <div
+        [ngClass]="{
+          'bg-red-600': store.isStreamStopped(),
+          'bg-green-700': store.isStreamStarted(),
+          'bg-orange-500': store.isStreamLoading(),
+        }"
+        class="p-4 rounded-full"></div>
+      <div
+        [ngClass]="{
+          'bg-red-600': store.isStreamStopped(),
+          'bg-green-700': store.isStreamStarted(),
+          'bg-orange-500': store.isStreamLoading(),
+        }"
+        class="p-4 absolute pulse rounded-full"></div>
+      <span class="text-white font-semibold">{{ onlineStatus() }}</span>
+    </div>
     <video autoplay [hidden]="!store.hasStream()" #video class="h-full"></video>
     <video #idleVideo [hidden]="store.hasStream()" class="h-full">
       <source src="assets/videos/idle-full.webm" type="video/webm" />

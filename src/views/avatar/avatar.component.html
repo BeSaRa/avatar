@@ -5,5 +5,15 @@
   [overlayChatComponent]="overlayChatComponent"
   (fullscreen)="toggleFullScreen()"
   [avatarVideoComponent]="avatarVideoComponent"
-  class="absolute top-10 right-10 size-28" />
+  class="absolute top-10 left-10 size-28" />
 <div class="bg-black/40 absolute top-1/2 text-white font-sans left-1/2 -translate-x-1/2">{{ text() }}</div>
+@if (store.isStreamLoading()) {
+  <div class="z-50 flex items-center justify-center w-full bg-black/50 h-full fixed">
+    <div class="lds-ellipsis">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+}

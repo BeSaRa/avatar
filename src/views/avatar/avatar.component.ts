@@ -2,6 +2,7 @@ import { Component, ElementRef, HostBinding, inject, signal } from '@angular/cor
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 import { ScreenControlComponent } from '@/components/screen-control/screen-control.component'
+import { AppStore } from '@/stores/app.store'
 
 @Component({
   selector: 'app-avatar',
@@ -15,6 +16,7 @@ export default class AvatarComponent {
   fullScreen = 'h-screen w-screen flex items-center justify-center'
   text = signal('')
   element: ElementRef<HTMLDivElement> = inject(ElementRef)
+  store = inject(AppStore)
 
   recognizing(value: string) {
     this.text.set(value)

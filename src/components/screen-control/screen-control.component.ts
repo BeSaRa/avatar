@@ -89,6 +89,8 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   listeningOngoing = 'جارى الاستماع'
   clickToSend = 'أضغط للأرسال'
 
+  settingsOpened = false
+
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
     await this.prepareRecorder()
@@ -156,14 +158,6 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
     this.recognizer.stopContinuousRecognitionAsync(() => {
       this.store.recordingStopped()
     })
-  }
-
-  startStream() {
-    this.avatarVideoComponent().start$.next()
-  }
-
-  stopStream() {
-    this.avatarVideoComponent().stop$.next()
   }
 
   toggleRecording() {
@@ -234,5 +228,15 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   interruptAvatar() {
     this.avatarService.interruptAvatar().pipe(take(1)).subscribe()
+  }
+
+  toggleStream() {
+    if (this.store.isStreamLoading()) return
+
+    this.store.isStreamStopped() ? this.avatarVideoComponent().start$.next() : this.avatarVideoComponent().stop$.next()
+  }
+
+  toggleSettings() {
+    this.settingsOpened = !this.settingsOpened
   }
 }
