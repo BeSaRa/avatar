@@ -5,6 +5,6 @@
     "AZURE": "https://rera-api.azurewebsites.net/api"
   },
   "API_VERSION": "v1",
-  "BASE_ENVIRONMENT": "AQARAT_STG",
+  "BASE_ENVIRONMENT": "DEV",
   "KUNA": "i-mEGilYdirGxQO_579aS_Y226Qq8Bi1SCwBehnp_jK_AzFu9Lhwig=="
 }
