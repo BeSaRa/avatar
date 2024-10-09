@@ -95,6 +95,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
           event.streams[0].getTracks().forEach(track => {
             track.onmute = () => {
               this.store.updateStreamId('')
+              this.store.updateStreamStatus('Stopped')
             }
           })
         })
