@@ -117,11 +117,7 @@
           }
         },
         "deploy": {
-          "builder": "angular-cli-ghpages:deploy",
-          "options": {
-            "baseHref": "https://besara.github.io/avatar/",
-            "repo": "https://github.com/BeSaRa/avatar.git"
-          }
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
