@@ -31,11 +31,12 @@ import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.com
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { SpeechService } from '@/services/speech.service'
 import { AvatarService } from '@/services/avatar.service'
+import { MatTooltip } from '@angular/material/tooltip'
 
 @Component({
   selector: 'app-screen-control',
   standalone: true,
-  imports: [CdkDrag, CdkDragHandle, NgClass, MatRipple],
+  imports: [CdkDrag, CdkDragHandle, NgClass, MatRipple, MatTooltip],
   templateUrl: './screen-control.component.html',
   styleUrl: './screen-control.component.scss',
   animations: [
@@ -90,6 +91,12 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   clickToSend = 'أضغط للأرسال'
 
   settingsOpened = false
+  lang = {
+    cancel_recording: 'الغاء التسجيل',
+    clear_chat_history: 'مسح سجل المحادثة',
+    stop_talking: 'توقف عن الحديث',
+    settings: 'الاعدادات',
+  }
 
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
