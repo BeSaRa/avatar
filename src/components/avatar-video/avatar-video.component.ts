@@ -55,7 +55,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
           .startStream()
           .pipe(
             catchError(err => {
-              this.store.updateStreamStatus('Stopped')
+              this.store.updateStreamStatus('Stopped') //1
               throw err
             })
           )
@@ -92,15 +92,19 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
 
         this.pc.addEventListener('track', event => {
           this.video().nativeElement.srcObject = event.streams[0]
-          event.streams[0].getTracks().forEach(track => {
-            track.onmute = () => {
-              this.store.updateStreamId('')
-              this.store.updateStreamStatus('Stopped')
-            }
-          })
         })
 
-        this.store.updateStreamStatus('Started')
+        this.pc.addEventListener('connectionstatechange', evt => {
+          const connectionState = (evt.target as unknown as RTCPeerConnection).connectionState
+          if (connectionState === 'connected') {
+            console.log(connectionState, 'connected')
+            this.store.updateStreamStatus('Started')
+          }
+          if (connectionState === 'disconnected') {
+            console.log(connectionState, 'disconnected')
+            this.store.updateStreamStatus('Stopped')
+          }
+        })
 
         return from(
           this.pc.setRemoteDescription(new RTCSessionDescription(offer as unknown as RTCSessionDescriptionInit))
@@ -118,6 +122,8 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
         return 'متصل'
       case 'InProgress':
         return 'جاري الاتصال'
+      case 'Disconnecting':
+        return 'جاري قطع الاتصال'
       default:
         return 'غير متصل'
     }
@@ -128,17 +134,19 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
     // this.start$.next()
     // close when destroy component
     merge(this.destroy$)
-      .pipe(tap(() => this.store.updateStreamStatus('Stopped')))
+      .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2
       .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
-      .subscribe()
+      .subscribe(() => {
+        console.log('COMPONENT DESTROYED')
+      })
 
     this.stop$
       .pipe(filter(() => this.store.hasStream()))
-      .pipe(tap(() => this.store.updateStreamStatus('Stopped')))
+      .pipe(tap(() => this.store.updateStreamStatus('Disconnecting')))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
       .subscribe(() => {
-        console.log('CLOSED')
+        console.log('MANUAL CLOSE')
       })
   }
 

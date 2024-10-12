@@ -17,8 +17,8 @@
         class="p-4 absolute pulse rounded-full"></div>
       <span class="text-white font-semibold">{{ onlineStatus() }}</span>
     </div>
-    <video autoplay [hidden]="!store.hasStream()" #video class="h-full"></video>
-    <video #idleVideo [hidden]="store.hasStream()" class="h-full">
+    <video autoplay [hidden]="store.isStreamStopped() || store.isStreamLoading()" #video class="h-full"></video>
+    <video #idleVideo [hidden]="store.isStreamStarted()" class="h-full">
       <source src="assets/videos/idle-full.webm" type="video/webm" />
     </video>
   </div>

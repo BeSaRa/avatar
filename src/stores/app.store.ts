@@ -6,7 +6,7 @@ interface AppStore {
   speechToken: SpeechTokenContract
   streamId: string
   recording: 'Started' | 'InProgress' | 'Stopped'
-  streamingStatus: 'Started' | 'InProgress' | 'Stopped'
+  streamingStatus: 'Started' | 'InProgress' | 'Stopped' | 'Disconnecting'
   streamReady: boolean
 }
 
@@ -33,7 +33,7 @@ export const AppStore = signalStore(
     hasStream: computed(() => !!streamId()),
     isStreamStarted: computed(() => streamingStatus() === 'Started'),
     isStreamStopped: computed(() => streamingStatus() === 'Stopped'),
-    isStreamLoading: computed(() => streamingStatus() === 'InProgress'),
+    isStreamLoading: computed(() => streamingStatus() === 'InProgress' || streamingStatus() === 'Disconnecting'),
   })),
   withMethods(store => ({
     updateSpeechToken: (token: SpeechTokenContract = { token: '', region: '' }) => {
@@ -51,7 +51,7 @@ export const AppStore = signalStore(
     recordingInProgress: () => {
       patchState(store, { recording: 'InProgress' })
     },
-    updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' = 'Stopped') => {
+    updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' | 'Disconnecting' = 'Stopped') => {
       patchState(store, { streamingStatus: status })
     },
   }))
