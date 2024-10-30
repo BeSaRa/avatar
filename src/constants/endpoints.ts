@@ -1,8 +1,8 @@
 export const EndPoints = {
   BASE_URL: '',
-  SPEECH_TOKEN: 'common/speech/token',
-  CHAT: 'website/chat',
-  AVATAR: 'common/avatar',
+  SPEECH_TOKEN: 'speech/token',
+  CHAT: 'chatbot/chat/website',
+  AVATAR: 'avatar',
 }
 
 export type EndpointsType = typeof EndPoints
