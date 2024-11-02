@@ -1,6 +1,9 @@
-import { Component } from '@angular/core'
+import { Component, HostListener, inject } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import { VersionComponent } from '@/components/version/version.component'
+import { LocalPopupComponent } from '@/components/local-popup/local-popup.component'
+import { MatDialog } from '@angular/material/dialog'
+import { LocalService } from '@/services/local.service'
 
 @Component({
   selector: 'app-root',
@@ -9,4 +12,21 @@ import { VersionComponent } from '@/components/version/version.component'
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  dialog = inject(MatDialog)
+  lang = inject(LocalService)
+
+  @HostListener('window:keydown.Control.Alt.a', ['$event'])
+  @HostListener('window:keydown.Control.Alt.ش', ['$event'])
+  openLocalDialog($event: Event): void {
+    $event.preventDefault()
+    this.dialog.open(LocalPopupComponent, {
+      direction: document.dir as 'rtl' | 'ltr',
+    })
+  }
+
+  @HostListener('window:keydown.Control.Alt.l', ['$event'])
+  toggleLanguage(): void {
+    this.lang.toggleLanguage()
+  }
+}

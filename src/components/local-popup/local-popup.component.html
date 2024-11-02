@@ -1,0 +1,31 @@
+<div class="flex flex-col overflow-hidden dialog-container">
+  <div class="bg-primary text-white text-xl p-4">{{ lang.locals.localization }}</div>
+  <div [formGroup]="form" class="p-4 flex flex-col flex-auto">
+    <mat-form-field class="w-full">
+      <mat-label>{{ lang.locals.local_key }}</mat-label>
+      <input formControlName="key" type="text" matInput />
+      @if (form.controls.key.hasError('required')) {
+        <mat-error>required</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ lang.locals.arabic_local }}</mat-label>
+      <input type="text" formControlName="ar" matInput />
+      @if (form.controls.ar.hasError('required')) {
+        <mat-error>required</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="w-full">
+      <mat-label>{{ lang.locals.english_local }}</mat-label>
+      <input type="text" formControlName="en" matInput />
+      @if (form.controls.en.hasError('required')) {
+        <mat-error>required</mat-error>
+      }
+    </mat-form-field>
+  </div>
+  <div class="p-4">
+    <button (click)="save.next()" [disabled]="form.invalid" mat-raised-button class="primary">
+      {{ lang.locals.save }}
+    </button>
+  </div>
+</div>

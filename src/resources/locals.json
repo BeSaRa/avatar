@@ -1,0 +1,22 @@
+{
+ "local_key": {
+  "ar": "رمز التعريب",
+  "en": "Local key"
+ },
+ "arabic_local": {
+  "ar": "الترجمة العربية",
+  "en": "Arabic translation"
+ },
+ "english_local": {
+  "ar": "الترجمة الانجليزية",
+  "en": "English Translation"
+ },
+ "localization": {
+  "ar": "التعريب",
+  "en": "Localization"
+ },
+ "save": {
+  "ar": "حفظ",
+  "en": "Save"
+ }
+}
