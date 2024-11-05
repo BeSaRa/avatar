@@ -1,34 +1,27 @@
 export interface LangKeysContract {
-  application_name: string
-  confirm_password: string
-  new_password: string
-  app_password: string
-  ldap_password: string
-  username: string
-  password: string
-  localization: string
+  try_it_out: string
+  document_search_description: string
+  chat_description: string
   local_key: string
   arabic_local: string
   english_local: string
+  localization: string
   save: string
-  login_to_your_account: string
-  login: string
-  title: string
-  change_language: string
-  logout: string
-  logout_message: string
-  users: string
-  arabic_name: string
-  english_name: string
-  email: string
-  login_name: string
-  status: string
-  domain: string
-  employee_number: string
-  no_records_to_display: string
-  actions: string
-  edit_permissions: string
-  change_password: string
-  change: string
-  close: string
+  cancel_recording: string
+  clear_chat_history: string
+  stop_talking: string
+  settings: string
+  click_to_speak: string
+  loading: string
+  listening_ongoing: string
+  click_to_send: string
+  connected: string
+  not_connected: string
+  connecting: string
+  disconnecting: string
+  home: string
+  search: string
+  chat: string
+  avatar_chat: string
+  welcome_message: string
 }

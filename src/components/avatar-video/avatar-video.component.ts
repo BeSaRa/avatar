@@ -27,6 +27,7 @@ import {
 import { AsyncPipe, NgClass } from '@angular/common'
 import { ignoreErrors } from '@/utils/utils'
 import { AppStore } from '@/stores/app.store'
+import { LocalService } from '@/services/local.service'
 
 @Component({
   selector: 'app-avatar-video',
@@ -41,6 +42,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
   video = viewChild.required<ElementRef<HTMLVideoElement>>('video')
   idleVideo = viewChild.required<ElementRef<HTMLVideoElement>>('idleVideo')
   avatarService = inject(AvatarService)
+  lang = inject(LocalService)
   start$ = new ReplaySubject<void>(1)
   stop$ = new ReplaySubject<void>(1)
   declare pc: RTCPeerConnection
@@ -117,15 +119,16 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
     .pipe(map(() => ''))
 
   onlineStatus = computed(() => {
+    this.lang.localChange() // just to track any change for the languages
     switch (this.store.streamingStatus()) {
       case 'Started':
-        return 'متصل'
+        return this.lang.locals.connected
       case 'InProgress':
-        return 'جاري الاتصال'
+        return this.lang.locals.connecting
       case 'Disconnecting':
-        return 'جاري قطع الاتصال'
+        return this.lang.locals.disconnecting
       default:
-        return 'غير متصل'
+        return this.lang.locals.not_connected
     }
   })
 

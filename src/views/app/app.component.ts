@@ -16,8 +16,8 @@ export class AppComponent {
   dialog = inject(MatDialog)
   lang = inject(LocalService)
 
-  @HostListener('window:keydown.Control.Alt.a', ['$event'])
-  @HostListener('window:keydown.Control.Alt.ش', ['$event'])
+  @HostListener('window:keyup.Control.Alt.a', ['$event'])
+  @HostListener('window:keyup.Control.Alt.ش', ['$event'])
   openLocalDialog($event: Event): void {
     $event.preventDefault()
     this.dialog.open(LocalPopupComponent, {
@@ -25,7 +25,7 @@ export class AppComponent {
     })
   }
 
-  @HostListener('window:keydown.Control.Alt.l', ['$event'])
+  @HostListener('window:keyup.Control.Alt.l', ['$event'])
   toggleLanguage(): void {
     this.lang.toggleLanguage()
   }

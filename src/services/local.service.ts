@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core'
+import { inject, Injectable, signal } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs'
 import { UrlService } from '@/services/url.service'
@@ -14,6 +14,7 @@ export class LocalService {
   private readonly urlService = inject(UrlService)
   locals: LangKeysContract = {} as LangKeysContract
   private declare localization: Record<keyof LangKeysContract, { ar: string; en: string }>
+  localChange = signal<'ar' | 'en'>('ar')
   currentLanguage: 'ar' | 'en' = 'ar'
   langChange$ = new BehaviorSubject<'ar' | 'en'>('ar')
   document = inject(DOCUMENT)
@@ -58,6 +59,7 @@ export class LocalService {
       this.document.dir = lang === 'ar' ? 'rtl' : 'ltr'
       const html = this.document.querySelector('html')
       html && (html.lang = lang)
+      this.localChange.set(lang)
     })
   }
 

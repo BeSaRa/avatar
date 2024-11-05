@@ -1,6 +1,6 @@
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals'
+import { getState, patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals'
 import { SpeechTokenContract } from '@/contracts/speech-token-contract'
-import { computed } from '@angular/core'
+import { computed, effect } from '@angular/core'
 
 interface AppStore {
   speechToken: SpeechTokenContract
@@ -8,6 +8,11 @@ interface AppStore {
   recording: 'Started' | 'InProgress' | 'Stopped'
   streamingStatus: 'Started' | 'InProgress' | 'Stopped' | 'Disconnecting'
   streamReady: boolean
+  backgroundColor: string
+  backgroundUrl: string
+  logoUrl: string
+  isVideo: boolean
+  preview: boolean
 }
 
 const initialState: AppStore = {
@@ -19,6 +24,11 @@ const initialState: AppStore = {
   recording: 'Stopped',
   streamingStatus: 'Stopped',
   streamReady: false,
+  backgroundColor: '#8A1538',
+  backgroundUrl: 'assets/images/background.svg',
+  logoUrl: 'assets/images/qrep-newlogo-colored.png',
+  isVideo: false,
+  preview: false,
 }
 
 export const AppStore = signalStore(
@@ -54,5 +64,29 @@ export const AppStore = signalStore(
     updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' | 'Disconnecting' = 'Stopped') => {
       patchState(store, { streamingStatus: status })
     },
-  }))
+  })),
+  withMethods(store => {
+    return {
+      updateState(state: AppStore) {
+        patchState(store, state)
+      },
+    }
+  }),
+  withHooks(store => {
+    const storageState = localStorage.getItem('CURRENT_STATE')
+    if (storageState) {
+      patchState(store, JSON.parse(storageState))
+    } else {
+      const state = getState(store)
+      localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
+    }
+    return {
+      onInit() {
+        effect(() => {
+          const state = getState(store)
+          localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
+        })
+      },
+    }
+  })
 )

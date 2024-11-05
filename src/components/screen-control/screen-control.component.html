@@ -13,7 +13,7 @@
   <div
     [ngClass]="{ '!-right-14': store.isRecordingStarted() }"
     class="absolute w-1/2 right-0 top-16 transition-all duration-300">
-    <button [matTooltip]="lang.cancel_recording" (click)="rejectText()" class="w-full bg-red-500 rounded-full">
+    <button [matTooltip]="lang.locals.cancel_recording" (click)="rejectText()" class="w-full bg-red-500 rounded-full">
       <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <title>close</title>
         <path
@@ -30,16 +30,16 @@
     aria-label="record">
     <div class="relative flex items-center justify-center">
       @if (store.isRecordingLoading()) {
-        <span class="absolute z-20 font-semibold text-white">{{ loading }}</span>
+        <span class="absolute z-20 font-semibold text-white">{{ lang.locals.loading }}</span>
       }
       @if (store.isRecordingStopped()) {
-        <span class="absolute z-20 font-semibold text-black">{{ clickToSpeech }}</span>
+        <span class="absolute z-20 font-semibold text-black">{{ lang.locals.click_to_speak }}</span>
       }
       @if (store.isRecordingStarted() && recognizingStatus()) {
-        <span class="absolute z-20 font-semibold text-white">{{ listeningOngoing }}</span>
+        <span class="absolute z-20 font-semibold text-white">{{ lang.locals.listening_ongoing }}</span>
       }
       @if (store.isRecordingStarted() && !recognizingStatus()) {
-        <span class="absolute z-20 font-semibold text-white">{{ clickToSend }}</span>
+        <span class="absolute z-20 font-semibold text-white">{{ lang.locals.click_to_send }}</span>
       }
       <div
         [@recordButton]="store.recording()"
@@ -53,7 +53,7 @@
     </div>
   </button>
 
-  <button matRipple [matTooltip]="lang.clear_chat_history" (click)="clearChat()" class="text-white">
+  <button matRipple [matTooltip]="lang.locals.clear_chat_history" (click)="clearChat()" class="text-white">
     <svg fill="currentColor" class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <title>remove chat</title>
       <path
@@ -61,7 +61,7 @@
     </svg>
   </button>
 
-  <button [matTooltip]="lang.stop_talking" (click)="interruptAvatar()" class="text-white">
+  <button [matTooltip]="lang.locals.stop_talking" (click)="interruptAvatar()" class="text-white">
     <svg class="w-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 100 125">
       <g>
         <path
@@ -94,7 +94,7 @@
   <div class="relative flex flex-col">
     <button
       (click)="toggleSettings()"
-      [matTooltip]="lang.settings"
+      [matTooltip]="lang.locals.settings"
       class="absolute -top-2 -right-14 z-20 bg-black/50 rounded-r text-white"
       aria-label="Settings">
       <svg class="size-10" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

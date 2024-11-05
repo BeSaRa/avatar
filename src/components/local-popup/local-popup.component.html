@@ -1,4 +1,4 @@
-<div class="flex flex-col overflow-hidden dialog-container">
+<div class="flex flex-col overflow-hidden dialog-container min-w-[400px]">
   <div class="bg-primary text-white text-xl p-4">{{ lang.locals.localization }}</div>
   <div [formGroup]="form" class="p-4 flex flex-col flex-auto">
     <mat-form-field class="w-full">
@@ -10,14 +10,14 @@
     </mat-form-field>
     <mat-form-field class="w-full">
       <mat-label>{{ lang.locals.arabic_local }}</mat-label>
-      <input type="text" formControlName="ar" matInput />
+      <textarea formControlName="ar" matInput> </textarea>
       @if (form.controls.ar.hasError('required')) {
         <mat-error>required</mat-error>
       }
     </mat-form-field>
     <mat-form-field class="w-full">
       <mat-label>{{ lang.locals.english_local }}</mat-label>
-      <input type="text" formControlName="en" matInput />
+      <textarea formControlName="en" matInput> </textarea>
       @if (form.controls.en.hasError('required')) {
         <mat-error>required</mat-error>
       }

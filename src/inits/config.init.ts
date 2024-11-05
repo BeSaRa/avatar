@@ -3,7 +3,6 @@ import { ConfigService } from '@/services/config.service'
 import { UrlService } from '@/services/url.service'
 import { forkJoin, switchMap, tap } from 'rxjs'
 import { SpeechService } from '@/services/speech.service'
-import { AppStore } from '@/stores/app.store'
 import { LocalService } from '@/services/local.service'
 
 export default {
@@ -19,8 +18,8 @@ export default {
       forkJoin([configService.load()]).pipe(
         tap(() => urlService.setConfigService(configService)),
         tap(() => urlService.prepareUrls()),
-        switchMap(() => commonService.generateSpeechToken()),
-        tap(response => injector.get(AppStore).updateSpeechToken(response)),
+        // switchMap(() => commonService.generateSpeechToken()),
+        // tap(response => injector.get(AppStore).updateSpeechToken(response)),
         switchMap(() => local.load())
       )
   },

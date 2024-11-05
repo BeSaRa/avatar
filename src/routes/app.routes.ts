@@ -3,13 +3,18 @@ import { closeStreamGuard } from '@/guards/close-stream.guard'
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'home',
+    loadComponent: () => import('@/views/home/home.component'),
+    loadChildren: () => import('@/routes/home.routes'),
+  },
+  {
+    path: 'avatar',
     loadComponent: () => import('@/views/avatar/avatar.component'),
     pathMatch: 'full',
     canDeactivate: [closeStreamGuard],
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'home',
   },
 ]

@@ -32,6 +32,7 @@ import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { SpeechService } from '@/services/speech.service'
 import { AvatarService } from '@/services/avatar.service'
 import { MatTooltip } from '@angular/material/tooltip'
+import { LocalService } from '@/services/local.service'
 
 @Component({
   selector: 'app-screen-control',
@@ -85,18 +86,8 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   accept$ = new Subject<void>()
   recognizingStatus = signal<boolean>(false)
 
-  clickToSpeech = 'اضغط للتحدث'
-  loading = 'جاري التحميل'
-  listeningOngoing = 'جارى الاستماع'
-  clickToSend = 'أضغط للأرسال'
-
   settingsOpened = false
-  lang = {
-    cancel_recording: 'الغاء التسجيل',
-    clear_chat_history: 'مسح سجل المحادثة',
-    stop_talking: 'توقف عن الحديث',
-    settings: 'الاعدادات',
-  }
+  lang = inject(LocalService)
 
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
