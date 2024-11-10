@@ -4,11 +4,12 @@ import { HeaderComponent } from '@/components/header/header.component'
 import { LocalService } from '@/services/local.service'
 import PerfectScrollbar from 'perfect-scrollbar'
 import { RouterOutlet } from '@angular/router'
+import { ChatComponent } from '@/components/chat/chat.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, RouterOutlet],
+  imports: [HeaderComponent, RouterOutlet, ChatComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   host: {
