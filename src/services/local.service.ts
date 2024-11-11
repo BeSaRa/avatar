@@ -18,7 +18,7 @@ export class LocalService {
   localChange = signal<'ar' | 'en'>(this.currentLanguage)
   langChange$ = new BehaviorSubject<'ar' | 'en'>(this.currentLanguage)
   document = inject(DOCUMENT)
-  private readonly localFile = '/resources/locals.json'
+  private readonly localFile = 'resources/locals.json'
 
   constructor() {
     this.listenToLanguageChange()
