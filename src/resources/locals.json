@@ -1,114 +1,134 @@
 {
-  "local_key": {
-    "ar": "رمز التعريب",
-    "en": "Local key"
-  },
-  "arabic_local": {
-    "ar": "الترجمة العربية",
-    "en": "Arabic translation"
-  },
-  "english_local": {
-    "ar": "الترجمة الانجليزية",
-    "en": "English Translation"
-  },
-  "localization": {
-    "ar": "التعريب",
-    "en": "Localization"
-  },
-  "save": {
-    "ar": "حفظ",
-    "en": "Save"
-  },
-  "cancel_recording": {
-    "ar": "الغاء التسجيل",
-    "en": "Cancel Recording"
-  },
-  "clear_chat_history": {
-    "ar": "مسح سجل المحادثة",
-    "en": "Clear chat History"
-  },
-  "stop_talking": {
-    "ar": "توقف عن الحديث",
-    "en": "Stop Talking"
-  },
-  "settings": {
-    "ar": "الاعدادات",
-    "en": "Settings"
-  },
-  "click_to_speak": {
-    "ar": "اضغط للتحدث",
-    "en": "Click to Speak"
-  },
-  "loading": {
-    "ar": "جاري التحميل",
-    "en": "Loading"
-  },
-  "listening_ongoing": {
-    "ar": "جاري الاستماع",
-    "en": "listening outgoing"
-  },
-  "click_to_send": {
-    "ar": "اضغط للارسال",
-    "en": "Click to Send"
-  },
-  "connected": {
-    "ar": "متصل",
-    "en": "Connected"
-  },
-  "not_connected": {
-    "ar": "غير متصل",
-    "en": "Not Connected"
-  },
-  "connecting": {
-    "ar": "جاري الاتصال",
-    "en": "Connecting"
-  },
-  "disconnecting": {
-    "ar": "جاري قطع الاتصال",
-    "en": "disconnecting"
-  },
-  "home": {
-    "ar": "الرئيسية",
-    "en": "Home"
-  },
-  "search": {
-    "ar": "البحث الذكي",
-    "en": "AI Search"
-  },
-  "chat": {
-    "ar": "المساعد الآلي",
-    "en": "Chatbot"
-  },
-  "avatar_chat": {
-    "ar": "الشخصية الرقمية",
-    "en": "Avatar Chat"
-  },
-  "welcome_message": {
-    "ar": "مرحباّ بكم فى حلول الذكاء الاصطناعي",
-    "en": "Welcome to AI Solutions"
-  },
-  "chat_description": {
-    "ar": "روبوت يقدم المساعدة ويجيب على الأسئلة ويوفر المعلومات بشكل فوري وفعال. يعتمد الروبوت الذكي على تقنيات المعلومات الطبيعية لفهم استفسارات المستخدمين والتفاعل معها.",
-    "en": "A bot that provides assistance, answers questions and provides information in an immediate and efficient manner. The intelligent bot relies on natural information technologies to understand and queries users."
-  },
-  "document_search_description": {
-    "ar": "البحث الذكي هو تقنية متطورة تستخدم الذكاء الاصطناعي لتحسين تجربة البحث عبر الإنترنت. بدلاً من تقديم قائمة طويلة من الروابط، تقوم هذه الخدمة بتحليل الهدف والسياق وراء السؤال لتقديم إجابات دقيقة ومفصلة للمستخدم.",
-    "en": "Smart Search is a cutting-edge technology that uses artificial intelligence to improve the online search experience. Instead of providing a long list of links, this service analyzes the intent and context behind the question to provide the user with accurate and detailed answers."
-  },
-  "try_it_out": {
-    "ar": "جربها",
-    "en": "try it out"
-  },
-  "generic": {
-    "ar": "عام",
-    "en": "Generic"
-  },
-  "video_indexer": {
-    "ar": "فهرس الفيديو",
-    "en": "Video Indexer"
-  },
-  "custom": {
-    "ar": "مُخصص",
-    "en": "Custom"
-  }
+ "local_key": {
+  "ar": "رمز التعريب",
+  "en": "Local key"
+ },
+ "arabic_local": {
+  "ar": "الترجمة العربية",
+  "en": "Arabic translation"
+ },
+ "english_local": {
+  "ar": "الترجمة الانجليزية",
+  "en": "English Translation"
+ },
+ "localization": {
+  "ar": "التعريب",
+  "en": "Localization"
+ },
+ "save": {
+  "ar": "حفظ",
+  "en": "Save"
+ },
+ "cancel_recording": {
+  "ar": "الغاء التسجيل",
+  "en": "Cancel Recording"
+ },
+ "clear_chat_history": {
+  "ar": "مسح سجل المحادثة",
+  "en": "Clear chat History"
+ },
+ "stop_talking": {
+  "ar": "توقف عن الحديث",
+  "en": "Stop Talking"
+ },
+ "settings": {
+  "ar": "الاعدادات",
+  "en": "Settings"
+ },
+ "click_to_speak": {
+  "ar": "اضغط للتحدث",
+  "en": "Click to Speak"
+ },
+ "loading": {
+  "ar": "جاري التحميل",
+  "en": "Loading"
+ },
+ "listening_ongoing": {
+  "ar": "جاري الاستماع",
+  "en": "listening outgoing"
+ },
+ "click_to_send": {
+  "ar": "اضغط للارسال",
+  "en": "Click to Send"
+ },
+ "connected": {
+  "ar": "متصل",
+  "en": "Connected"
+ },
+ "not_connected": {
+  "ar": "غير متصل",
+  "en": "Not Connected"
+ },
+ "connecting": {
+  "ar": "جاري الاتصال",
+  "en": "Connecting"
+ },
+ "disconnecting": {
+  "ar": "جاري قطع الاتصال",
+  "en": "disconnecting"
+ },
+ "home": {
+  "ar": "الرئيسية",
+  "en": "Home"
+ },
+ "search": {
+  "ar": "البحث الذكي",
+  "en": "AI Search"
+ },
+ "chat": {
+  "ar": "المساعد الآلي",
+  "en": "Chatbot"
+ },
+ "avatar_chat": {
+  "ar": "الشخصية الرقمية",
+  "en": "Avatar Chat"
+ },
+ "welcome_message": {
+  "ar": "مرحباّ بكم فى حلول الذكاء الاصطناعي",
+  "en": "Welcome to AI Solutions"
+ },
+ "chat_description": {
+  "ar": "روبوت يقدم المساعدة ويجيب على الأسئلة ويوفر المعلومات بشكل فوري وفعال. يعتمد الروبوت الذكي على تقنيات المعلومات الطبيعية لفهم استفسارات المستخدمين والتفاعل معها.",
+  "en": "A bot that provides assistance, answers questions and provides information in an immediate and efficient manner. The intelligent bot relies on natural information technologies to understand and queries users."
+ },
+ "document_search_description": {
+  "ar": "البحث الذكي هو تقنية متطورة تستخدم الذكاء الاصطناعي لتحسين تجربة البحث عبر الإنترنت. بدلاً من تقديم قائمة طويلة من الروابط، تقوم هذه الخدمة بتحليل الهدف والسياق وراء السؤال لتقديم إجابات دقيقة ومفصلة للمستخدم.",
+  "en": "Smart Search is a cutting-edge technology that uses artificial intelligence to improve the online search experience. Instead of providing a long list of links, this service analyzes the intent and context behind the question to provide the user with accurate and detailed answers."
+ },
+ "try_it_out": {
+  "ar": "جربها",
+  "en": "try it out"
+ },
+ "generic": {
+  "ar": "عام",
+  "en": "Generic"
+ },
+ "video_indexer": {
+  "ar": "فهرس الفيديو",
+  "en": "Video Indexer"
+ },
+ "custom": {
+  "ar": "مُخصص",
+  "en": "Custom"
+ },
+ "logo_url": {
+  "ar": "رابط صورة الشعار",
+  "en": "logo url"
+ },
+ "background_url": {
+  "ar": "رابط صورة الخلفية",
+  "en": "background URL"
+ },
+ "background_color": {
+  "ar": "لون الخلفية",
+  "en": "background color"
+ },
+ "is_background_video": {
+  "ar": "الخلفية فيديو ؟",
+  "en": "is background Video ?"
+ },
+ "preview": {
+  "ar": "معاينة",
+  "en": "Preview"
+ }
 }

@@ -1,4 +1,9 @@
 export interface LangKeysContract {
+  preview: string
+  is_background_video: string
+  background_color: string
+  background_url: string
+  logo_url: string
   try_it_out: string
   document_search_description: string
   chat_description: string

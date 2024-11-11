@@ -14,9 +14,9 @@ export class LocalService {
   private readonly urlService = inject(UrlService)
   locals: LangKeysContract = {} as LangKeysContract
   private declare localization: Record<keyof LangKeysContract, { ar: string; en: string }>
-  localChange = signal<'ar' | 'en'>('ar')
   currentLanguage: 'ar' | 'en' = 'ar'
-  langChange$ = new BehaviorSubject<'ar' | 'en'>('ar')
+  localChange = signal<'ar' | 'en'>(this.currentLanguage)
+  langChange$ = new BehaviorSubject<'ar' | 'en'>(this.currentLanguage)
   document = inject(DOCUMENT)
   private readonly localFile = '/resources/locals.json'
 
@@ -56,6 +56,7 @@ export class LocalService {
 
   private listenToLanguageChange() {
     this.langChange$.subscribe(lang => {
+      console.log({ lang })
       this.document.dir = lang === 'ar' ? 'rtl' : 'ltr'
       const html = this.document.querySelector('html')
       html && (html.lang = lang)

@@ -1,0 +1,26 @@
+<div class="flex flex-col w-[min(500px,80vw)]">
+  <div class="p-4 bg-primary text-white">{{ lang.locals.settings }}</div>
+  <div [formGroup]="form" class="p-4 min-h-0 flex-auto flex flex-col">
+    <mat-form-field>
+      <mat-label>{{ lang.locals.logo_url }}</mat-label>
+      <input formControlName="logoUrl" matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ lang.locals.background_url }}</mat-label>
+      <input formControlName="backgroundUrl" matInput />
+    </mat-form-field>
+    <div class="flex gap-2 mb-4 items-center">
+      <input type="color" formControlName="backgroundColor" id="color" class="size-10 border-none" />
+      <label for="color">{{ lang.locals.background_color }}</label>
+    </div>
+    <div class="mb-4">
+      <mat-slide-toggle formControlName="isVideo">{{ lang.locals.is_background_video }}</mat-slide-toggle>
+    </div>
+    <div>
+      <mat-slide-toggle formControlName="preview">{{ lang.locals.preview }}</mat-slide-toggle>
+    </div>
+  </div>
+  <div class="p-4">
+    <button (click)="save$.next()" mat-raised-button>{{ lang.locals.save }}</button>
+  </div>
+</div>

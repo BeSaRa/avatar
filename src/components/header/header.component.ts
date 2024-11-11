@@ -5,6 +5,8 @@ import { AppStore } from '@/stores/app.store'
 import { LocalService } from '@/services/local.service'
 import { getState } from '@ngrx/signals'
 import { animate, state, style, transition, trigger } from '@angular/animations'
+import { MatDialog } from '@angular/material/dialog'
+import { SettingsPopupComponent } from '@/components/settings-popup/settings-popup.component'
 
 @Component({
   selector: 'app-header',
@@ -37,6 +39,7 @@ export class HeaderComponent {
   store = inject(AppStore)
   lang = inject(LocalService)
   settings = getState(this.store)
+  dialog = inject(MatDialog)
   clonedSettings = structuredClone(this.settings)
   menuStatus: 'opened' | 'closed' = 'closed'
   private menuStatusMap = {
@@ -46,5 +49,10 @@ export class HeaderComponent {
 
   toggleMenu() {
     this.menuStatus = this.menuStatusMap[this.menuStatus as keyof typeof this.menuStatusMap] as 'opened' | 'closed'
+  }
+
+  openSettings($event: Event) {
+    $event.preventDefault()
+    this.dialog.open(SettingsPopupComponent)
   }
 }
