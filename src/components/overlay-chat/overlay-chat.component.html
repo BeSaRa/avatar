@@ -16,6 +16,8 @@
 
         @if (message.context && message.context.citations.length) {
           <div>
+            <!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+            <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
             <div class="icon-with-title" (click)="linkRef.hidden = !linkRef.hidden">
               <i
                 class="mdi"
@@ -25,6 +27,8 @@
                 }"></i>
               <span class="title">References</span>
             </div>
+            <!-- eslint-enable @angular-eslint/template/click-events-have-key-events -->
+
             <div #linkRef hidden>
               @for (link of message.context.citations; track $index) {
                 <div dir="auto">

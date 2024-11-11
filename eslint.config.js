@@ -51,6 +51,12 @@ module.exports = tsEsLint.config(
           style: 'kebab-case',
         },
       ],
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'lf',
+        },
+      ],
     },
   },
   {
