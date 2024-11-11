@@ -24,4 +24,7 @@ export interface LangKeysContract {
   chat: string
   avatar_chat: string
   welcome_message: string
+  generic: string
+  video_indexer: string
+  custom: string
 }
