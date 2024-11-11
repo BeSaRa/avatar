@@ -18,7 +18,7 @@ import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.d
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
-  status = signal(true)
+  status = signal(false)
   statusWord = computed(() => (this.status() ? 'opened' : 'closed'))
   document = inject(DOCUMENT)
   lang = inject(LocalService)
