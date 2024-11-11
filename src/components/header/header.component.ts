@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core'
-import { RouterLink } from '@angular/router'
+import { RouterLink, RouterLinkActive } from '@angular/router'
 import { NgOptimizedImage } from '@angular/common'
 import { AppStore } from '@/stores/app.store'
 import { LocalService } from '@/services/local.service'
@@ -11,7 +11,7 @@ import { SettingsPopupComponent } from '@/components/settings-popup/settings-pop
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink, NgOptimizedImage, RouterLinkActive],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   host: {

@@ -14,7 +14,7 @@
       class="fixed z-10 md:!h-auto overflow-hidden top-[112px] bg-gray-200 right-0 left-0 flex flex-col md:top-auto md:relative md:flex md:flex-row">
       <ul
         class="xs:flex xs:flex-col md:flex gap-1 [&_a:hover]:bg-primary [&_a:hover]:text-white md:[&_a]:border [&_a]:p-2 [&_a]:border-gray-300 [&_a]:rounded-full [&_li.active_a]:bg-primary [&_li.active_a]:text-white [&_li.active_a]:border-transparent">
-        <li class="active">
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="flex gap-1" routerLink="/home">
             <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
               <path
@@ -23,7 +23,7 @@
             <span>{{ lang.locals.home }}</span>
           </a>
         </li>
-        <li>
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="flex gap-1" href="#">
             <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
               <path
@@ -32,7 +32,7 @@
             <span>{{ lang.locals.search }}</span>
           </a>
         </li>
-        <li>
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="flex gap-1" href="#">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
               <path
@@ -41,7 +41,7 @@
             <span>{{ lang.locals.chat }}</span>
           </a>
         </li>
-        <li>
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="flex gap-1" routerLink="/avatar">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
               <path
@@ -50,7 +50,7 @@
             <span>{{ lang.locals.avatar_chat }}</span>
           </a>
         </li>
-        <li>
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="flex gap-1" routerLink="/home/video-indexer">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -60,7 +60,7 @@
             <span>{{ lang.locals.video_indexer }}</span>
           </a>
         </li>
-        <li>
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a (click)="openSettings($event)" href="#" class="flex gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
               <path
