@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
-import { provideRouter } from '@angular/router'
+import { provideRouter, withHashLocation } from '@angular/router'
 import { routes } from '@/routes/app.routes'
 import { provideInterceptors } from 'cast-response'
 import { GeneralInterceptor } from '@/model-interceptors/general-interceptor'
@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     configInit,
     provideHttpClient(withFetch(), withInterceptors([apiKeyInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withHashLocation()),
     provideAnimationsAsync(),
     /* provideClientHydration(), */
     provideInterceptors([GeneralInterceptor]),
