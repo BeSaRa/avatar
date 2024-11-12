@@ -9,17 +9,18 @@ import PerfectScrollbar from 'perfect-scrollbar'
 import { ChatService } from '@/services/chat.service'
 import { ignoreErrors } from '@/utils/utils'
 import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.directive'
+import { RecorderComponent } from '@/components/recorder/recorder.component'
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [MatRipple, ReactiveFormsModule, TextWriterAnimatorDirective, NgClass],
+  imports: [MatRipple, ReactiveFormsModule, TextWriterAnimatorDirective, NgClass, RecorderComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   injector = inject(Injector)
-  status = signal(false)
+  status = signal(true)
   document = inject(DOCUMENT)
   lang = inject(LocalService)
   chatService = inject(ChatService)

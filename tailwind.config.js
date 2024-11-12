@@ -7,8 +7,16 @@ module.exports = {
         page: 'url(assets/images/bg.svg)',
       },
       colors: {
-        primary: 'var(--app-primary-color)',
-        secondary: 'var(--app-secondary-color)',
+        primary: ({ opacityValue }) => {
+          return opacityValue
+            ? `rgb(from var(--app-primary-color) r g b / ${opacityValue})`
+            : `rgb(from var(--app-primary-color) r g b)`
+        },
+        secondary: ({ opacityValue }) => {
+          return opacityValue
+            ? `rgb(from var(--app-secondary-color) r g b / ${opacityValue})`
+            : `rgb(from var(--app-secondary-color) r g b)`
+        },
       },
     },
   },
