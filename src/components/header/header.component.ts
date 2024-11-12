@@ -58,7 +58,8 @@ export class HeaderComponent {
     this.dialog.open(SettingsPopupComponent)
   }
 
-  openChatbot() {
+  openChatbot($event: Event) {
+    $event.preventDefault()
     this.chat().toggleChat()
   }
 }
