@@ -71,6 +71,7 @@ body {
 .lds-ellipsis div {
   box-sizing: border-box;
 }
+
 .lds-ellipsis {
   display: inline-block;
   position: relative;
@@ -78,6 +79,7 @@ body {
   height: 80px;
   color: white;
 }
+
 .lds-ellipsis div {
   position: absolute;
   top: 33.33333px;
@@ -92,18 +94,22 @@ body {
   left: 8px;
   animation: lds-ellipsis1 0.6s infinite;
 }
+
 .lds-ellipsis div:nth-child(2) {
   left: 8px;
   animation: lds-ellipsis2 0.6s infinite;
 }
+
 .lds-ellipsis div:nth-child(3) {
   left: 32px;
   animation: lds-ellipsis2 0.6s infinite;
 }
+
 .lds-ellipsis div:nth-child(4) {
   left: 56px;
   animation: lds-ellipsis3 0.6s infinite;
 }
+
 @keyframes lds-ellipsis1 {
   0% {
     transform: scale(0);
@@ -112,6 +118,7 @@ body {
     transform: scale(1);
   }
 }
+
 @keyframes lds-ellipsis3 {
   0% {
     transform: scale(1);
@@ -120,6 +127,7 @@ body {
     transform: scale(0);
   }
 }
+
 @keyframes lds-ellipsis2 {
   0% {
     transform: translate(0, 0);
@@ -133,11 +141,18 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: Roboto, 'Lusail', 'Helvetica Neue', sans-serif;
 }
 
 html[dir='rtl'] body {
   font-family: 'Lusail', 'Open Sans', sans-serif !important;
+}
+
+@layer base {
+  :root {
+    --app-primary-color: #8a1538;
+  }
 }

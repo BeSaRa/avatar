@@ -16,6 +16,18 @@ export class Message extends ClonerMixin(class {}) {
     super()
     this.id = generateUUID()
   }
+
+  isUser(): boolean {
+    return this.role === 'user'
+  }
+
+  isAssistant(): boolean {
+    return this.role === 'assistant'
+  }
+
+  isError(): boolean {
+    return this.role === 'error'
+  }
 }
 
 interface IContext {

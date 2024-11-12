@@ -67,7 +67,7 @@ export const AppStore = signalStore(
   })),
   withMethods(store => {
     return {
-      updateState(state: AppStore) {
+      updateState(state: Partial<AppStore>) {
         patchState(store, state)
       },
     }

@@ -48,7 +48,7 @@ export class ChatService {
     // Replace text between [ and ] with <a> tags
     formattedText = formattedText.replace(
       /\[(.*?)\]/g,
-      '<pre class="d-inline"><small class="px-1 text-primary">$1<i class="mdi mdi-link-variant"></i></small></pre>'
+      '<pre class="d-inline"><small class="px-1 text-primary">$1<i class="link-icon"></i></small></pre>'
     )
     // text = text.replace(/\./g, '.<br>')
 
