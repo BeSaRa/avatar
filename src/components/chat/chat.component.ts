@@ -1,7 +1,7 @@
-import { Component, computed, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core'
+import { Component, effect, ElementRef, inject, Injector, OnInit, signal, viewChild } from '@angular/core'
 import { MatRipple } from '@angular/material/core'
 import { LocalService } from '@/services/local.service'
-import { DOCUMENT } from '@angular/common'
+import { DOCUMENT, NgClass } from '@angular/common'
 import { catchError, exhaustMap, filter, map, Subject, takeUntil, tap } from 'rxjs'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
@@ -13,20 +13,22 @@ import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.d
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [MatRipple, ReactiveFormsModule, TextWriterAnimatorDirective],
+  imports: [MatRipple, ReactiveFormsModule, TextWriterAnimatorDirective, NgClass],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
+  injector = inject(Injector)
   status = signal(false)
-  statusWord = computed(() => (this.status() ? 'opened' : 'closed'))
   document = inject(DOCUMENT)
   lang = inject(LocalService)
   chatService = inject(ChatService)
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
+  textArea = viewChild<ElementRef<HTMLTextAreaElement>>('textArea')
   fullscreenStatus = signal(false)
   answerInProgress = signal(false)
+  animating = signal(false)
   declare scrollbarRef: PerfectScrollbar
   // noinspection JSUnusedGlobalSymbols
   chatBodyContainerEffect = effect(() => {
@@ -42,6 +44,15 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       this.messageCtrl.disable()
     } else {
       this.messageCtrl.enable()
+    }
+  })
+
+  animatingEffect = effect(() => {
+    if (!this.animating()) {
+      const elements = this.chatBodyContainer()?.nativeElement?.querySelectorAll('.chat-message')
+      const last = elements && elements[elements.length - 1]
+
+      last && last.scrollIntoView(true)
     }
   })
 
@@ -73,6 +84,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .pipe(map(() => this.messageCtrl.value.trim()))
       .pipe(tap(() => this.messageCtrl.setValue('')))
       .pipe(tap(() => this.answerInProgress.set(true)))
+      .pipe(tap(() => this.goToEndOfChat()))
       .pipe(
         exhaustMap(value =>
           this.chatService
@@ -86,6 +98,41 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
             .pipe(ignoreErrors())
         )
       )
-      .subscribe(() => this.answerInProgress.set(false))
+      .subscribe(() => {
+        this.answerInProgress.set(false)
+        Promise.resolve().then(() => {
+          this.textArea()?.nativeElement?.focus()
+          const timeoutID = setTimeout(() => {
+            this.scrollToTop()
+            clearInterval(timeoutID)
+          }, 50)
+        })
+      })
+  }
+
+  scrollToTop(): void {
+    const elements = this.chatBodyContainer()?.nativeElement?.querySelectorAll('.chat-message')
+    const lastElement = elements && elements[elements.length - 1]
+    const intervalID = setInterval(() => {
+      lastElement && lastElement.scrollIntoView(true)
+    }, 50)
+
+    effect(
+      onCleanup => {
+        !this.animating() && intervalID && clearInterval(intervalID)
+        onCleanup(() => {
+          intervalID && clearInterval(intervalID)
+        })
+      },
+      { injector: this.injector }
+    )
+  }
+
+  private goToEndOfChat() {
+    const timeoutID = setTimeout(() => {
+      const elements = this.chatBodyContainer()?.nativeElement?.querySelectorAll('.user-message')
+      elements && elements[elements.length - 1]?.scrollIntoView(true)
+      clearTimeout(timeoutID)
+    })
   }
 }
