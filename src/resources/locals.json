@@ -182,5 +182,9 @@
  "video_token": {
   "ar": "رابط الفيديو",
   "en": "Video token"
+ },
+ "search_message": {
+  "ar": "تمكين الأفكار وإطلاق العنان للذكاء!",
+  "en": "Empowering Insights, Unleashing Intelligence!"
  }
 }

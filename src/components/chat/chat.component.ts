@@ -19,14 +19,15 @@ import { RecorderComponent } from '@/components/recorder/recorder.component'
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
+  recorder = viewChild<RecorderComponent>('recorder')
   injector = inject(Injector)
-  status = signal(true)
+  status = signal(false)
   document = inject(DOCUMENT)
   lang = inject(LocalService)
   chatService = inject(ChatService)
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
-  textArea = viewChild<ElementRef<HTMLTextAreaElement>>('textArea')
+  messageInput = viewChild.required<ElementRef<HTMLTextAreaElement>>('textArea')
   fullscreenStatus = signal(false)
   answerInProgress = signal(false)
   animating = signal(false)
@@ -84,6 +85,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .pipe(filter(() => !!this.messageCtrl.value.trim()))
       .pipe(map(() => this.messageCtrl.value.trim()))
       .pipe(tap(() => this.messageCtrl.setValue('')))
+      .pipe(tap(() => this.recorder()?.cleartext()))
       .pipe(tap(() => this.answerInProgress.set(true)))
       .pipe(tap(() => this.goToEndOfChat()))
       .pipe(
@@ -102,7 +104,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .subscribe(() => {
         this.answerInProgress.set(false)
         Promise.resolve().then(() => {
-          this.textArea()?.nativeElement?.focus()
+          this.messageInput()?.nativeElement?.focus()
           const timeoutID = setTimeout(() => {
             this.scrollToTop()
             clearInterval(timeoutID)

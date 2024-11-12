@@ -20,13 +20,24 @@ import {
   of,
   Subject,
   switchMap,
+  takeUntil,
   tap,
 } from 'rxjs'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { RecorderComponent } from '@/components/recorder/recorder.component'
 
 @Component({
   selector: 'app-ai-search',
   standalone: true,
-  imports: [ReactiveFormsModule, MatPaginatorModule, AsyncPipe, NgClass, MatProgressSpinnerModule, NgTemplateOutlet],
+  imports: [
+    ReactiveFormsModule,
+    MatPaginatorModule,
+    AsyncPipe,
+    NgClass,
+    MatProgressSpinnerModule,
+    NgTemplateOutlet,
+    RecorderComponent,
+  ],
   templateUrl: './ai-search.component.html',
   styleUrl: './ai-search.component.scss',
   providers: [
@@ -37,7 +48,7 @@ import {
   ],
   animations: [fadeInSlideUp],
 })
-export class AiSearchComponent implements OnInit {
+export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnInit {
   aiSearchService = inject(AiSearchService)
   lang = inject(LocalService)
   searchForm = new FormControl('', { nonNullable: true })
@@ -77,7 +88,6 @@ export class AiSearchComponent implements OnInit {
           tap(({ total_count, rs }) => {
             this.total.set(total_count)
             this.isTruncatedContent.set(Array.from({ length: rs?.length ?? 0 }, () => true))
-            this.searchForm.reset('', { emitEvent: false })
             this.animateTrigger.set(!this.animateTrigger())
           }),
           map(res => res.rs)
@@ -96,6 +106,7 @@ export class AiSearchComponent implements OnInit {
   listenToSearch() {
     this.searchForm.valueChanges
       .pipe(
+        takeUntil(this.destroy$),
         distinctUntilChanged(),
         debounceTime(250),
         filter(searchToken => searchToken.trim().length > 0)

@@ -1,4 +1,5 @@
 export interface LangKeysContract {
+  search_message: string
   preview: string
   is_background_video: string
   background_color: string
