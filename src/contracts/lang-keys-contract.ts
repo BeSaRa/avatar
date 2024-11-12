@@ -27,4 +27,16 @@ export interface LangKeysContract {
   generic: string
   video_indexer: string
   custom: string
+  show_more: string
+  show_less: string
+  result_count: string
+  search_about: string
+  search_in_website: string
+  items_per_page_label: string
+  next_page_label: string
+  previous_page_label: string
+  first_page_label: string
+  last_page_label: string
+  page: string
+  of: string
 }

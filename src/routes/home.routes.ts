@@ -8,6 +8,10 @@ const routes: Routes = [
     loadComponent: () => import('@/views/video-indexer/video-indexer.component').then(c => c.VideoIndexerComponent),
   },
   {
+    path: 'search',
+    loadComponent: () => import('@/views/ai-search/ai-search.component').then(c => c.AiSearchComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
