@@ -22,6 +22,7 @@ export class VideoIndexerComponent {
     return this.frameSources[this.activeTab()]
   })
   setActiveTab(tabType: VideoIndexerTabType) {
+    console.log(this.frameSources)
     this.activeTab.set(tabType)
   }
 }

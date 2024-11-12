@@ -111,6 +111,54 @@
   "ar": "مُخصص",
   "en": "Custom"
  },
+ "show_more": {
+  "ar": "عرض المزيد",
+  "en": "Show more"
+ },
+ "show_less": {
+  "ar": "عرض أقل",
+  "en": "Show less"
+ },
+ "result_count": {
+  "ar": "عدد النتائج",
+  "en": "Result count"
+ },
+ "search_in_website": {
+  "ar": "البحث في الموقع",
+  "en": "Search in website"
+ },
+ "search_about": {
+  "ar": "البحث عن",
+  "en": "Search about"
+ },
+ "items_per_page_label": {
+  "ar": "عدد العناصر في الصفحة",
+  "en": "Item per page"
+ },
+ "next_page_label": {
+  "ar": "الصفحة التالية",
+  "en": "Next page"
+ },
+ "previous_page_label": {
+  "ar": "الصفحة السابقة",
+  "en": "Previous page"
+ },
+ "first_page_label": {
+  "ar": "الصفحة الأولى",
+  "en": "First page"
+ },
+ "last_page_label": {
+  "ar": "الصفحة الأخيرة",
+  "en": "Last page"
+ },
+ "page": {
+  "ar": "صفحة",
+  "en": "Page"
+ },
+ "of": {
+  "ar": "من",
+  "en": "of"
+ },
  "logo_url": {
   "ar": "رابط صورة الشعار",
   "en": "logo url"
@@ -130,5 +178,9 @@
  "preview": {
   "ar": "معاينة",
   "en": "Preview"
+ },
+ "video_token": {
+  "ar": "رابط الفيديو",
+  "en": "Video token"
  }
 }

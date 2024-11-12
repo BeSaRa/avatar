@@ -13,6 +13,7 @@ interface AppStore {
   logoUrl: string
   isVideo: boolean
   preview: boolean
+  videoToken: string
 }
 
 const initialState: AppStore = {
@@ -29,6 +30,7 @@ const initialState: AppStore = {
   logoUrl: 'assets/images/qrep-newlogo-colored.png',
   isVideo: false,
   preview: false,
+  videoToken: '',
 }
 
 export const AppStore = signalStore(

@@ -5,6 +5,7 @@ export const EndPoints = {
   AVATAR: 'avatar',
   LOCALS: 'http://localhost:3333',
   VIDEO_INDEXER: 'https://www.videoindexer.ai/embed',
+  AI_SEARCH: 'search/search',
 }
 
 export type EndpointsType = typeof EndPoints
