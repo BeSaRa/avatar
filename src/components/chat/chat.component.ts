@@ -48,13 +48,22 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       this.messageCtrl.enable()
     }
   })
-
+  // noinspection JSUnusedGlobalSymbols
   animatingEffect = effect(() => {
     if (!this.animating()) {
       const elements = this.chatBodyContainer()?.nativeElement?.querySelectorAll('.chat-message')
       const last = elements && elements[elements.length - 1]
 
       last && last.scrollIntoView(true)
+    }
+  })
+  // noinspection JSUnusedGlobalSymbols
+  statusEffect = effect(() => {
+    if (this.status()) {
+      const timeoutID = setTimeout(() => {
+        this.messageInput().nativeElement.focus()
+        clearTimeout(timeoutID)
+      })
     }
   })
 
