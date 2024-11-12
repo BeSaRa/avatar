@@ -27,6 +27,7 @@ export class SettingsPopupComponent extends OnDestroyMixin(class {}) implements 
     logoUrl: [this.settings.logoUrl, Validators.required],
     backgroundUrl: [this.settings.backgroundUrl, Validators.required],
     backgroundColor: [this.settings.backgroundColor, Validators.required],
+    videoToken: [this.settings.videoToken, Validators.required],
     isVideo: [this.settings.isVideo, Validators.required],
     preview: [this.settings.preview, Validators.required],
   })

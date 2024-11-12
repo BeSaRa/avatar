@@ -44,4 +44,5 @@ export interface LangKeysContract {
   last_page_label: string
   page: string
   of: string
+  video_token: string
 }
