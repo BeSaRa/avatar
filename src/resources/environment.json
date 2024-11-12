@@ -6,6 +6,6 @@
     "RERA": "https://rera-api-1.azurewebsites.net/api"
   },
   "API_VERSION": "v1",
-  "BASE_ENVIRONMENT": "RERA",
+  "BASE_ENVIRONMENT": "DEV",
   "KUNA": "i-mEGilYdirGxQO_579aS_Y226Qq8Bi1SCwBehnp_jK_AzFu9Lhwig=="
 }
