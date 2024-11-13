@@ -1,6 +1,6 @@
 <div class="w-screen h-screen shadow-2xl">
   <div class="h-full m-auto flex flex-col">
-    <app-header [chat]="chatComponent" />
+    <app-header />
     <main #main class="flex-auto min-h-0 text-white overflow-hidden relative">
       <div class="container m-auto p-4">
         <router-outlet />
@@ -8,5 +8,5 @@
     </main>
     <footer></footer>
   </div>
-  <app-chat #chatComponent class="fixed z-20 rtl:left-0 ltr:right-0 bottom-0" />
+  <app-chat class="fixed z-20 rtl:left-0 ltr:right-0 bottom-0" />
 </div>

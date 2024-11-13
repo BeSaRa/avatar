@@ -15,6 +15,7 @@ export class ChatService {
   private readonly urlService = inject(UrlService)
   private readonly store = inject(AppStore)
   messages = signal<Message[]>([])
+  status = signal<boolean>(false)
 
   sendMessage(content: string): Observable<ChatMessageResultContract> {
     this.messages.update(messages => [...messages, new Message(content, 'user')])

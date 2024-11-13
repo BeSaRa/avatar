@@ -21,10 +21,10 @@ import { RecorderComponent } from '@/components/recorder/recorder.component'
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   recorder = viewChild<RecorderComponent>('recorder')
   injector = inject(Injector)
-  status = signal(false)
   document = inject(DOCUMENT)
   lang = inject(LocalService)
   chatService = inject(ChatService)
+  status = this.chatService.status
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
   messageInput = viewChild.required<ElementRef<HTMLTextAreaElement>>('textArea')

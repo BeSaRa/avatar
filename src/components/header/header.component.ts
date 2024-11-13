@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core'
+import { Component, inject } from '@angular/core'
 import { RouterLink, RouterLinkActive } from '@angular/router'
 import { NgClass, NgOptimizedImage } from '@angular/common'
 import { AppStore } from '@/stores/app.store'
@@ -7,7 +7,7 @@ import { getState } from '@ngrx/signals'
 import { animate, state, style, transition, trigger } from '@angular/animations'
 import { MatDialog } from '@angular/material/dialog'
 import { SettingsPopupComponent } from '@/components/settings-popup/settings-popup.component'
-import { ChatComponent } from '@/components/chat/chat.component'
+import { ChatService } from '@/services/chat.service'
 
 @Component({
   selector: 'app-header',
@@ -37,7 +37,7 @@ import { ChatComponent } from '@/components/chat/chat.component'
   ],
 })
 export class HeaderComponent {
-  chat = input.required<ChatComponent>()
+  chatService = inject(ChatService)
   store = inject(AppStore)
   lang = inject(LocalService)
   settings = getState(this.store)
@@ -60,6 +60,6 @@ export class HeaderComponent {
 
   openChatbot($event: Event) {
     $event.preventDefault()
-    this.chat().toggleChat()
+    this.chatService.status.update(value => !value)
   }
 }

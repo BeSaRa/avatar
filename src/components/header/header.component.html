@@ -32,7 +32,7 @@
             <span>{{ lang.locals.search }}</span>
           </a>
         </li>
-        <li [ngClass]="{ active: chat().status() }">
+        <li [ngClass]="{ active: chatService.status() }">
           <a (click)="openChatbot($event)" class="flex gap-1" href="#">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
               <path
