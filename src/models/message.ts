@@ -36,6 +36,7 @@ interface IContext {
 }
 
 export interface ICitations {
+  title: string
   filepath: string
   content: string
   url: string

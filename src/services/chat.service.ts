@@ -35,7 +35,7 @@ export class ChatService {
       )
       .pipe(
         map(res => {
-          res.message.content = formatString(this.formatText(res.message.content))
+          res.message.content = formatString(this.formatText(res.message.content, res.message))
           res.message = new Message().clone(res.message)
           this.messages.update(messages => [...messages, res.message])
           return res
@@ -43,14 +43,18 @@ export class ChatService {
       )
   }
 
-  private formatText(text: string) {
+  private formatText(text: string, message: Message): string {
+    console.log('message', message)
     let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
 
     // Replace text between [ and ] with <a> tags
-    formattedText = formattedText.replace(
-      /\[(.*?)\]/g,
-      '<pre class="d-inline"><small class="px-1 text-primary">$1<i class="link-icon"></i></small></pre>'
-    )
+    formattedText = formattedText.replace(/\[(.*?)\]/g, (match, p1) => {
+      const item = message.context.citations[Number(p1.replace(/[^0-9]/g, ''))]
+      const title = item.title
+      const url = item.url
+      // eslint-disable-next-line max-len
+      return `<br /><small class="px-1 text-primary"><a target="_blank" href="${url}">${title}</a><i class="link-icon"></i></small>`
+    })
     // text = text.replace(/\./g, '.<br>')
 
     // Return the formatted text
