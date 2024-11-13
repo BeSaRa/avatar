@@ -9,112 +9,121 @@
   </svg>
 </button>
 
-<div
-  [ngClass]="{ hidden: !status() }"
-  #chatContainer
-  class="z-20 bg-white w-[500px] h-[600px] relative shadow-2xl rounded-md overflow-hidden bottom-10 max-h-full max-w-full flex flex-col ltr:left-5 rtl:right-5">
-  <div class="bg-gray-200 border-b border-primary/40 flex justify-between items-center px-4 py-2">
-    <span>{{ lang.locals.chat }}</span>
-    <div>
-      <button
-        matRipple
-        class="bg-gray-400 hover:bg-primary border rounded-full p-1 text-white"
-        (click)="fullScreenToggle()">
-        @if (fullscreenStatus()) {
+<div [ngClass]="{ hidden: !status() }" #chatContainer>
+  <div
+    [ngClass]="{ 'w-full h-full inset-0': fullscreenStatus() }"
+    class="z-20 bg-white w-[500px] h-[600px] relative shadow-2xl rounded-md overflow-hidden bottom-10 max-h-full max-w-full flex flex-col ltr:left-5 rtl:right-5">
+    <div class="bg-gray-200 border-b border-primary/40 flex justify-between items-center px-4 py-2">
+      <span>{{ lang.locals.chat }}</span>
+      <div>
+        <button
+          matRipple
+          class="bg-gray-400 hover:bg-primary border rounded-full p-1 text-white"
+          (click)="fullScreenToggle()">
+          @if (fullscreenStatus()) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M144,104V64a8,8,0,0,1,16,0V84.69l42.34-42.35a8,8,0,0,1,11.32,11.32L171.31,96H192a8,8,0,0,1,0,16H152A8,8,0,0,1,144,104Zm-40,40H64a8,8,0,0,0,0,16H84.69L42.34,202.34a8,8,0,0,0,11.32,11.32L96,171.31V192a8,8,0,0,0,16,0V152A8,8,0,0,0,104,144Zm67.31,16H192a8,8,0,0,0,0-16H152a8,8,0,0,0-8,8v40a8,8,0,0,0,16,0V171.31l42.34,42.35a8,8,0,0,0,11.32-11.32ZM104,56a8,8,0,0,0-8,8V84.69L53.66,42.34A8,8,0,0,0,42.34,53.66L84.69,96H64a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V64A8,8,0,0,0,104,56Z"></path>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M216,48V96a8,8,0,0,1-16,0V67.31l-42.34,42.35a8,8,0,0,1-11.32-11.32L188.69,56H160a8,8,0,0,1,0-16h48A8,8,0,0,1,216,48ZM98.34,146.34,56,188.69V160a8,8,0,0,0-16,0v48a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16H67.31l42.35-42.34a8,8,0,0,0-11.32-11.32ZM208,152a8,8,0,0,0-8,8v28.69l-42.34-42.35a8,8,0,0,0-11.32,11.32L188.69,200H160a8,8,0,0,0,0,16h48a8,8,0,0,0,8-8V160A8,8,0,0,0,208,152ZM67.31,56H96a8,8,0,0,0,0-16H48a8,8,0,0,0-8,8V96a8,8,0,0,0,16,0V67.31l42.34,42.35a8,8,0,0,0,11.32-11.32Z"></path>
+            </svg>
+          }
+        </button>
+        <button
+          matRipple
+          class="bg-gray-400 hover:bg-primary border rounded-full p-1 text-white"
+          (click)="toggleChat()">
           <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
             <path
-              d="M144,104V64a8,8,0,0,1,16,0V84.69l42.34-42.35a8,8,0,0,1,11.32,11.32L171.31,96H192a8,8,0,0,1,0,16H152A8,8,0,0,1,144,104Zm-40,40H64a8,8,0,0,0,0,16H84.69L42.34,202.34a8,8,0,0,0,11.32,11.32L96,171.31V192a8,8,0,0,0,16,0V152A8,8,0,0,0,104,144Zm67.31,16H192a8,8,0,0,0,0-16H152a8,8,0,0,0-8,8v40a8,8,0,0,0,16,0V171.31l42.34,42.35a8,8,0,0,0,11.32-11.32ZM104,56a8,8,0,0,0-8,8V84.69L53.66,42.34A8,8,0,0,0,42.34,53.66L84.69,96H64a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V64A8,8,0,0,0,104,56Z"></path>
+              d="M176,128a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,128Zm56,0A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path>
           </svg>
+        </button>
+      </div>
+    </div>
+    <div #chatBody class="flex-auto overflow-hidden flex flex-col relative min-h-0 p-4">
+      @for (message of chatService.messages(); track message.id) {
+        @if (message.isUser()) {
+          <div
+            class="user-message chat-message ltr:self-end min-w-[min(400px,100%)] rtl:self-start rtl:!rounded-tr-none ltr:!rounded-tr-none">
+            <p>{{ message.content }}</p>
+          </div>
+        } @else if (message.isAssistant()) {
+          <div
+            class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
+            <span appTextWriterAnimator (animating)="animating.set($event)" [text]="message.content"></span>
+          </div>
         } @else {
-          <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
-            <path
-              d="M216,48V96a8,8,0,0,1-16,0V67.31l-42.34,42.35a8,8,0,0,1-11.32-11.32L188.69,56H160a8,8,0,0,1,0-16h48A8,8,0,0,1,216,48ZM98.34,146.34,56,188.69V160a8,8,0,0,0-16,0v48a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16H67.31l42.35-42.34a8,8,0,0,0-11.32-11.32ZM208,152a8,8,0,0,0-8,8v28.69l-42.34-42.35a8,8,0,0,0-11.32,11.32L188.69,200H160a8,8,0,0,0,0,16h48a8,8,0,0,0,8-8V160A8,8,0,0,0,208,152ZM67.31,56H96a8,8,0,0,0,0-16H48a8,8,0,0,0-8,8V96a8,8,0,0,0,16,0V67.31l42.34,42.35a8,8,0,0,0,11.32-11.32Z"></path>
-          </svg>
+          <div class="system-message chat-message">
+            <p>{{ message.content }}</p>
+          </div>
         }
-      </button>
-      <button matRipple class="bg-gray-400 hover:bg-primary border rounded-full p-1 text-white" (click)="toggleChat()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
+      }
+
+      @if (answerInProgress()) {
+        <div class="spinner justify-center flex gap-1">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
+      }
+    </div>
+    <div class="p-4 gap-2 flex justify-center items-stretch">
+      <button
+        (click)="clearChatHistory()"
+        [matTooltip]="lang.locals.clear_chat_history"
+        class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
           <path
-            d="M176,128a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,128Zm56,0A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path>
+            d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+        </svg>
+      </button>
+      <button
+        [matTooltip]="lang.locals.send"
+        [disabled]="answerInProgress()"
+        (click)="sendMessage$.next()"
+        class="bg-primary rounded outline-none ring-offset-1 focus:ring-2 ring-primary text-white px-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
+          <path
+            d="M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z"></path>
+        </svg>
+      </button>
+
+      <input
+        #textArea
+        (keydown.enter)="sendMessage$.next()"
+        [formControl]="messageCtrl"
+        class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" />
+
+      <app-recorder
+        #recorder
+        (recognized$)="messageCtrl.setValue($event)"
+        (recognizing$)="messageCtrl.setValue($event)" />
+
+      <button
+        [matTooltip]="lang.locals.open_avatar"
+        class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12"
+        (click)="toggleAvatar()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M18.72,14.76C19.07,13.91 19.26,13 19.26,12C19.26,11.28 19.15,10.59 18.96,9.95C18.31,10.1 17.63,10.18 16.92,10.18C13.86,10.18 11.15,8.67 9.5,6.34C8.61,8.5 6.91,10.26 4.77,11.22C4.73,11.47 4.73,11.74 4.73,12A7.27,7.27 0 0,0 12,19.27C13.05,19.27 14.06,19.04 14.97,18.63C15.54,19.72 15.8,20.26 15.78,20.26C14.14,20.81 12.87,21.08 12,21.08C9.58,21.08 7.27,20.13 5.57,18.42C4.53,17.38 3.76,16.11 3.33,14.73H2V10.18H3.09C3.93,6.04 7.6,2.92 12,2.92C14.4,2.92 16.71,3.87 18.42,5.58C19.69,6.84 20.54,8.45 20.89,10.18H22V14.67H22V14.69L22,14.73H21.94L18.38,18L13.08,17.4V15.73H17.91L18.72,14.76M9.27,11.77C9.57,11.77 9.86,11.89 10.07,12.11C10.28,12.32 10.4,12.61 10.4,12.91C10.4,13.21 10.28,13.5 10.07,13.71C9.86,13.92 9.57,14.04 9.27,14.04C8.64,14.04 8.13,13.54 8.13,12.91C8.13,12.28 8.64,11.77 9.27,11.77M14.72,11.77C15.35,11.77 15.85,12.28 15.85,12.91C15.85,13.54 15.35,14.04 14.72,14.04C14.09,14.04 13.58,13.54 13.58,12.91A1.14,1.14 0 0,1 14.72,11.77Z" />
         </svg>
       </button>
     </div>
   </div>
-  <div #chatBody class="flex-auto overflow-hidden flex flex-col relative min-h-0 p-4">
-    @for (message of chatService.messages(); track message.id) {
-      @if (message.isUser()) {
-        <div
-          class="user-message chat-message ltr:self-end min-w-[min(400px,100%)] rtl:self-start rtl:!rounded-tr-none ltr:!rounded-tr-none">
-          <p>{{ message.content }}</p>
-        </div>
-      } @else if (message.isAssistant()) {
-        <div
-          class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
-          <span appTextWriterAnimator (animating)="animating.set($event)" [text]="message.content"></span>
-        </div>
-      } @else {
-        <div class="system-message chat-message">
-          <p>{{ message.content }}</p>
-        </div>
-      }
-    }
 
-    @if (answerInProgress()) {
-      <div class="spinner justify-center flex gap-1">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
+  @if (avatarOn) {
+    <div
+      cdkDrag
+      class="bg-black border rounded-md border-gray-200 size-80 z-30 rtl:right-[500px] ltr:left-[500px] rtl:mr-5 ltr:ml-m absolute bottom-10">
+      <div class="w-full flex">
+        <span class="w-full bg-gray-200 p-2 text-center">{{ lang.locals.avatar_chat }}</span>
       </div>
-    }
-  </div>
-  <div class="p-4 gap-2 flex justify-center items-stretch">
-    <button
-      (click)="clearChatHistory()"
-      [matTooltip]="lang.locals.clear_chat_history"
-      class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12">
-      <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
-        <path
-          d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
-      </svg>
-    </button>
-    <button
-      [matTooltip]="lang.locals.send"
-      [disabled]="answerInProgress()"
-      (click)="sendMessage$.next()"
-      class="bg-primary rounded outline-none ring-offset-1 focus:ring-2 ring-primary text-white px-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
-        <path
-          d="M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z"></path>
-      </svg>
-    </button>
-
-    <input
-      #textArea
-      (keydown.enter)="sendMessage$.next()"
-      [formControl]="messageCtrl"
-      class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" />
-
-    <app-recorder
-      #recorder
-      (recognized$)="messageCtrl.setValue($event)"
-      (recognizing$)="messageCtrl.setValue($event)" />
-
-    <button
-      [matTooltip]="lang.locals.open_avatar"
-      class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12"
-      (click)="toggleAvatar()">
-      <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 24 24">
-        <path
-          d="M18.72,14.76C19.07,13.91 19.26,13 19.26,12C19.26,11.28 19.15,10.59 18.96,9.95C18.31,10.1 17.63,10.18 16.92,10.18C13.86,10.18 11.15,8.67 9.5,6.34C8.61,8.5 6.91,10.26 4.77,11.22C4.73,11.47 4.73,11.74 4.73,12A7.27,7.27 0 0,0 12,19.27C13.05,19.27 14.06,19.04 14.97,18.63C15.54,19.72 15.8,20.26 15.78,20.26C14.14,20.81 12.87,21.08 12,21.08C9.58,21.08 7.27,20.13 5.57,18.42C4.53,17.38 3.76,16.11 3.33,14.73H2V10.18H3.09C3.93,6.04 7.6,2.92 12,2.92C14.4,2.92 16.71,3.87 18.42,5.58C19.69,6.84 20.54,8.45 20.89,10.18H22V14.67H22V14.69L22,14.73H21.94L18.38,18L13.08,17.4V15.73H17.91L18.72,14.76M9.27,11.77C9.57,11.77 9.86,11.89 10.07,12.11C10.28,12.32 10.4,12.61 10.4,12.91C10.4,13.21 10.28,13.5 10.07,13.71C9.86,13.92 9.57,14.04 9.27,14.04C8.64,14.04 8.13,13.54 8.13,12.91C8.13,12.28 8.64,11.77 9.27,11.77M14.72,11.77C15.35,11.77 15.85,12.28 15.85,12.91C15.85,13.54 15.35,14.04 14.72,14.04C14.09,14.04 13.58,13.54 13.58,12.91A1.14,1.14 0 0,1 14.72,11.77Z" />
-      </svg>
-    </button>
-  </div>
+      <app-avatar-video class="w-full" [size]="undefined" />
+    </div>
+  }
 </div>
-
-@if (avatarOn) {
-  <div class="size-80 z-30 rtl:right-[500px] ltr:left-[500px] rtl:mr-5 ltr:ml-m absolute bottom-10">
-    <app-avatar-video class="w-full" [size]="undefined" />
-  </div>
-}

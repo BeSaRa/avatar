@@ -23,9 +23,12 @@
       [hidden]="store.isStreamStopped() || store.isStreamLoading()"
       #video
       [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }"></video>
-    <video #idleVideo [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }" [hidden]="store.isStreamStarted()">
-      <source src="assets/videos/idle-full.webm" type="video/webm" />
-    </video>
+
+    @if (hasSize()) {
+      <video #idleVideo [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }" [hidden]="store.isStreamStarted()">
+        <source src="assets/videos/idle-full.webm" type="video/webm" />
+      </video>
+    }
   </div>
   {{ init$ | async }}
 </div>
