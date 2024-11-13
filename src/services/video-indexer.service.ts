@@ -21,8 +21,8 @@ export class VideoIndexerService {
         player: `${this.urlService.URLS.VIDEO_INDEXER}/player/${this.GENERAL_VIDEO_TOKEN}/?&locale=en`,
       },
       custom: {
-        insights: `${this.urlService.URLS.VIDEO_INDEXER}/insights/${accessToken}/?&locale=en`,
-        player: `${this.urlService.URLS.VIDEO_INDEXER}/player/${accessToken}/?&locale=en`,
+        insights: `${this.urlService.URLS.VIDEO_INDEXER}/insights/${accessToken}`,
+        player: `${this.urlService.URLS.VIDEO_INDEXER}/player/${accessToken}`,
       },
     }
   }

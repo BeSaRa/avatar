@@ -13,14 +13,18 @@ export class AvatarService {
   private readonly http = inject(HttpClient)
   private readonly store = inject(AppStore)
 
-  startStream(): Observable<StreamResultContract> {
+  startStream(size?: 'life-size'): Observable<StreamResultContract> {
     return this.http
       .post<StreamResultContract>(
         this.urlService.URLS.AVATAR + '/start-stream',
         {},
         {
           params: {
-            size: 'life-size',
+            ...(size
+              ? {
+                  size: 'life-size',
+                }
+              : undefined),
           },
         }
       )

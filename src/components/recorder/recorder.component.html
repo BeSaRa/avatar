@@ -1,13 +1,26 @@
-<button
-  [matTooltip]="lang.locals.click_to_speak"
-  [disabled]="store.isRecordingLoading()"
-  (click)="toggleRecording()"
-  class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12">
-  <div
-    [ngClass]="{ 'bounce-animation': store.isRecordingStarted() }"
-    class="absolute bg-primary/60 top-0 left-0 size-full z-10 rounded-full scale-0"></div>
-  <svg class="size-8" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 256">
-    <path
-      d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z"></path>
-  </svg>
-</button>
+<div class="relative">
+  @if (store.isRecordingStarted()) {
+    <button
+      (click)="stopRecording()"
+      class="absolute flex rtl:-left-1/2 ltr:-right-1/2 gap-1 items-center justify-center bg-black/50 text-xs opacity-50 hover:opacity-100 text-white rounded-full w-max p-2 -top-2 -translate-y-full">
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-3" fill="currentColor" viewBox="0 0 256 256">
+        <path
+          d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z"></path>
+      </svg>
+      <span>{{ lang.locals.cancel_recording }}</span>
+    </button>
+  }
+  <button
+    [matTooltip]="lang.locals.click_to_speak"
+    [disabled]="store.isRecordingLoading()"
+    (click)="toggleRecording()"
+    class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12">
+    <div
+      [ngClass]="{ 'bounce-animation': store.isRecordingStarted() }"
+      class="absolute bg-primary/60 top-0 left-0 size-full z-10 rounded-full scale-0"></div>
+    <svg class="size-8" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 256">
+      <path
+        d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z"></path>
+    </svg>
+  </button>
+</div>

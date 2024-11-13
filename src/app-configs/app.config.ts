@@ -7,9 +7,16 @@ import configInit from '../inits/config.init'
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { apiKeyInterceptor } from '@/http-interceptors/api-key.interceptor'
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip'
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+      useValue: {
+        position: 'above',
+      },
+    },
     configInit,
     provideHttpClient(withFetch(), withInterceptors([apiKeyInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),

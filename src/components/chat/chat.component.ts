@@ -10,15 +10,26 @@ import { ChatService } from '@/services/chat.service'
 import { ignoreErrors } from '@/utils/utils'
 import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.directive'
 import { RecorderComponent } from '@/components/recorder/recorder.component'
+import { MatTooltip } from '@angular/material/tooltip'
+import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [MatRipple, ReactiveFormsModule, TextWriterAnimatorDirective, NgClass, RecorderComponent],
+  imports: [
+    MatRipple,
+    ReactiveFormsModule,
+    TextWriterAnimatorDirective,
+    NgClass,
+    RecorderComponent,
+    MatTooltip,
+    AvatarVideoComponent,
+  ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
+  avatarOn = false
   recorder = viewChild<RecorderComponent>('recorder')
   injector = inject(Injector)
   document = inject(DOCUMENT)
@@ -79,6 +90,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   }
 
   fullScreenToggle() {
+    console.log(this.chatContainer().nativeElement)
     if (!this.document.fullscreenElement) {
       this.chatContainer()
         .nativeElement.requestFullscreen()
@@ -146,5 +158,13 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       elements && elements[elements.length - 1]?.scrollIntoView(true)
       clearTimeout(timeoutID)
     })
+  }
+
+  clearChatHistory() {
+    this.chatService.messages.set([])
+  }
+
+  toggleAvatar() {
+    this.avatarOn = !this.avatarOn
   }
 }

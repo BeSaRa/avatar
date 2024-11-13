@@ -5,11 +5,12 @@ import { LocalService } from '@/services/local.service'
 import PerfectScrollbar from 'perfect-scrollbar'
 import { RouterOutlet } from '@angular/router'
 import { ChatComponent } from '@/components/chat/chat.component'
+import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, RouterOutlet, ChatComponent],
+  imports: [HeaderComponent, RouterOutlet, ChatComponent, AvatarVideoComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   host: {

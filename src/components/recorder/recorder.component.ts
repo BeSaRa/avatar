@@ -38,10 +38,14 @@ export class RecorderComponent extends OnDestroyMixin(class {}) {
   }
 
   async stopRecording() {
-    this.recognizer.stopContinuousRecognitionAsync(() => {
+    if (this.recognizer) {
+      this.recognizer.stopContinuousRecognitionAsync(() => {
+        this.store.recordingStopped()
+        this.cleartext()
+      })
+    } else {
       this.store.recordingStopped()
-      this.cleartext()
-    })
+    }
   }
 
   private async startRecording() {

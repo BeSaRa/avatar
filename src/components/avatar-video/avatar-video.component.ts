@@ -8,6 +8,7 @@ import {
   HostBinding,
   AfterViewInit,
   computed,
+  input,
 } from '@angular/core'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
@@ -37,6 +38,8 @@ import { LocalService } from '@/services/local.service'
   styleUrl: './avatar-video.component.scss',
 })
 export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements OnInit, OnDestroy, AfterViewInit {
+  size = input<'life-size' | undefined>()
+  hasSize = computed(() => !!this.size())
   @HostBinding('attr.class')
   fullWidth = 'w-full h-full block '
   video = viewChild.required<ElementRef<HTMLVideoElement>>('video')
@@ -54,7 +57,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
     .pipe(
       exhaustMap(() =>
         this.avatarService
-          .startStream()
+          .startStream(this.size())
           .pipe(
             catchError(err => {
               this.store.updateStreamStatus('Stopped') //1
@@ -99,11 +102,9 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
         this.pc.addEventListener('connectionstatechange', evt => {
           const connectionState = (evt.target as unknown as RTCPeerConnection).connectionState
           if (connectionState === 'connected') {
-            console.log(connectionState, 'connected')
             this.store.updateStreamStatus('Started')
           }
           if (connectionState === 'disconnected') {
-            console.log(connectionState, 'disconnected')
             this.store.updateStreamStatus('Stopped')
           }
         })
@@ -151,6 +152,10 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
       .subscribe(() => {
         console.log('MANUAL CLOSE')
       })
+
+    if (!this.size()) {
+      this.start$.next()
+    }
   }
 
   ngAfterViewInit(): void {

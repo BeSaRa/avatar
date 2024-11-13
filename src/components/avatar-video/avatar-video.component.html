@@ -17,8 +17,13 @@
         class="p-4 absolute pulse rounded-full"></div>
       <span class="text-white font-semibold">{{ onlineStatus() }}</span>
     </div>
-    <video autoplay [hidden]="store.isStreamStopped() || store.isStreamLoading()" #video class="h-full"></video>
-    <video #idleVideo [hidden]="store.isStreamStarted()" class="h-full">
+
+    <video
+      autoplay
+      [hidden]="store.isStreamStopped() || store.isStreamLoading()"
+      #video
+      [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }"></video>
+    <video #idleVideo [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }" [hidden]="store.isStreamStarted()">
       <source src="assets/videos/idle-full.webm" type="video/webm" />
     </video>
   </div>

@@ -186,5 +186,13 @@
  "search_message": {
   "ar": "تمكين الأفكار وإطلاق العنان للذكاء!",
   "en": "Empowering Insights, Unleashing Intelligence!"
+ },
+ "send": {
+  "ar": "أرسال",
+  "en": "send"
+ },
+ "open_avatar": {
+  "ar": "افتح الشخصية الرقمية",
+  "en": "Open avatar"
  }
 }
