@@ -50,8 +50,12 @@ export class ChatService {
     // Replace text between [ and ] with <a> tags
     formattedText = formattedText.replace(/\[(.*?)\]/g, (match, p1) => {
       const item = message.context.citations[Number(p1.replace(/[^0-9]/g, ''))]
+      if (!item) {
+        return match
+      }
       const title = item.title
       const url = item.url
+
       // eslint-disable-next-line max-len
       return `<br /><small class="px-1 text-primary"><a target="_blank" href="${url}">${title}</a><i class="link-icon"></i></small>`
     })
