@@ -43,7 +43,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
   @HostBinding('attr.class')
   fullWidth = 'w-full h-full block '
   video = viewChild.required<ElementRef<HTMLVideoElement>>('video')
-  idleVideo = viewChild.required<ElementRef<HTMLVideoElement>>('idleVideo')
+  idleVideo = viewChild<ElementRef<HTMLVideoElement>>('idleVideo')
   avatarService = inject(AvatarService)
   lang = inject(LocalService)
   start$ = new ReplaySubject<void>(1)
@@ -163,9 +163,11 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
   }
 
   private playIdle(): void {
-    this.idleVideo().nativeElement.src = 'assets/videos/idle-full.webm'
-    this.idleVideo().nativeElement.muted = true
-    this.idleVideo().nativeElement.loop = true
-    this.idleVideo().nativeElement.play().then()
+    if (this.idleVideo() && this.idleVideo()?.nativeElement) {
+      this.idleVideo()!.nativeElement.src = 'assets/videos/idle-full.webm'
+      this.idleVideo()!.nativeElement.muted = true
+      this.idleVideo()!.nativeElement.loop = true
+      this.idleVideo()!.nativeElement.play().then()
+    }
   }
 }

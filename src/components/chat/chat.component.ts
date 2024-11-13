@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, Injector, OnInit, signal, viewChild } from '@angular/core'
+import { Component, effect, ElementRef, HostListener, inject, Injector, OnInit, signal, viewChild } from '@angular/core'
 import { MatRipple } from '@angular/material/core'
 import { LocalService } from '@/services/local.service'
 import { DOCUMENT, NgClass } from '@angular/common'
@@ -12,6 +12,7 @@ import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.d
 import { RecorderComponent } from '@/components/recorder/recorder.component'
 import { MatTooltip } from '@angular/material/tooltip'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
+import { CdkDrag } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-chat',
@@ -24,6 +25,7 @@ import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.com
     RecorderComponent,
     MatTooltip,
     AvatarVideoComponent,
+    CdkDrag,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
@@ -83,6 +85,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   ngOnInit(): void {
     this.listenToSendMessage()
+    this.detectFullScreenMode()
   }
 
   toggleChat() {
@@ -166,5 +169,13 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   toggleAvatar() {
     this.avatarOn = !this.avatarOn
+  }
+
+  @HostListener('window:fullscreenchange')
+  detectFullScreenMode() {
+    const isFullscreen = !!this.document.fullscreenElement
+    if (!isFullscreen) {
+      this.fullscreenStatus.set(isFullscreen)
+    }
   }
 }
