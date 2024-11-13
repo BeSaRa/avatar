@@ -49,7 +49,7 @@ export class ChatService {
 
     // Replace text between [ and ] with <a> tags
     formattedText = formattedText.replace(/\[(.*?)\]/g, (match, p1) => {
-      const item = message.context.citations[Number(p1.replace(/[^0-9]/g, ''))]
+      const item = message.context.citations[Number(p1.replace(/[^0-9]/g, '')) - 1]
       if (!item) {
         return match
       }
