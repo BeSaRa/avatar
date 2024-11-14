@@ -12,7 +12,7 @@ import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.d
 import { RecorderComponent } from '@/components/recorder/recorder.component'
 import { MatTooltip } from '@angular/material/tooltip'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
-import { CdkDrag } from '@angular/cdk/drag-drop'
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-chat',
@@ -26,6 +26,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop'
     MatTooltip,
     AvatarVideoComponent,
     CdkDrag,
+    CdkDragHandle,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',

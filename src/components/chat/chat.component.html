@@ -11,8 +11,8 @@
 
 <div [ngClass]="{ hidden: !status() }" #chatContainer>
   <div
-    [ngClass]="{ 'w-full h-full inset-0': fullscreenStatus() }"
-    class="z-20 bg-white w-[500px] h-[600px] relative shadow-2xl rounded-md overflow-hidden bottom-10 max-h-full max-w-full flex flex-col ltr:left-5 rtl:right-5">
+    [ngClass]="{ 'w-full h-full inset-0': fullscreenStatus(), 'ltr:left-5 rtl:right-5': !fullscreenStatus() }"
+    class="z-20 bg-white w-[500px] h-[600px] relative shadow-2xl rounded-md overflow-hidden bottom-10 max-h-full max-w-full flex flex-col">
     <div class="bg-gray-200 border-b border-primary/40 flex justify-between items-center px-4 py-2">
       <span>{{ lang.locals.chat }}</span>
       <div>
@@ -119,9 +119,19 @@
   @if (avatarOn) {
     <div
       cdkDrag
-      class="bg-black border rounded-md border-gray-200 size-80 z-30 rtl:right-[500px] ltr:left-[500px] rtl:mr-5 ltr:ml-m absolute bottom-10">
+      class="bg-black border rounded-md border-gray-200 size-80 z-30 rtl:right-[500px] ltr:left-[500px] rtl:mr-5 ltr:ml-m absolute bottom-10 overflow-hidden">
       <div class="w-full flex">
-        <span class="w-full bg-gray-200 p-2 text-center">{{ lang.locals.avatar_chat }}</span>
+        <span class="w-full bg-gray-200 p-2 text-center relative">
+          <svg
+            cdkDragHandle
+            class="size-6 absolute top-0 right-0 cursor-move fill-gray-500 m-2"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path
+              d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z" />
+          </svg>
+          {{ lang.locals.avatar_chat }}
+        </span>
       </div>
       <app-avatar-video class="w-full" [size]="undefined" />
     </div>
