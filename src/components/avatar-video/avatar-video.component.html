@@ -1,6 +1,8 @@
 <div id="video-wrapper" class="flex items-center w-full h-full justify-center">
   <div class="flex flex-col items-center w-full h-full justify-center absolute">
-    <div class="flex gap-1 shadow-2xl shadow-white bg-black/20 p-1 mt-2 absolute z-50 top-0 rounded-md">
+    <div
+      class="flex gap-1 shadow-2xl shadow-white bg-black/20 p-1 mt-2 absolute z-50 top-0 rounded-md"
+      [ngClass]="{ 'scale-50 left-0': !hasSize() }">
       <div
         [ngClass]="{
           'bg-red-600': store.isStreamStopped(),
@@ -15,7 +17,9 @@
           'bg-orange-500': store.isStreamLoading(),
         }"
         class="p-4 absolute pulse rounded-full"></div>
-      <span class="text-white font-semibold">{{ onlineStatus() }}</span>
+      @if (hasSize()) {
+        <span class="text-white font-semibold">{{ onlineStatus() }}</span>
+      }
     </div>
 
     <video
