@@ -1,13 +1,16 @@
 import { fadeInSlideUp } from '@/animations/fade-in-slide'
+import { RecorderComponent } from '@/components/recorder/recorder.component'
 import { DEFAULT_SEARCH_QUERY } from '@/constants/default-search-query'
 import { SearchQueryContract } from '@/contracts/search-query-contract'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AiSearchService } from '@/services/ai-search.service'
 import { LocalService } from '@/services/local.service'
 import { PaginatorIntlService } from '@/services/paginator-intl.service'
+import { AppStore } from '@/stores/app.store'
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common'
-import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core'
+import { Component, effect, inject, OnInit, signal, untracked, viewChild } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import {
   BehaviorSubject,
@@ -22,9 +25,6 @@ import {
   takeUntil,
   tap,
 } from 'rxjs'
-import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
-import { RecorderComponent } from '@/components/recorder/recorder.component'
-import { AppStore } from '@/stores/app.store'
 
 @Component({
   selector: 'app-ai-search',
@@ -49,6 +49,7 @@ import { AppStore } from '@/stores/app.store'
   animations: [fadeInSlideUp],
 })
 export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnInit {
+  paginator = viewChild<MatPaginator>('paginator')
   aiSearchService = inject(AiSearchService)
   store = inject(AppStore)
   lang = inject(LocalService)
@@ -69,8 +70,7 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   storeEffect = effect(() => {
     if (this.store.isRecordingStopped()) {
       untracked(() => {
-        this.search$.next(this.searchForm.value)
-        this.searchForm.reset('', { emitEvent: false })
+        this.prepareForSearch(this.searchForm.value)
       })
     }
   })
@@ -117,8 +117,18 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
         filter(searchToken => searchToken.trim().length > 0 && this.store.isRecordingStopped())
       )
       .subscribe(searchToken => {
-        console.log(searchToken)
-        this.search$.next(searchToken)
+        this.prepareForSearch(searchToken)
       })
+  }
+  resetPaginator() {
+    if (this.paginator()) {
+      this.paginator()!.pageIndex = 0
+      this.paginator()!._changePageSize(this.paginator()!.pageSize)
+    }
+  }
+  prepareForSearch(searchToken: string) {
+    this.resetPaginator()
+    this.search$.next(searchToken)
+    this.searchForm.reset('', { emitEvent: false })
   }
 }

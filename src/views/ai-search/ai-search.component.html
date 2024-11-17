@@ -82,6 +82,7 @@
       </dl>
     </div>
     <mat-paginator
+      #paginator
       class="rounded-md sticky bottom-0 border-2 border-gray-700 mt-3 [&_div.mat-mdc-paginator-outer-container]:bg-gray-200 [&_div.mat-mdc-paginator-outer-container]:rounded-md [&_div.mat-mdc-paginator-outer-container_div.mat-mdc-paginator-container]:justify-center"
       (page)="onPaginate($event)"
       [pageSizeOptions]="pageSizeOptions"
