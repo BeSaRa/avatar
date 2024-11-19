@@ -117,7 +117,7 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
         filter(searchToken => searchToken.trim().length > 0 && this.store.isRecordingStopped())
       )
       .subscribe(searchToken => {
-        this.prepareForSearch(searchToken)
+        this.prepareForSearch(searchToken, false)
       })
   }
   resetPaginator() {
@@ -126,9 +126,9 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
       this.paginator()!._changePageSize(this.paginator()!.pageSize)
     }
   }
-  prepareForSearch(searchToken: string) {
+  prepareForSearch(searchToken: string, resetAfterSearch = true) {
     this.resetPaginator()
     this.search$.next(searchToken)
-    this.searchForm.reset('', { emitEvent: false })
+    if (resetAfterSearch) this.searchForm.reset('', { emitEvent: false })
   }
 }
