@@ -151,6 +151,111 @@ html[dir='rtl'] body {
   font-family: 'Lusail', 'Open Sans', sans-serif !important;
 }
 
+mat-expansion-panel,
+mat-expansion-panel-header,
+mat-panel-title,
+mat-panel-description,
+.mat-expansion-panel-content,
+.mat-expansion-panel-body {
+  font-family: inherit !important;
+}
+
+.user-message,
+.assistant-message,
+.system-message {
+  @apply p-2 mb-2 rounded-md relative;
+}
+
+.system-message {
+  @apply bg-red-600 text-white;
+}
+
+.user-message {
+  @apply bg-primary text-white;
+
+  &:before {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    @apply bg-primary;
+  }
+}
+
+.assistant-message {
+  @apply bg-gray-200 text-black;
+  &:before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+    @apply bg-gray-200;
+  }
+}
+
+html[dir='ltr'] {
+  .user-message {
+    &:before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      @apply bg-primary;
+    }
+  }
+
+  .assistant-message {
+    &:before {
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      @apply bg-gray-200;
+    }
+  }
+}
+
+html[dir='rtl'] {
+  .user-message {
+    &:before {
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      @apply bg-primary;
+    }
+  }
+
+  .assistant-message {
+    @apply self-end #{!important};
+    &:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      @apply bg-gray-200;
+    }
+  }
+}
+
 @layer base {
   :root {
     --app-primary-color: #8a1538;

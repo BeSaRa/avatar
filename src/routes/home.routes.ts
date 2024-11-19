@@ -12,6 +12,10 @@ const routes: Routes = [
     loadComponent: () => import('@/views/ai-search/ai-search.component').then(c => c.AiSearchComponent),
   },
   {
+    path: 'chat-history',
+    loadComponent: () => import('@/views/chat-history/chat-history.component').then(c => c.ChatHistoryComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
