@@ -48,4 +48,11 @@ export interface LangKeysContract {
   page: string
   of: string
   video_token: string
+  chat_history: string
+  select_filter: string
+  bot_name: string
+  feedback: string
+  sentiment: string
+  dislike: string
+  like: string
 }

@@ -194,5 +194,33 @@
  "open_avatar": {
   "ar": "افتح الشخصية الرقمية",
   "en": "Open avatar"
+ },
+ "chat_history": {
+  "ar": "سجل المحادثات",
+  "en": "Chat history"
+ },
+ "select_filter": {
+  "ar": "اختر الفلتر ",
+  "en": "Select filter"
+ },
+ "bot_name": {
+  "ar": "اسم البوت",
+  "en": "Bot name"
+ },
+ "feedback": {
+  "ar": "التقييم",
+  "en": "Feedback"
+ },
+ "sentiment": {
+  "ar": "المشاعر",
+  "en": "Sentiment"
+ },
+ "dislike": {
+  "ar": "عدم إعجاب",
+  "en": "Dislike"
+ },
+ "like": {
+  "ar": "إعجاب",
+  "en": "Like"
  }
 }
