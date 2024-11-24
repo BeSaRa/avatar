@@ -13,6 +13,8 @@ import { RecorderComponent } from '@/components/recorder/recorder.component'
 import { MatTooltip } from '@angular/material/tooltip'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
+import { slideFromBottom } from '@/animations/fade-in-slide'
+import { ChatHistoryService } from '@/services/chat-history.service'
 
 @Component({
   selector: 'app-chat',
@@ -30,6 +32,7 @@ import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
+  animations: [slideFromBottom],
 })
 export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   avatarOn = false
@@ -38,6 +41,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   document = inject(DOCUMENT)
   lang = inject(LocalService)
   chatService = inject(ChatService)
+  chatHistoryService = inject(ChatHistoryService)
   status = this.chatService.status
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
@@ -45,6 +49,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   fullscreenStatus = signal(false)
   answerInProgress = signal(false)
   animating = signal(false)
+  ratingDone = signal(false)
   declare scrollbarRef: PerfectScrollbar
   // noinspection JSUnusedGlobalSymbols
   chatBodyContainerEffect = effect(() => {
@@ -178,5 +183,15 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
     if (!isFullscreen) {
       this.fullscreenStatus.set(isFullscreen)
     }
+  }
+
+  rateConversation(feedback: number) {
+    const conversationId = this.chatService.conversationId()
+    this.chatHistoryService
+      .addFeedback(conversationId, feedback)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.ratingDone.set(true)
+      })
   }
 }

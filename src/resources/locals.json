@@ -222,5 +222,65 @@
  "like": {
   "ar": "إعجاب",
   "en": "Like"
+ },
+ "negative": {
+  "ar": "سلبي",
+  "en": "Negative"
+ },
+ "mixed": {
+  "ar": "مختلط",
+  "en": "Mixed"
+ },
+ "positive": {
+  "ar": "إيجابي",
+  "en": "Positive"
+ },
+ "neutral": {
+  "ar": "محايد",
+  "en": "Neutral"
+ },
+ "feedback_chart": {
+  "ar": "آراء المستخدمين",
+  "en": "User Feedback"
+ },
+ "sentiment_chart": {
+  "ar": "تحليل المشاعر",
+  "en": "Sentiment Analysis"
+ },
+ "performance_chart": {
+  "ar": "أداء البوت",
+  "en": "Bot Performance"
+ },
+ "no_data_to_preview": {
+  "ar": "لا يوجد نتائج لعرضها",
+  "en": "No data to preview"
+ },
+ "rate_conversation": {
+  "ar": "قيّم المحادثة",
+  "en": "Rate the conversation"
+ },
+ "i_like": {
+  "ar": "أعجبني",
+  "en": "Like"
+ },
+ "i_dislike": {
+  "ar": "لم يعجبني",
+  "en": "Dislike"
+ },
+ "conversations_and_chats": {
+  "ar": "المحادثات والرسائل",
+  "en": "Conversations and Chats"
+ },
+ "choose_conversation": {
+  "ar": "اختر من المحادثات لعرض الرسائل",
+  "en": "Choose from conversation to view messages"
+ },
+ "conversation_description": {
+  "ar": "يمكنك الاطلاع على المحادثات والرسائل والتقييم الخاص بها",
+  "en": "You can review the conversations and its messages and rate"
+ },
+ "unspecified": {
+  "ar": "غير محدد",
+  "en": "Unspecified"
  }
 }

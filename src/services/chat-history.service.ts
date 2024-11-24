@@ -1,9 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { UrlService } from './url.service'
-import { Observable } from 'rxjs'
+import { map, Observable } from 'rxjs'
 import { ConversationResultContract } from '@/contracts/conversation-result-contract'
 import { ChatResultContract } from '@/contracts/chat-result-contract'
+import { CastResponse } from 'cast-response'
+import { Conversation } from '@/models/conversation'
+import { HistoryMessage } from '@/models/history-message'
+import { formatString, formatText, ignoreErrors } from '@/utils/utils'
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +16,10 @@ export class ChatHistoryService {
   private readonly http = inject(HttpClient)
   private readonly urlService = inject(UrlService)
 
-  getAllConversations(): Observable<ConversationResultContract[]> {
+  @CastResponse(() => Conversation)
+  getAllConversations(): Observable<Conversation[]> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/get-all-conversations`
-    return this.http.get<ConversationResultContract[]>(url)
+    return this.http.get<Conversation[]>(url)
   }
   getConversationsByUserId(userId: string): Observable<ConversationResultContract[]> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/get-conversations`
@@ -22,13 +27,31 @@ export class ChatHistoryService {
     return this.http.get<ConversationResultContract[]>(url, { params: params })
   }
 
-  getChatByConversationId(conversationId: string): Observable<ChatResultContract[]> {
+  getChatByConversationId(conversationId: string): Observable<HistoryMessage[]> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/get-chat`
     const params = new HttpParams().set('conv_id', conversationId)
-    return this.http.get<ChatResultContract[]>(url, { params: params })
+
+    return this.http
+      .get<ChatResultContract[]>(url, { params })
+      .pipe(
+        map(res => {
+          return res.map(item => {
+            // Construct and populate a HistoryMessage object
+            const historyMessage = new HistoryMessage()
+            historyMessage.context = JSON.parse(item.context)
+            historyMessage.content = formatString(formatText(item.content, historyMessage))
+            historyMessage.partitionKey = item.partitionKey
+            historyMessage.rowKey = item.rowKey
+            historyMessage.role = item.role
+            return historyMessage
+          })
+        })
+      )
+      .pipe(ignoreErrors())
   }
+
   applyAnalysis(): Observable<string> {
-    const url = `${this.urlService.URLS.CHAT_HISTORY}/semantic-analysis`
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/sentiment-analysis`
     return this.http.post<string>(url, null)
   }
   addFeedback(conversationId: string, feedback: number): Observable<string> {

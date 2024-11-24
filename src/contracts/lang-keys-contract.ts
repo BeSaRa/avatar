@@ -55,4 +55,19 @@ export interface LangKeysContract {
   sentiment: string
   dislike: string
   like: string
+  negative: string
+  mixed: string
+  positive: string
+  neutral: string
+  feedback_chart: string
+  sentiment_chart: string
+  performance_chart: string
+  no_data_to_preview: string
+  rate_conversation: string
+  i_like: string
+  i_dislike: string
+  conversations_and_chats: string
+  choose_conversation: string
+  conversation_description: string
+  unspecified: string
 }
