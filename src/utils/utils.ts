@@ -1,3 +1,4 @@
+import { ICitations } from '@/models/base-message'
 // noinspection JSUnusedGlobalSymbols
 
 import { FormControlDirective, FormControlName, NgModel } from '@angular/forms'
@@ -195,4 +196,85 @@ export const formatString = (text: string) => {
     .map(word => (isRTL(word) ? '\u202A' : '\u202C') + word)
     .join(' ')
   return text
+}
+
+export function formatText<T extends { context: { citations: ICitations[] } }>(text: string, message: T): string {
+  let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+
+  // Replace text between [ and ] with <a> tags
+  formattedText = formattedText.replace(/\[(.*?)\]/g, (match, p1) => {
+    const item = message.context.citations[Number(p1.replace(/[^0-9]/g, '')) - 1]
+    if (!item) {
+      return match
+    }
+    const title = item.title
+    const url = item.url
+
+    // eslint-disable-next-line max-len
+    return `<br /><small class="px-1 text-primary"><a target="_blank" href="${url}">${title}</a><i class="link-icon"></i></small>`
+  })
+  // text = text.replace(/\./g, '.<br>')
+
+  // Return the formatted text
+  return formattedText.trim()
+}
+
+export function preprocessInput(rawInput: string): string {
+  try {
+    return rawInput
+      .replace(/'/g, '"') // Replace single quotes with double quotes
+      .replace(/\bNone\b/g, 'null') // Replace Python-style None with JSON null
+      .replace(/\bTrue\b/g, 'true') // Replace Python-style True with JSON true
+      .replace(/\bFalse\b/g, 'false') // Replace Python-style False with JSON false
+      .replace(/\\\\"/g, '"') // Unescape double-escaped quotes inside content
+      .replace(/"{/g, '{') // Remove unnecessary double-quotes around objects
+      .replace(/}"/g, '}') // Remove unnecessary double-quotes around objects
+      .replace(/,\s*([}\]])/g, '$1') // Remove trailing commas in objects and arrays
+      .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):/g, '$1"$2"$3') // Quote unquoted keys
+      .replace(/\\(?!["\\/bfnrtu])/g, '\\\\') // Escape lone backslashes
+      .replace(/'/g, '"') // Replace single quotes with double quotes
+      .replace(/"intent":\s*"(\[.*?\])"/, (_, intent) => {
+        // Fix double-stringified intent field
+        const correctedIntent = intent.replace(/\\"/g, '"')
+        return `"intent": ${correctedIntent}`
+      })
+  } catch (error) {
+    throw new Error(`Preprocessing error: ${error}`)
+  }
+}
+
+export function parseEmbeddedContent(citations: ICitations[]) {
+  return citations.map(citation => {
+    try {
+      // Parse 'content' field if it is valid JSON
+      if (typeof citation.content === 'string' && citation.content.trim().startsWith('{')) {
+        citation.content = JSON.parse(citation.content)
+      }
+    } catch (error) {
+      console.warn(`Failed to parse content for citation: "${citation.title}". Error: ${error}`)
+    }
+    return citation
+  })
+}
+
+export function extractCitationsAndIntents(input: string) {
+  try {
+    // Preprocess the input
+    const preprocessedInput = preprocessInput(input)
+
+    // Parse the preprocessed input
+    const parsedInput = JSON.parse(preprocessedInput)
+
+    // Extract citations and intents
+    const citations = parsedInput.citations || []
+    const intent = parsedInput.intent || []
+
+    // Parse embedded JSON strings in 'content' fields
+    const cleanedCitations = parseEmbeddedContent(citations)
+
+    return { citations: cleanedCitations, intent }
+  } catch (error) {
+    console.error(`Failed to parse input. Error: ${error}`)
+    throw new Error(`Failed to parse input: ${error}`)
+  }
 }

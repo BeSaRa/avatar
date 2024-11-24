@@ -1,74 +1,79 @@
+import { Subject, switchMap, takeUntil, tap } from 'rxjs'
+import { Conversation } from '@/models/conversation'
 import { ChatHistoryService } from '@/services/chat-history.service'
 import { LocalService } from '@/services/local.service'
 import { OverlayModule } from '@angular/cdk/overlay'
 import { AsyncPipe, NgClass } from '@angular/common'
-import { Component, effect, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core'
-import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { Component, inject, OnInit, signal } from '@angular/core'
+import { ReactiveFormsModule } from '@angular/forms'
 import { MatExpansionModule } from '@angular/material/expansion'
-import PerfectScrollbar from 'perfect-scrollbar'
-import { debounceTime } from 'rxjs'
+import { ChatHistoryChartsComponent } from '../../components/chat-history-charts/chat-history-charts.component'
+import { ConversationListComponent } from '../../components/conversation-list/conversation-list.component'
+import { HistoryMessage } from '@/models/history-message'
+import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.directive'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 
 @Component({
   selector: 'app-chat-history',
   standalone: true,
-  imports: [MatExpansionModule, AsyncPipe, NgClass, ReactiveFormsModule, OverlayModule],
+  imports: [
+    MatExpansionModule,
+    AsyncPipe,
+    NgClass,
+    ReactiveFormsModule,
+    OverlayModule,
+    ChatHistoryChartsComponent,
+    ConversationListComponent,
+    TextWriterAnimatorDirective,
+  ],
   templateUrl: './chat-history.component.html',
   styleUrl: './chat-history.component.scss',
 })
-export class ChatHistoryComponent implements OnInit {
-  conversationsContainer = viewChild.required<ElementRef<HTMLDivElement>>('conversationsContainer')
+export class ChatHistoryComponent extends OnDestroyMixin(class {}) implements OnInit {
   chatHistoryService = inject(ChatHistoryService)
   lang = inject(LocalService)
-  searchControl = new FormControl('', { nonNullable: true })
-  filterOptions = signal([
-    { label: this.lang.locals.bot_name, value: 'bot_name' },
-    { label: this.lang.locals.sentiment, value: 'sentiment' },
-    { label: this.lang.locals.feedback, value: 'feedback' },
-  ])
-  showSuggestions = signal(false)
-  selectedConversation = signal<string | null>(null)
-  selectedFilter = signal<string | null>(null)
-
-  conversations$ = this.chatHistoryService.getAllConversations()
-  dropdownOpen = false
+  conversations = signal<Conversation[]>([])
+  chats = signal<HistoryMessage[]>([])
+  loaderChat = signal<boolean>(false)
+  loader$ = new Subject<'chat' | 'sentiment' | 'conversation' | 'no_loader'>()
+  loadConversation$ = new Subject<void>()
 
   ngOnInit(): void {
-    this.onSearch()
-  }
-  selectOption(option: { label: string; value: string }) {
-    this.selectedFilter.set(option.label) // Set the selected option
-    this.dropdownOpen = false // Close the dropdown
+    this.loadConversations()
+    this.loadConversation$.next()
   }
 
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen // Toggle the dropdown
-  }
-  closeDropdown() {
-    this.dropdownOpen = false // Close dropdown
-  }
-
-  constructor() {
-    effect(() => {
-      new PerfectScrollbar(this.conversationsContainer().nativeElement)
-    })
-  }
-
-  onSearch() {
-    this.searchControl.valueChanges.pipe(debounceTime(400)).subscribe(query => this.handleQuery(query))
-  }
-  handleQuery(query: string) {
-    if (query.endsWith('@')) {
-      this.showSuggestions.set(true) // Show suggestions when `@` is the last character
-    } else if (query.match(/@\w*$/)) {
-      this.showSuggestions.set(true) // Keep showing suggestions if typing after `@`
-    } else {
-      this.showSuggestions.set(false) // Hide suggestions otherwise
-    }
-  }
   loadChat(conversationId: string) {
-    this.selectedConversation.set(conversationId)
-    this.chatHistoryService.getChatByConversationId(conversationId).subscribe(res => {
-      console.log(res)
-    })
+    this.loaderChat.set(true)
+    this.chatHistoryService
+      .getChatByConversationId(conversationId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        this.chats.set(res)
+        this.loaderChat.set(false)
+      })
+  }
+
+  loadConversations() {
+    this.loadConversation$
+      .pipe(switchMap(() => this.chatHistoryService.getAllConversations().pipe(takeUntil(this.destroy$))))
+      .pipe(
+        tap(() => {
+          this.loader$.next('conversation')
+        })
+      )
+      .subscribe(res => {
+        this.conversations.set(res)
+        this.loader$.next('no_loader')
+      })
+  }
+  sentimentAnalyis() {
+    this.chatHistoryService
+      .applyAnalysis()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => this.loadConversation$.next())
+      )
+      .subscribe()
   }
 }

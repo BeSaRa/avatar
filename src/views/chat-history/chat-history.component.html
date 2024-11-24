@@ -1,157 +1,86 @@
+<app-chat-history-charts [conversations]="conversations()" />
 <mat-accordion multi>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Personal data </mat-panel-title>
-      <mat-panel-description> Type your name and age </mat-panel-description>
+      <mat-panel-title>{{ lang.locals.conversations_and_chats }}</mat-panel-title>
+      <mat-panel-description>
+        <p class="text-gray-400">
+          {{ lang.locals.conversation_description }}
+        </p>
+      </mat-panel-description>
     </mat-expansion-panel-header>
-  </mat-expansion-panel>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title> Day of the trip </mat-panel-title>
-      <mat-panel-description> Inform the date you wish to travel </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div class="flex bg-gray-100 rounded-md shadow-md max-h-[calc(100vh_-_18rem)]">
+    <button
+      (click)="sentimentAnalyis()"
+      (keyup.enter)="sentimentAnalyis()"
+      tabindex="1"
+      class="inline-flex gap-4 items-center text-white bg-primary focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-6 fill-white" viewBox="0 0 24 24">
+        <path
+          d="M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z" />
+      </svg>
+      {{ lang.locals.sentiment_chart }}
+    </button>
+    <div class="flex flex-col lg:flex-row bg-gray-100 rounded-md shadow-md h-[calc(100vh_-_18rem)]">
       <!-- Left Panel -->
-      <div
-        #conversationsContainer
-        class="w-4/12 border-l border-gray-400 bg-gray-200 text-gray-700 rounded-md overflow-hidden relative">
-        <div
-          class="flex max-w-lg mx-auto items-center bg-gray-200 sticky rounded-t-md top-0 z-10 p-3 rtl:flex-row-reverse border-b border-b-gray-300">
-          <button
-            cdkOverlayOrigin
-            #trigger="cdkOverlayOrigin"
-            class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-primary border border-gray-300 rtl:rounded-e-lg ltr:rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-400"
-            (click)="toggleDropdown()">
-            {{ selectedFilter() || lang.locals.select_filter }}
-          </button>
-          <ng-template
-            cdkConnectedOverlay
-            [cdkConnectedOverlayOrigin]="trigger"
-            [cdkConnectedOverlayOpen]="dropdownOpen"
-            (overlayOutsideClick)="closeDropdown()">
-            <div
-              class="absolute ltr:left-0 rtl:right-0 z-10 w-40 mt-2 bg-white border border-gray-300 rounded-md shadow-lg">
-              <ul class="py-1">
-                @for (option of filterOptions(); track option) {
-                  <li
-                    class="px-4 py-2 text-base text-gray-700 hover:bg-gray-200 cursor-pointer"
-                    tabindex="1"
-                    (keyup.enter)="selectOption(option)"
-                    (click)="selectOption(option)">
-                    {{ option.label }}
-                  </li>
-                }
-              </ul>
-            </div>
-          </ng-template>
-          <div class="relative w-full">
-            <input
-              type="text"
-              class="w-full block p-2.5 z-20 text-sm text-gray-900 bg-gray-50 rtl:rounded-s-lg ltr:rounded-e-lg rtl:border-e-gray-50 ltr:border-s-gray-50 rtl:border-e-2 ltr:border-s-2 border border-gray-300 focus:ring-primary focus:border-primary outline-0"
-              [placeholder]="
-                lang.locals.search_about +
-                ' ' +
-                (selectedFilter() || lang.locals.bot_name + ',' + lang.locals.feedback + ',' + lang.locals.sentiment) +
-                '...'
-              "
-              [formControl]="searchControl" />
-          </div>
-          <!-- Dropdown for filter selection -->
-          <!-- <div class="relative"> -->
-          <!-- <button
-              cdkOverlayOrigin
-              #trigger="cdkOverlayOrigin"
-              class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-primary border border-gray-300 rtl:rounded-e-lg ltr:rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-400"
-              (click)="toggleDropdown()">
-              {{ selectedFilter() || lang.locals.select_filter }}
-            </button> -->
+      @let type = loader$ | async;
+      <div class="w-full lg:w-4/12 p-4 lg:p-0 flex-shrink-0 overflow-auto h-1/2 lg:h-full">
+        @if (type === 'conversation') {
+          <p class="relative z-50 text-3xl">LOADER</p>
+        }
 
-          <!-- Dropdown Menu -->
-          <!-- <ng-template
-              cdkConnectedOverlay
-              [cdkConnectedOverlayOrigin]="trigger"
-              [cdkConnectedOverlayOpen]="dropdownOpen"
-              (overlayOutsideClick)="closeDropdown()">
-              <div
-                class="absolute ltr:left-0 rtl:right-0 z-10 w-40 mt-2 bg-white border border-gray-300 rounded-md shadow-lg">
-                <ul class="py-1">
-                  @for (option of filterOptions(); track option) {
-                    <li
-                      class="px-4 py-2 text-base text-gray-700 hover:bg-gray-200 cursor-pointer"
-                      tabindex="1"
-                      (keyup.enter)="selectOption(option)"
-                      (click)="selectOption(option)">
-                      {{ option.label }}
-                    </li>
-                  }
-                </ul>
-              </div>
-            </ng-template> -->
-          <!-- </div> -->
-
-          <!-- Search Input -->
-          <!-- <input
-            type="text"
-            class="flex-1 block p-2.5 z-20 text-sm text-gray-900 bg-gray-50 rtl:rounded-s-lg ltr:rounded-e-lg rtl:border-e-gray-50 ltr:border-s-gray-50 rtl:border-e-2 ltr:border-s-2 border border-gray-300 focus:ring-primary focus:border-primary outline-0"
-            [placeholder]="
-              lang.locals.search_about +
-              ' ' +
-              (selectedFilter() || lang.locals.bot_name + ',' + lang.locals.feedback + ',' + lang.locals.sentiment) +
-              '...'
-            "
-            [formControl]="searchControl" /> -->
-        </div>
-
-        <ul class="max-w-md">
-          @for (conversation of conversations$ | async; track conversation.conversation_id; let i = $index) {
-            <li
-              tabindex="1"
-              (keyup.enter)="selectedConversation.set(conversation.conversation_id)"
-              (click)="loadChat(conversation.conversation_id)"
-              [ngClass]="{
-                '!bg-gray-400/80 !rounded-md !text-gray-700': selectedConversation() === conversation.conversation_id,
-              }"
-              class="pb-3 pt-2 sm:pb-4 sm:pt-4 px-4 m-1 cursor-pointer hover:bg-gray-400/20 hover:rounded-md hover:text-gray-700">
-              <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                <div class="flex-1 min-w-0">
-                  <p class="text-base font-medium text-gray-700 truncate uppercase">{{ conversation.bot_name }}</p>
-                  <p
-                    [ngClass]="{
-                      'bg-green-100 text-green-800 border-green-400': conversation.feedback > 0,
-                      '!bg-red-100 !text-red-800 !border-red-400': conversation.feedback <= 0,
-                    }"
-                    class="w-fit text-xs font-medium me-2 px-1 py-[0.0625rem] rounded border">
-                    {{ conversation.feedback > 0 ? lang.locals.like : lang.locals.dislike }}
-                  </p>
-                </div>
-                <div class="flex-shrink-0">
-                  <div
-                    class="flex justify-center items-center border-dashed border-gray-700 border size-8 rounded-full bg-gray-100 p-2 m-1">
-                    @switch (conversation.sentiment) {
-                      @case ('negative') {
-                        <span class="text-xl leading-[normal]">😟</span>
-                      }
-                      @case ('mixed') {
-                        <span class="text-xl leading-[normal]">😕</span>
-                      }
-                      @case ('positive') {
-                        <span class="text-xl leading-[normal]">😊</span>
-                      }
-                      @case ('neutral') {
-                        <span class="text-xl leading-[normal]">😐</span>
-                      }
-                    }
-                  </div>
-                </div>
-                <!-- <div class="inline-flex items-center text-lg text-gray-200 opacity-50">#{{ i + 1 }}</div> -->
-              </div>
-            </li>
-          }
-        </ul>
+        <app-conversation-list [conversations]="conversations()" (onConversationSelect)="loadChat($event)" />
       </div>
       <!-- Right Panel -->
-      <div class="w-8/12 overflow-auto">
-        <!-- Add content here -->
+      <div class="w-full lg:w-8/12 overflow-auto relative flex-auto h-1/2 lg:h-full">
+        @if (loaderChat()) {
+          <div
+            class="absolute inset-0 flex items-center justify-center backdrop-blur-sm bg-white bg-opacity-50 z-10 h-100vh">
+            <div class="loader flex items-center justify-center">
+              <!-- Your specific loader design -->
+              <div role="status">
+                <svg
+                  aria-hidden="true"
+                  class="inline w-8 h-8 text-gray-200 animate-spin fill-primary"
+                  viewBox="0 0 100 101"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentFill" />
+                </svg>
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+        }
+        <div class="flex-auto overflow-hidden flex flex-col relative min-h-0 p-4">
+          @for (message of chats(); track message.id) {
+            @if (message.isUser()) {
+              <div
+                class="user-message chat-message ltr:self-end min-w-[min(400px,100%)] rtl:self-start rtl:!rounded-tr-none ltr:!rounded-tr-none">
+                <p>{{ message.content }}</p>
+              </div>
+            } @else if (message.isAssistant()) {
+              <div
+                class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
+                <span appTextWriterAnimator [text]="message.content"></span>
+              </div>
+            } @else {
+              <div class="system-message chat-message">
+                <p>{{ message.content }}</p>
+              </div>
+            }
+          }
+          @if (!chats().length) {
+            <div class="flex justify-center items-center">
+              <p class="text-gray-700 text-xl mt-10">{{ lang.locals.choose_conversation }}</p>
+              <img src="../../assets/images/select.svg" alt="select" class="w-1/4 h-1/4" />
+            </div>
+          }
+        </div>
       </div>
     </div>
   </mat-expansion-panel>

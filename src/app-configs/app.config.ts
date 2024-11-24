@@ -8,6 +8,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { apiKeyInterceptor } from '@/http-interceptors/api-key.interceptor'
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip'
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation(), withComponentInputBinding()),
     provideAnimationsAsync(),
+    provideCharts(withDefaultRegisterables()),
     /* provideClientHydration(), */
     provideInterceptors([GeneralInterceptor]),
   ],

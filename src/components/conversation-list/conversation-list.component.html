@@ -1,0 +1,110 @@
+<div
+  #conversationsContainer
+  class="w-full h-full border-l border-gray-400 bg-gray-200 text-gray-700 rounded-md overflow-hidden relative">
+  <div
+    class="flex max-w-lg mx-auto items-center bg-gray-200 sticky rounded-t-md top-0 z-10 p-3 rtl:flex-row-reverse border-b border-b-gray-300">
+    <button
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-primary border border-gray-300 rtl:rounded-e-lg ltr:rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-400"
+      (click)="dropdownOpen.set(!dropdownOpen())">
+      {{ selectedFilter().label || lang.locals.select_filter }}
+    </button>
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger"
+      [cdkConnectedOverlayOpen]="dropdownOpen()"
+      (overlayOutsideClick)="dropdownOpen.set(false)">
+      <div class="absolute ltr:left-0 rtl:right-0 z-10 w-40 mt-2 bg-white border border-gray-300 rounded-md shadow-lg">
+        <ul class="py-1">
+          @for (option of filterOptions; track option) {
+            <li
+              class="px-4 py-2 text-base text-gray-700 hover:bg-gray-200 cursor-pointer"
+              tabindex="1"
+              (keyup.enter)="onFilterTypeSelect(option)"
+              (click)="onFilterTypeSelect(option)">
+              {{ option.label }}
+            </li>
+          }
+        </ul>
+      </div>
+    </ng-template>
+    <div class="relative w-full">
+      <input
+        cdkOverlayOrigin
+        #suggestionTrigger="cdkOverlayOrigin"
+        type="text"
+        [readOnly]="selectedFilter().value !== 'bot_name'"
+        class="w-full block p-2.5 z-20 text-sm text-gray-900 bg-gray-50 rtl:rounded-s-lg ltr:rounded-e-lg rtl:border-e-gray-50 ltr:border-s-gray-50 rtl:border-e-2 ltr:border-s-2 border border-gray-300 focus:ring-primary focus:border-primary outline-0"
+        [placeholder]="
+          lang.locals.search_about +
+          ' ' +
+          (selectedFilter().label || lang.locals.bot_name + ',' + lang.locals.feedback + ',' + lang.locals.sentiment) +
+          '...'
+        "
+        (focus)="loadSuggestions()"
+        [formControl]="searchControl" />
+
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="suggestionTrigger"
+        [cdkConnectedOverlayOpen]="showSuggestions()"
+        (overlayOutsideClick)="showSuggestions.set(false)"
+        [cdkConnectedOverlayWidth]="suggestionTrigger.elementRef.nativeElement.offsetWidth">
+        <div class="w-full ltr:left-0 rtl:right-0 z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg">
+          @for (suggestion of suggestions(); track suggestion) {
+            <p
+              class="cursor-pointer p-2 hover:bg-gray-200 hover:rounded-sm"
+              tabindex="1"
+              (keyup)="onSuggestionSelect(suggestion)"
+              (click)="onSuggestionSelect(suggestion)">
+              {{ suggestion.label }}
+            </p>
+          }
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <ul class="max-w-md">
+    @for (conversation of filteredConversations(); track conversation.conversation_id; let i = $index) {
+      <li
+        tabindex="1"
+        (keyup.enter)="OnSelectConversation(conversation.conversation_id)"
+        (click)="OnSelectConversation(conversation.conversation_id)"
+        [ngClass]="{
+          '!bg-gray-400/40 !rounded-md !text-gray-700': selectedConversation() === conversation.conversation_id,
+        }"
+        class="pb-3 pt-2 sm:pb-4 sm:pt-4 px-4 m-1 cursor-pointer hover:bg-gray-400/20 hover:rounded-md hover:text-gray-700">
+        <div class="flex items-center space-x-4 rtl:space-x-reverse">
+          <div class="flex-1 min-w-0">
+            <p class="text-base font-medium text-gray-700 truncate uppercase">{{ conversation.bot_name }}</p>
+            <p
+              [ngClass]="{
+                'bg-green-100 text-green-800 border-green-400': (conversation.feedback ?? 0) > 0,
+                '!bg-red-100 !text-red-800 !border-red-400': (conversation.feedback ?? 0) <= 0,
+              }"
+              class="w-fit text-xs font-medium me-2 px-1 py-[0.0625rem] rounded border">
+              {{ conversation.feedback ? lang.locals.like : lang.locals.dislike }}
+            </p>
+          </div>
+          <div class="flex-shrink-0">
+            <div
+              class="flex justify-center items-center border-dashed border-gray-700 border size-8 rounded-full bg-gray-100 p-2 m-1">
+              <span class="text-xl leading-[normal]">{{ conversation.getEmojiPerSetiment() }}</span>
+            </div>
+          </div>
+          <!-- <div class="inline-flex items-center text-lg text-gray-200 opacity-50">#{{ i + 1 }}</div> -->
+        </div>
+      </li>
+    } @empty {
+      <div class="flex flex-col justify-center items-center gap-4 mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-12 fill-current" viewBox="0 0 24 24">
+          <path
+            d="M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M15.5,8C16.3,8 17,8.7 17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M12,14C13.75,14 15.29,14.72 16.19,15.81L14.77,17.23C14.32,16.5 13.25,16 12,16C10.75,16 9.68,16.5 9.23,17.23L7.81,15.81C8.71,14.72 10.25,14 12,14Z" />
+        </svg>
+        <span class="text-center text-gray-700 text-lg">{{ lang.locals.no_data_to_preview }}</span>
+      </div>
+    }
+  </ul>
+</div>
