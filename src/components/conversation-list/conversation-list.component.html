@@ -6,9 +6,14 @@
     <button
       cdkOverlayOrigin
       #trigger="cdkOverlayOrigin"
-      class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-primary border border-gray-300 rtl:rounded-e-lg ltr:rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-400"
+      class="relative flex-shrink-0 z-10 inline-flex items-center py-2.5 px-8 text-sm font-medium text-center text-white bg-primary border border-gray-300 rtl:rounded-e-lg ltr:rounded-s-lg focus:ring-4 focus:outline-none focus:ring-gray-400"
       (click)="dropdownOpen.set(!dropdownOpen())">
       {{ selectedFilter().label || lang.locals.select_filter }}
+      <span class="absolute left-0 m-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-6 fill-current" viewBox="0 0 24 24">
+          <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+        </svg>
+      </span>
     </button>
     <ng-template
       cdkConnectedOverlay
@@ -44,7 +49,14 @@
         "
         (focus)="loadSuggestions()"
         [formControl]="searchControl" />
-
+      @if (searchControl.value) {
+        <button (click)="resetContorl()" class="absolute left-0 top-0 m-3 bg-transparent outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="size-4 fill-current" viewBox="0 0 24 24">
+            <path
+              d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+          </svg>
+        </button>
+      }
       <ng-template
         cdkConnectedOverlay
         [cdkConnectedOverlayOrigin]="suggestionTrigger"
@@ -64,6 +76,17 @@
         </div>
       </ng-template>
     </div>
+    <button
+      [matTooltip]="lang.locals.sort_conversation"
+      (click)="sort()"
+      (keyup.enter)="sort()"
+      tabindex="2"
+      type="button"
+      class="bg-transparent mx-2 outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-6 fill-current" viewBox="0 0 24 24">
+        <path d="M18 21L14 17H17V7H14L18 3L22 7H19V17H22M2 19V17H12V19M2 13V11H9V13M2 7V5H6V7H2Z" />
+      </svg>
+    </button>
   </div>
 
   <ul class="max-w-md">
@@ -76,19 +99,37 @@
           '!bg-gray-400/40 !rounded-md !text-gray-700': selectedConversation() === conversation.conversation_id,
         }"
         class="pb-3 pt-2 sm:pb-4 sm:pt-4 px-4 m-1 cursor-pointer hover:bg-gray-400/20 hover:rounded-md hover:text-gray-700">
+        <p class="text-gray-700/60 text-xs">{{ conversation.timestamp | date: 'short' }}</p>
+
         <div class="flex items-center space-x-4 rtl:space-x-reverse">
           <div class="flex-1 min-w-0">
-            <p class="text-base font-medium text-gray-700 truncate uppercase">{{ conversation.bot_name }}</p>
             <p
+              [matTooltip]="lang.locals.conversation_title"
+              class="text-base font-medium text-gray-700 truncate uppercase">
+              {{ conversation.title }}
+            </p>
+            <p
+              [matTooltip]="lang.locals.feedback"
               [ngClass]="{
-                'bg-green-100 text-green-800 border-green-400': (conversation.feedback ?? 0) > 0,
-                '!bg-red-100 !text-red-800 !border-red-400': (conversation.feedback ?? 0) <= 0,
+                'bg-green-100 text-green-800 border-green-400': conversation.feedback === feedbackOptions.LIKE,
+                'bg-red-100 text-red-800 border-red-400': conversation.feedback === feedbackOptions.DISLIKE,
+                '!bg-gray-100 !text-gray-800 !border-gray-400': conversation.feedback === feedbackOptions.UNSPECIFIED,
               }"
               class="w-fit text-xs font-medium me-2 px-1 py-[0.0625rem] rounded border">
-              {{ conversation.feedback ? lang.locals.like : lang.locals.dislike }}
+              @switch (conversation.feedback) {
+                @case (feedbackOptions.LIKE) {
+                  {{ lang.locals.like }}
+                }
+                @case (feedbackOptions.DISLIKE) {
+                  {{ lang.locals.dislike }}
+                }
+                @default {
+                  {{ lang.locals.unspecified }}
+                }
+              }
             </p>
           </div>
-          <div class="flex-shrink-0">
+          <div class="flex-shrink-0" [matTooltip]="lang.locals.sentiment">
             <div
               class="flex justify-center items-center border-dashed border-gray-700 border size-8 rounded-full bg-gray-100 p-2 m-1">
               <span class="text-xl leading-[normal]">{{ conversation.getEmojiPerSetiment() }}</span>

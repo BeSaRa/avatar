@@ -1,17 +1,17 @@
-import { Subject, switchMap, takeUntil, tap } from 'rxjs'
+import { BehaviorSubject, finalize, Subject, switchMap, takeUntil, tap } from 'rxjs'
 import { Conversation } from '@/models/conversation'
 import { ChatHistoryService } from '@/services/chat-history.service'
 import { LocalService } from '@/services/local.service'
 import { OverlayModule } from '@angular/cdk/overlay'
-import { AsyncPipe, NgClass } from '@angular/common'
+import { AsyncPipe } from '@angular/common'
 import { Component, inject, OnInit, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { MatExpansionModule } from '@angular/material/expansion'
 import { ChatHistoryChartsComponent } from '../../components/chat-history-charts/chat-history-charts.component'
 import { ConversationListComponent } from '../../components/conversation-list/conversation-list.component'
 import { HistoryMessage } from '@/models/history-message'
-import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { MatTooltip } from '@angular/material/tooltip'
 
 @Component({
   selector: 'app-chat-history',
@@ -19,12 +19,12 @@ import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
   imports: [
     MatExpansionModule,
     AsyncPipe,
-    NgClass,
     ReactiveFormsModule,
     OverlayModule,
     ChatHistoryChartsComponent,
     ConversationListComponent,
-    TextWriterAnimatorDirective,
+    OverlayModule,
+    MatTooltip,
   ],
   templateUrl: './chat-history.component.html',
   styleUrl: './chat-history.component.scss',
@@ -34,46 +34,76 @@ export class ChatHistoryComponent extends OnDestroyMixin(class {}) implements On
   lang = inject(LocalService)
   conversations = signal<Conversation[]>([])
   chats = signal<HistoryMessage[]>([])
-  loaderChat = signal<boolean>(false)
-  loader$ = new Subject<'chat' | 'sentiment' | 'conversation' | 'no_loader'>()
-  loadConversation$ = new Subject<void>()
+  loaderChat$ = new BehaviorSubject<boolean>(false)
+  loaderSentiment$ = new BehaviorSubject<boolean>(false)
+  conversationLoader$ = new BehaviorSubject<boolean>(false)
+  loadConversation$ = new Subject<string | undefined>()
+  botNames = signal<string[]>([this.lang.locals.all_bots])
+  showBotDp = signal(false)
+  selectedBot = signal<string>(this.botNames()[0])
 
   ngOnInit(): void {
     this.loadConversations()
-    this.loadConversation$.next()
+    this.loadConversation$.next(undefined)
+    this.getBotNames()
   }
 
   loadChat(conversationId: string) {
-    this.loaderChat.set(true)
+    this.loaderChat$.next(true)
     this.chatHistoryService
       .getChatByConversationId(conversationId)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loaderChat$.next(false))
+      )
       .subscribe(res => {
         this.chats.set(res)
-        this.loaderChat.set(false)
       })
   }
 
   loadConversations() {
     this.loadConversation$
-      .pipe(switchMap(() => this.chatHistoryService.getAllConversations().pipe(takeUntil(this.destroy$))))
       .pipe(
         tap(() => {
-          this.loader$.next('conversation')
-        })
+          this.conversationLoader$.next(true) // Show loader when new value is emitted
+        }),
+        switchMap(botName => this.chatHistoryService.getAllConversations(botName)),
+        tap(() => {
+          this.conversationLoader$.next(false) // Hide loader after data is fetched
+        }),
+        takeUntil(this.destroy$) // Ensure proper cleanup
       )
       .subscribe(res => {
-        this.conversations.set(res)
-        this.loader$.next('no_loader')
+        this.conversations.set(res) // Update the conversations
       })
   }
+
   sentimentAnalyis() {
+    this.loaderSentiment$.next(true)
     this.chatHistoryService
       .applyAnalysis()
       .pipe(
         takeUntil(this.destroy$),
-        tap(() => this.loadConversation$.next())
+        tap(() =>
+          this.loadConversation$.next(this.selectedBot() === this.lang.locals.all_bots ? undefined : this.selectedBot())
+        ),
+        finalize(() => this.loaderSentiment$.next(false))
       )
       .subscribe()
+  }
+
+  getBotNames() {
+    return this.chatHistoryService
+      .getAllBotNames()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => this.botNames.set([...this.botNames(), ...res]))
+  }
+  onBotSelect(botName: string) {
+    this.selectedBot.set(botName)
+    this.showBotDp.set(false)
+    this.loadConversation$.next(botName === this.lang.locals.all_bots ? undefined : botName)
+  }
+  reloadConversations() {
+    this.loadConversation$.next(this.selectedBot() === this.lang.locals.all_bots ? undefined : this.selectedBot())
   }
 }

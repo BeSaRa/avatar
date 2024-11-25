@@ -15,6 +15,7 @@ import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.com
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { slideFromBottom } from '@/animations/fade-in-slide'
 import { ChatHistoryService } from '@/services/chat-history.service'
+import { FeedbackChat } from '@/enums/feedback-chat'
 
 @Component({
   selector: 'app-chat',
@@ -51,6 +52,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   animating = signal(false)
   ratingDone = signal(false)
   declare scrollbarRef: PerfectScrollbar
+  feedbackOptions = FeedbackChat
   // noinspection JSUnusedGlobalSymbols
   chatBodyContainerEffect = effect(() => {
     if (this.chatBodyContainer()) {
@@ -171,6 +173,8 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   clearChatHistory() {
     this.chatService.messages.set([])
+    this.chatService.conversationId.set('')
+    this.ratingDone.set(false)
   }
 
   toggleAvatar() {
@@ -185,7 +189,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
     }
   }
 
-  rateConversation(feedback: number) {
+  rateConversation(feedback: FeedbackChat) {
     const conversationId = this.chatService.conversationId()
     this.chatHistoryService
       .addFeedback(conversationId, feedback)
