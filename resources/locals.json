@@ -282,5 +282,33 @@
  "unspecified": {
   "ar": "غير محدد",
   "en": "Unspecified"
+ },
+ "all_bots": {
+  "ar": "جميع البوتات",
+  "en": "All bots"
+ },
+ "choose_bot": {
+  "ar": "اختر البوت الذي تريد عرض إحصائياته",
+  "en": "Choose the bot you want to show its statistics"
+ },
+ "conversation_title": {
+  "ar": "عنوان المحادثة",
+  "en": "Conversation Title"
+ },
+ "sentiment_analysis_description": {
+  "ar": "عند الضغط على الزر يتم تحليل مشاعر المحادثات و إعادة طلب المحادثات ",
+  "en": "When press on the button the sentiment analysis process procced and the conversation reload"
+ },
+ "reload_conversation": {
+  "ar": "إعادة تحميل المحادثات",
+  "en": "Reload Conversations"
+ },
+ "sort_conversation": {
+  "ar": "فرز المحادثات حسب التاريخ",
+  "en": "Sort conversation by date"
+ },
+ "total": {
+  "ar": "الإجمالي",
+  "en": "Total"
  }
 }
