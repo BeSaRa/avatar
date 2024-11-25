@@ -19,7 +19,7 @@ export class ChatHistoryService {
 
   @CastResponse(() => Conversation)
   getAllConversations(botName?: string): Observable<Conversation[]> {
-    const url = `${this.urlService.URLS.CHAT_HISTORY}/get-all-conversations`
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/all-conversations`
     let params = new HttpParams()
     if (botName) {
       params = params.set('bot_name', botName)
@@ -27,13 +27,13 @@ export class ChatHistoryService {
     return this.http.get<Conversation[]>(url, { params: params })
   }
   getConversationsByUserId(userId: string): Observable<ConversationResultContract[]> {
-    const url = `${this.urlService.URLS.CHAT_HISTORY}/get-conversations`
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/conversations`
     const params = new HttpParams().set('user_id', userId)
     return this.http.get<ConversationResultContract[]>(url, { params: params })
   }
 
   getChatByConversationId(conversationId: string): Observable<HistoryMessage[]> {
-    const url = `${this.urlService.URLS.CHAT_HISTORY}/get-chat`
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/chat`
     const params = new HttpParams().set('conv_id', conversationId)
 
     return this.http
@@ -65,7 +65,7 @@ export class ChatHistoryService {
     return this.http.post<string>(url, null, { params: params })
   }
   getAllBotNames(): Observable<string[]> {
-    const url = `${this.urlService.URLS.CHAT_HISTORY}/get-bot-name`
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/bot-names`
     return this.http.get<string[]>(url)
   }
 }
