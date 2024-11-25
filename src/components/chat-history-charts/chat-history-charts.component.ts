@@ -9,16 +9,19 @@ import { Conversation } from '@/models/conversation'
 import { SentimentType } from '@/types/sentiment-type'
 
 const COLORS = {
-  primary: 'rgba(138, 21, 56, 0.8)',
-  primaryBorder: 'rgb(138, 21, 56)',
-  darkGray: 'rgba(75, 75, 75, 0.8)',
-  darkGrayBorder: 'rgb(75, 75, 75)',
-  mediumGray: 'rgba(120, 120, 120, 0.8)',
-  mediumGrayBorder: 'rgb(120, 120, 120)',
-  lightGray: 'rgba(200, 200, 200, 0.8)',
-  lightGrayBorder: 'rgb(200, 200, 200)',
-  dark: 'rgba(25,25,25,0.8)',
-  darkBoarder: 'rgb(25,25,25)',
+  sentiment: {
+    negative: { fill: 'rgba(244, 67, 54, 0.8)', border: 'rgb(244, 67, 54)' }, // Red
+    mixed: { fill: 'rgba(255, 193, 7, 0.8)', border: 'rgb(255, 193, 7)' }, // Amber
+    positive: { fill: 'rgba(76, 175, 80, 0.8)', border: 'rgb(76, 175, 80)' }, // Green
+    neutral: { fill: 'rgba(158, 158, 158, 0.8)', border: 'rgb(158, 158, 158)' }, // Gray
+    undefined: { fill: 'rgba(96, 125, 139, 0.8)', border: 'rgb(96, 125, 139)' }, // Blue Gray
+  },
+
+  feedback: {
+    like: { fill: 'rgba(76, 175, 80, 0.8)', border: 'rgb(76, 175, 80)' }, // Green
+    dislike: { fill: 'rgba(244, 67, 54, 0.8)', border: 'rgb(244, 67, 54)' }, // Red
+    unspecified: { fill: 'rgba(158, 158, 158, 0.8)', border: 'rgb(158, 158, 158)' }, // Gray
+  },
 }
 @Component({
   selector: 'app-chat-history-charts',
@@ -76,19 +79,19 @@ export class ChatHistoryChartsComponent {
 
   /* ----------------------------- Sentiment Chart ---------------------------- */
   calculateSetimentDistribution(): ChartConfiguration['data'] {
-    const sentimentCounts: Record<SentimentType | 'unspecified', number> = {
+    const sentimentCounts: Record<SentimentType, number> = {
       negative: 0,
       mixed: 0,
       positive: 0,
       neutral: 0,
-      unspecified: 0,
+      undefined: 0,
     }
 
     this.conversations().forEach(conversation => {
       if (this.isValidSentiment(conversation.sentiment)) {
         sentimentCounts[conversation.sentiment]++
       } else {
-        sentimentCounts.unspecified++
+        sentimentCounts.undefined++
       }
     })
     return {
@@ -103,13 +106,19 @@ export class ChatHistoryChartsComponent {
         {
           label: this.lang.locals.sentiment,
           data: Object.values(sentimentCounts),
-          backgroundColor: [COLORS.darkGray, COLORS.mediumGray, COLORS.primary, COLORS.lightGray, COLORS.dark],
+          backgroundColor: [
+            COLORS.sentiment.negative.fill,
+            COLORS.sentiment.mixed.fill,
+            COLORS.sentiment.positive.fill,
+            COLORS.sentiment.neutral.fill,
+            COLORS.sentiment.undefined.fill,
+          ],
           borderColor: [
-            COLORS.darkGrayBorder,
-            COLORS.mediumGrayBorder,
-            COLORS.primaryBorder,
-            COLORS.lightGrayBorder,
-            COLORS.darkBoarder,
+            COLORS.sentiment.negative.border,
+            COLORS.sentiment.mixed.border,
+            COLORS.sentiment.positive.border,
+            COLORS.sentiment.neutral.border,
+            COLORS.sentiment.undefined.border,
           ],
           borderWidth: 2,
         },
@@ -152,7 +161,7 @@ export class ChatHistoryChartsComponent {
               const dataset = context.dataset.data as number[]
               const total = dataset.reduce((acc: number, value: number) => acc + value, 0)
               const percentage = (((context.raw as number) / total) * 100).toFixed(1)
-              return `${label}:${percentage}%`
+              return [`${label}:${percentage}%`, `${this.lang.locals.total}:${context.raw}`]
             },
           },
         },
@@ -182,7 +191,7 @@ export class ChatHistoryChartsComponent {
             const percentage = ((value / total) * 100).toFixed(1)
             const label = (context.chart.data.labels as string[])[context.dataIndex]
 
-            return [label, `${percentage}%`]
+            return [label, `${percentage}%`, `${this.lang.locals.total}:${value}`]
           },
         },
       },
@@ -213,22 +222,22 @@ export class ChatHistoryChartsComponent {
         {
           label: this.lang.locals.like,
           data: [likes],
-          backgroundColor: COLORS.primary,
-          borderColor: COLORS.primaryBorder,
+          backgroundColor: COLORS.feedback.like.fill,
+          borderColor: COLORS.feedback.like.border,
           borderWidth: 2,
         },
         {
           label: this.lang.locals.dislike,
           data: [dislikes],
-          backgroundColor: COLORS.darkGray,
-          borderColor: COLORS.darkGrayBorder,
+          backgroundColor: COLORS.feedback.dislike.fill,
+          borderColor: COLORS.feedback.dislike.border,
           borderWidth: 2,
         },
         {
           label: this.lang.locals.unspecified,
           data: [unspecified],
-          backgroundColor: COLORS.dark,
-          borderColor: COLORS.darkBoarder,
+          backgroundColor: COLORS.feedback.unspecified.fill,
+          borderColor: COLORS.feedback.unspecified.border,
           borderWidth: 2,
         },
       ],
@@ -297,9 +306,9 @@ export class ChatHistoryChartsComponent {
   generateBotColor(index: number) {
     // Define colors for likes, dislikes, and unspecified explicitly
     const categoryColors = [
-      { background: COLORS.primary, border: COLORS.primaryBorder }, // Likes
-      { background: COLORS.darkGray, border: COLORS.darkGrayBorder }, // Dislikes
-      { background: COLORS.dark, border: COLORS.darkBoarder }, // Unspecified
+      { background: COLORS.feedback.like.fill, border: COLORS.feedback.like.border }, // Likes
+      { background: COLORS.feedback.dislike.fill, border: COLORS.feedback.dislike.border }, // Dislikes
+      { background: COLORS.feedback.unspecified.fill, border: COLORS.feedback.unspecified.border }, // Unspecified
     ]
 
     if (index < categoryColors.length) {
@@ -310,7 +319,12 @@ export class ChatHistoryChartsComponent {
       }
     }
 
-    const baseColors = [COLORS.primaryBorder, COLORS.darkGrayBorder, COLORS.mediumGrayBorder, COLORS.lightGrayBorder]
+    const baseColors = [
+      COLORS.feedback.like.fill,
+      COLORS.feedback.like.border,
+      COLORS.feedback.dislike.fill,
+      COLORS.feedback.dislike.border,
+    ]
 
     const baseColor = baseColors[index % baseColors.length]
 

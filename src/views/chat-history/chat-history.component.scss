@@ -1,0 +1,18 @@
+@keyframes heartbeat {
+  0% {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+  }
+  50% {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+  }
+}
+.animate-heartbeat {
+  animation: heartbeat 2s infinite ease-in-out;
+  stroke-linecap: round;
+}

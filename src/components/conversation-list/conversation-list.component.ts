@@ -1,8 +1,9 @@
+import { FeedbackChat } from '@/enums/feedback-chat'
 import { Conversation } from '@/models/conversation'
 import { LocalService } from '@/services/local.service'
 import { ChatFilterType } from '@/types/chat-filter-type'
 import { OverlayModule } from '@angular/cdk/overlay'
-import { NgClass } from '@angular/common'
+import { DatePipe, NgClass } from '@angular/common'
 import {
   Component,
   computed,
@@ -17,13 +18,14 @@ import {
   viewChild,
 } from '@angular/core'
 import { ReactiveFormsModule, FormControl } from '@angular/forms'
+import { MatTooltip } from '@angular/material/tooltip'
 import PerfectScrollbar from 'perfect-scrollbar'
 import { Subject, combineLatest, startWith, debounceTime, distinctUntilChanged, map, tap } from 'rxjs'
 
 @Component({
   selector: 'app-conversation-list',
   standalone: true,
-  imports: [NgClass, ReactiveFormsModule, OverlayModule],
+  imports: [NgClass, ReactiveFormsModule, OverlayModule, MatTooltip, DatePipe],
   templateUrl: './conversation-list.component.html',
   styleUrl: './conversation-list.component.scss',
 })
@@ -45,17 +47,22 @@ export class ConversationListComponent implements OnInit {
   selectedFilter = signal<{ label: string; value: ChatFilterType }>(this.filterOptions[0])
 
   filterType$ = new Subject<ChatFilterType>()
-  filterValue$ = new Subject<string>()
+  filterValue$ = new Subject<string | FeedbackChat>()
 
   filteredConversations = signal<Conversation[]>([])
 
   dropdownOpen = signal(false)
 
+  feedbackOptions = FeedbackChat
+
+  currentSort: 'asc' | 'desc' = 'asc'
+
   suggestions = computed(() => {
     if (this.selectedFilter().value === 'feedback') {
       return [
-        { label: this.lang.locals.like, value: 'like' },
-        { label: this.lang.locals.dislike, value: 'dislike' },
+        { label: this.lang.locals.like, value: FeedbackChat.LIKE },
+        { label: this.lang.locals.dislike, value: FeedbackChat.DISLIKE },
+        { label: this.lang.locals.unspecified, value: FeedbackChat.UNSPECIFIED },
       ]
     }
     if (this.selectedFilter().value === 'sentiment') {
@@ -64,6 +71,7 @@ export class ConversationListComponent implements OnInit {
         { label: this.lang.locals.positive, value: 'positive' },
         { label: this.lang.locals.mixed, value: 'mixed' },
         { label: this.lang.locals.neutral, value: 'neutral' },
+        { label: this.lang.locals.unspecified, value: 'undefined' },
       ]
     }
     return []
@@ -81,7 +89,7 @@ export class ConversationListComponent implements OnInit {
       this.conversationsContainer().nativeElement.addEventListener('wheel', event => {
         event.stopPropagation()
       })
-      if (this.conversations().length) {
+      if (this.conversations()) {
         untracked(() => {
           this.filterType$.next('bot_name')
         })
@@ -95,14 +103,14 @@ export class ConversationListComponent implements OnInit {
   }
 
   onFilterTypeSelect(option: { label: string; value: ChatFilterType }) {
-    this.searchControl.reset('')
+    this.resetContorl()
     this.selectedFilter.set(option) // Set the selected option
     this.dropdownOpen.set(false) // Close the dropdown
     this.filterValue$.next('')
     this.filterType$.next(option.value)
   }
 
-  onSuggestionSelect(suggestion: { label: string; value: string }) {
+  onSuggestionSelect(suggestion: { label: string; value: string | FeedbackChat }) {
     this.filterValue$.next(suggestion.value) // Update filter value
     this.searchControl.setValue(suggestion.label, { emitEvent: false }) // Update input value
     this.showSuggestions.set(false) // Hide suggestions
@@ -118,7 +126,7 @@ export class ConversationListComponent implements OnInit {
     ])
       .pipe(
         map(([searchValue, filterType, filterValue]) => {
-          if (filterType !== 'bot_name' && !filterValue) {
+          if (filterType !== 'bot_name' && filterValue === '') {
             return this.conversations()
           }
           return this.conversations().filter(conversation => {
@@ -128,13 +136,12 @@ export class ConversationListComponent implements OnInit {
               return searchMatch
             }
 
-            if (filterType === 'sentiment') {
+            if (filterType === 'sentiment' && typeof filterValue === 'string') {
               return conversation.sentiment?.toLowerCase() === filterValue.toLowerCase()
             }
 
             if (filterType === 'feedback') {
-              const feedbackMatch = filterValue === 'like' ? !!conversation.feedback : !conversation.feedback
-              return feedbackMatch
+              return conversation.feedback === filterValue
             }
 
             return true
@@ -156,5 +163,25 @@ export class ConversationListComponent implements OnInit {
   OnSelectConversation(conversationId: string) {
     this.selectedConversation.set(conversationId)
     this.onConversationSelect.emit(conversationId)
+  }
+  resetContorl() {
+    this.searchControl.reset('')
+    this.filterValue$.next('')
+    this.filterType$.next(this.selectedFilter().value)
+  }
+
+  sort() {
+    this.currentSort = this.currentSort === 'asc' ? 'desc' : 'asc'
+    const sorted = this.filteredConversations().sort((a, b) => {
+      const dateA = new Date(a.timestamp).getTime()
+      const dateB = new Date(b.timestamp).getTime()
+
+      if (this.currentSort === 'asc') {
+        return dateA - dateB // Ascending order
+      } else {
+        return dateB - dateA // Descending order
+      }
+    })
+    this.filteredConversations.set(sorted)
   }
 }

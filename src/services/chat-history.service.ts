@@ -8,6 +8,7 @@ import { CastResponse } from 'cast-response'
 import { Conversation } from '@/models/conversation'
 import { HistoryMessage } from '@/models/history-message'
 import { formatString, formatText, ignoreErrors } from '@/utils/utils'
+import { FeedbackChat } from '@/enums/feedback-chat'
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +18,13 @@ export class ChatHistoryService {
   private readonly urlService = inject(UrlService)
 
   @CastResponse(() => Conversation)
-  getAllConversations(): Observable<Conversation[]> {
+  getAllConversations(botName?: string): Observable<Conversation[]> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/get-all-conversations`
-    return this.http.get<Conversation[]>(url)
+    let params = new HttpParams()
+    if (botName) {
+      params = params.set('bot_name', botName)
+    }
+    return this.http.get<Conversation[]>(url, { params: params })
   }
   getConversationsByUserId(userId: string): Observable<ConversationResultContract[]> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/get-conversations`
@@ -54,9 +59,13 @@ export class ChatHistoryService {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/sentiment-analysis`
     return this.http.post<string>(url, null)
   }
-  addFeedback(conversationId: string, feedback: number): Observable<string> {
+  addFeedback(conversationId: string, feedback: FeedbackChat): Observable<string> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/add-feedback`
     const params = new HttpParams().set('conv_id', conversationId).set('feedback', feedback)
     return this.http.post<string>(url, null, { params: params })
+  }
+  getAllBotNames(): Observable<string[]> {
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/get-bot-name`
+    return this.http.get<string[]>(url)
   }
 }

@@ -70,4 +70,11 @@ export interface LangKeysContract {
   choose_conversation: string
   conversation_description: string
   unspecified: string
+  all_bots: string
+  choose_bot: string
+  conversation_title: string
+  sentiment_analysis_description: string
+  reload_conversation: string
+  sort_conversation: string
+  total: string
 }
