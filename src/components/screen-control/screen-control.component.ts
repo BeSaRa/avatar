@@ -25,6 +25,7 @@ import {
 } from 'microsoft-cognitiveservices-speech-sdk'
 import { ChatService } from '@/services/chat.service'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
+import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
 import { MatRipple } from '@angular/material/core'
 import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap } from 'rxjs'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
@@ -37,7 +38,7 @@ import { LocalService } from '@/services/local.service'
 @Component({
   selector: 'app-screen-control',
   standalone: true,
-  imports: [CdkDrag, CdkDragHandle, NgClass, MatRipple, MatTooltip],
+  imports: [CdkDrag, CdkDragHandle, NgClass, MatRipple, MatTooltip, AvatarInterrupterBtnComponent],
   templateUrl: './screen-control.component.html',
   styleUrl: './screen-control.component.scss',
   animations: [
@@ -222,10 +223,6 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   clearChat() {
     this.chatService.messages.set([])
-  }
-
-  interruptAvatar() {
-    this.avatarService.interruptAvatar().pipe(take(1)).subscribe()
   }
 
   toggleStream() {

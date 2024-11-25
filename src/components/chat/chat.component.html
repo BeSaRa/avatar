@@ -110,7 +110,7 @@
       <button
         [matTooltip]="lang.locals.send"
         [disabled]="answerInProgress()"
-        (click)="sendMessage$.next()"
+        (click)="sendMessage()"
         class="bg-primary rounded outline-none ring-offset-1 focus:ring-2 ring-primary text-white px-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
           <path
@@ -118,11 +118,28 @@
         </svg>
       </button>
 
-      <input
+      <!-- <input
         #textArea
-        (keydown.enter)="sendMessage$.next()"
+        (keydown.enter)="sendMessage()"
         [formControl]="messageCtrl"
-        class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" />
+        class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" /> -->
+      <div class="relative w-full">
+        <input
+          #textArea
+          (keydown.enter)="sendMessage()"
+          [formControl]="messageCtrl"
+          class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" />
+        @if (answerInProgress()) {
+          <button
+            [matTooltip]="lang.locals.send"
+            (click)="stopTalking()"
+            class="absolute top-2 right-0 mr-1 rounded-full bg-white text-primary hover:bg-gray-200 overflow-hidden border-primary border-2 flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18,18H6V6H18V18Z" />
+            </svg>
+          </button>
+        }
+      </div>
 
       <app-recorder
         #recorder
@@ -159,6 +176,7 @@
         </span>
       </div>
       <app-avatar-video class="w-full" [size]="undefined" />
+      <app-avatar-interrupter-btn class="absolute z-10 top-12 w-12 mx-4" />
     </div>
   }
 </div>
