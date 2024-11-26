@@ -2,7 +2,7 @@ import { Component, effect, ElementRef, HostListener, inject, Injector, OnInit, 
 import { MatRipple } from '@angular/material/core'
 import { LocalService } from '@/services/local.service'
 import { DOCUMENT, NgClass } from '@angular/common'
-import { BehaviorSubject, catchError, exhaustMap, filter, map, Subject, switchMap, takeUntil, tap } from 'rxjs'
+import { catchError, exhaustMap, filter, map, Subject, takeUntil, tap } from 'rxjs'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import PerfectScrollbar from 'perfect-scrollbar'
@@ -52,6 +52,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   fullscreenStatus = signal(false)
   answerInProgress = signal(false)
   animating = signal(false)
+  stopAnimate = signal(false)
   ratingDone = signal(false)
   declare scrollbarRef: PerfectScrollbar
   feedbackOptions = FeedbackChat
@@ -92,8 +93,6 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   messageCtrl = new FormControl<string>('', { nonNullable: true })
   sendMessage$ = new Subject<void>()
-  stopChat$ = new Subject<void>()
-  isActive$ = new BehaviorSubject<boolean>(true)
 
   ngOnInit(): void {
     this.listenToSendMessage()
@@ -116,37 +115,27 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   }
 
   private listenToSendMessage() {
-    this.isActive$
+    return this.sendMessage$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(() => !!this.messageCtrl.value.trim()))
+      .pipe(map(() => this.messageCtrl.value.trim()))
+      .pipe(tap(() => this.stopAnimate.set(false)))
+      .pipe(tap(() => this.messageCtrl.setValue('')))
+      .pipe(tap(() => this.recorder()?.cleartext()))
+      .pipe(tap(() => this.answerInProgress.set(true)))
+      .pipe(tap(() => this.goToEndOfChat()))
       .pipe(
-        switchMap(isAcitve => {
-          if (!isAcitve) {
-            return this.stopChat$
-          }
-          return (
-            this.sendMessage$
-              .pipe(takeUntil(this.destroy$))
-              .pipe(filter(() => !!this.messageCtrl.value.trim()))
-              .pipe(map(() => this.messageCtrl.value.trim()))
-              // .pipe(tap(() => this.isActive$.next(true)))
-              .pipe(tap(() => this.messageCtrl.setValue('')))
-              .pipe(tap(() => this.recorder()?.cleartext()))
-              .pipe(tap(() => this.answerInProgress.set(true)))
-              .pipe(tap(() => this.goToEndOfChat()))
-              .pipe(
-                exhaustMap(value =>
-                  this.chatService
-                    .sendMessage(value)
-                    .pipe(
-                      catchError(err => {
-                        this.answerInProgress.set(false)
-                        throw new Error(err)
-                      })
-                    )
-                    .pipe(ignoreErrors())
-                )
-              )
-          )
-        })
+        exhaustMap(value =>
+          this.chatService
+            .sendMessage(value)
+            .pipe(
+              catchError(err => {
+                this.answerInProgress.set(false)
+                throw new Error(err)
+              })
+            )
+            .pipe(ignoreErrors())
+        )
       )
       .subscribe(() => {
         this.answerInProgress.set(false)
@@ -212,16 +201,5 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .subscribe(() => {
         this.ratingDone.set(true)
       })
-  }
-
-  stopTalking() {
-    this.isActive$.next(false)
-    this.stopChat$.next()
-  }
-  sendMessage() {
-    if (!this.isActive$.value) {
-      this.isActive$.next(true) // Reactivate message sending
-    }
-    this.sendMessage$.next() // Trigger message sending
   }
 }

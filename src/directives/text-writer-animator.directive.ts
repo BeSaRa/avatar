@@ -6,7 +6,8 @@ import { Directive, ElementRef, EventEmitter, Input, OnInit, Output } from '@ang
 })
 export class TextWriterAnimatorDirective implements OnInit {
   @Input() text = ''
-  @Input() speed = 20
+  @Input() speed = 2
+  @Input() stop = false
   @Output() animating: EventEmitter<boolean> = new EventEmitter<boolean>()
   constructor(private elementRef: ElementRef) {}
   ngOnInit(): void {
@@ -18,6 +19,10 @@ export class TextWriterAnimatorDirective implements OnInit {
     let currentText = ''
 
     const addNextCharacter = () => {
+      if (this.stop) {
+        this.animating.emit(false)
+        return
+      }
       currentText += this.text.charAt(index)
       this.elementRef.nativeElement.innerHTML = currentText // Render current text
       // chatContainer.scrollTop = chatContainer.scrollHeight;
