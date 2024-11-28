@@ -80,4 +80,7 @@ export interface LangKeysContract {
   doc_analyzer: string
   not_supported_filetype: string
   exceed_file_size: string
+  upload: string
+  remove: string
+  click_to_upload_or_dnd: string
 }
