@@ -310,5 +310,17 @@
  "total": {
   "ar": "الإجمالي",
   "en": "Total"
+ },
+ "doc_analyzer": {
+  "ar": "محلل المستندات",
+  "en": "Document Analyzer"
+ },
+ "not_supported_filetype": {
+  "ar": "صيغة الملف غير مدعومة",
+  "en": "File type not supported"
+ },
+ "exceed_file_size": {
+  "ar": "حجم الملف كبير جدا",
+  "en": "File size is too big"
  }
 }

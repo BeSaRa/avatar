@@ -16,6 +16,13 @@ const routes: Routes = [
     loadComponent: () => import('@/views/chat-history/chat-history.component').then(c => c.ChatHistoryComponent),
   },
   {
+    path: 'doc-intelligence',
+    loadComponent: () =>
+      import('@/views/document-intelligence/document-intelligence.component').then(
+        c => c.DocumentIntelligenceComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
