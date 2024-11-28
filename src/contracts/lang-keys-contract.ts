@@ -77,4 +77,7 @@ export interface LangKeysContract {
   reload_conversation: string
   sort_conversation: string
   total: string
+  doc_analyzer: string
+  not_supported_filetype: string
+  exceed_file_size: string
 }
