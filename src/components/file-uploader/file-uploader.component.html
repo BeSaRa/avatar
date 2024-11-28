@@ -1,37 +1,67 @@
-<div class="flex flex-col items-center justify-center space-y-4">
-  <!-- Upload Input Section -->
-  <label
-    appDndUploader
-    (files)="onFileUpload($event)"
-    for="dropzone-file"
-    class="flex flex-col items-center justify-center h-40 w-96 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-    @if (!files().length) {
-      <div class="flex flex-col items-center justify-center pt-5 pb-6">
-        <svg
-          class="w-8 h-8 mb-4 text-gray-500"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 20 16">
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-        </svg>
-        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-        <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+<div class="flex flex-col items-center justify-center">
+  <!-- Container for Header and Label -->
+  <div class="flex flex-col w-96 border border-gray-300 rounded-lg shadow-sm bg-white">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between px-4 py-2 bg-gray-200 rounded-t-lg">
+      <h2 class="text-lg font-semibold text-gray-700">File Upload</h2>
+      <div class="flex space-x-2 gap-3">
+        <button
+          [disabled]="!files().length"
+          type="button"
+          class="px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-white bg-primary/90 rounded-lg hover:bg-primary focus:ring-2 focus:outline-none focus:ring-primary/50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" />
+          </svg>
+          {{ lang.locals.upload }}
+        </button>
+        <button
+          [disabled]="!files().length"
+          type="button"
+          class="px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-2 focus:outline-none focus:ring-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+          </svg>
+          {{ lang.locals.remove }}
+        </button>
       </div>
-    } @else {
-      <ng-container [ngTemplateOutlet]="fileCards" />
-    }
-    <input id="dropzone-file" type="file" class="hidden" />
-  </label>
+    </div>
+
+    <!-- Upload Input Section -->
+    <label
+      appDndUploader
+      (files)="onFileUpload($event)"
+      for="dropzone-file"
+      class="flex flex-col items-center justify-center h-40 w-full rounded-b-lg cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-dased hover:border">
+      @if (!files().length) {
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <svg
+            class="w-8 h-8 mb-4 text-gray-500"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 16">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+          </svg>
+          <p class="mb-2 text-sm text-gray-500">{{ lang.locals.click_to_upload_or_dnd }}</p>
+          <p class="text-xs text-gray-500">PDF</p>
+        </div>
+      } @else {
+        <ng-container [ngTemplateOutlet]="fileCards" />
+      }
+      <input id="dropzone-file" type="file" class="hidden" accept="application/pdf" />
+    </label>
+  </div>
 
   <!-- File Cards Section -->
   <ng-template #fileCards>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-4">
       @for (item of files(); track item.url; let i = $index) {
         <div
           class="relative flex flex-col items-center justify-center p-4 bg-white border border-gray-300 rounded-lg shadow-sm">

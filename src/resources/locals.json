@@ -322,5 +322,17 @@
  "exceed_file_size": {
   "ar": "حجم الملف كبير جدا",
   "en": "File size is too big"
+ },
+ "upload": {
+  "ar": "رفع",
+  "en": "Upload"
+ },
+ "remove": {
+  "ar": "حذف",
+  "en": "Remove"
+ },
+ "click_to_upload_or_dnd": {
+  "ar": "اضغط لرفع ملف أو قم بسحبه و إفلاته",
+  "en": "Click to upload file or drag and drop"
  }
 }

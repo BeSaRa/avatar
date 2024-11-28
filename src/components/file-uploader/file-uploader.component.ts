@@ -1,6 +1,7 @@
 import { DndFileUploaderDirective } from '@/directives/dnd-file-uploader.directive'
+import { LocalService } from '@/services/local.service'
 import { NgTemplateOutlet } from '@angular/common'
-import { Component, signal } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { SafeUrl } from '@angular/platform-browser'
 
 @Component({
@@ -11,6 +12,7 @@ import { SafeUrl } from '@angular/platform-browser'
   styleUrl: './file-uploader.component.scss',
 })
 export class FileUploaderComponent {
+  lang = inject(LocalService)
   files = signal<{ file: File; url: SafeUrl }[]>([])
   onFileUpload(event: { file: File; url: SafeUrl }[]) {
     this.files.set(event)
