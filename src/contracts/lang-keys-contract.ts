@@ -83,4 +83,5 @@ export interface LangKeysContract {
   upload: string
   remove: string
   click_to_upload_or_dnd: string
+  file_upload: string
 }

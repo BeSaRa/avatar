@@ -11,9 +11,10 @@ export class DocIntelligenceService {
   http = inject(HttpClient)
   urlService = inject(UrlService)
 
-  documentAnalyze(file: string): Observable<DocumentIntelligenceContract> {
+  documentAnalyze(file: File): Observable<DocumentIntelligenceContract> {
     const url = `${this.urlService.URLS.DOC_INTELLIGENCE}/analyze-pdf`
-    const formData = new FormData().append('file', file)
+    const formData = new FormData()
+    formData.append('file', file)
     return this.http.post<string>(url, formData).pipe(map(res => JSON.parse(res) as DocumentIntelligenceContract))
   }
 }

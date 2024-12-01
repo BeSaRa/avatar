@@ -334,5 +334,9 @@
  "click_to_upload_or_dnd": {
   "ar": "اضغط لرفع ملف أو قم بسحبه و إفلاته",
   "en": "Click to upload file or drag and drop"
+ },
+ "file_upload": {
+  "ar": "رفع الملفات",
+  "en": "File upload"
  }
 }

@@ -3,9 +3,10 @@
   <div class="flex flex-col w-96 border border-gray-300 rounded-lg shadow-sm bg-white">
     <!-- Header Section -->
     <div class="flex items-center justify-between px-4 py-2 bg-gray-200 rounded-t-lg">
-      <h2 class="text-lg font-semibold text-gray-700">File Upload</h2>
+      <h2 class="text-lg font-semibold text-gray-700">{{ lang.locals.file_upload }}</h2>
       <div class="flex space-x-2 gap-3">
         <button
+          (click)="analyzeFile()"
           [disabled]="!files().length"
           type="button"
           class="px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-white bg-primary/90 rounded-lg hover:bg-primary focus:ring-2 focus:outline-none focus:ring-primary/50">
@@ -27,41 +28,55 @@
         </button>
       </div>
     </div>
-
-    <!-- Upload Input Section -->
-    <label
-      appDndUploader
-      (files)="onFileUpload($event)"
-      for="dropzone-file"
-      class="flex flex-col items-center justify-center h-40 w-full rounded-b-lg cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-dased hover:border">
-      @if (!files().length) {
-        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-          <svg
-            class="w-8 h-8 mb-4 text-gray-500"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 16">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-          </svg>
-          <p class="mb-2 text-sm text-gray-500">{{ lang.locals.click_to_upload_or_dnd }}</p>
-          <p class="text-xs text-gray-500">PDF</p>
+    <div class="p-2">
+      @if (notAllowedFiles()) {
+        <div class="bg-red-100 border border-red-400 rounded-md w-full p-2 mb-1">
+          <p class="font-semibold text-xs text-red-500">{{ lang.locals.not_supported_filetype }}</p>
+          <p class="font-medium text-xs text-red-500">{{ notAllowedFiles() }}</p>
         </div>
-      } @else {
-        <ng-container [ngTemplateOutlet]="fileCards" />
       }
-      <input id="dropzone-file" type="file" class="hidden" accept="application/pdf" />
-    </label>
+      <!-- Upload Input Section -->
+      <label
+        appDndUploader
+        dragHostClass="!border-solid !border-primary"
+        (files)="onFileUpload($event)"
+        for="dropzone-file"
+        class="flex flex-col items-center justify-center h-40 w-full rounded-b-lg cursor-pointer bg-gray-50 border-dashed border-2 rounded-md border-gray-300">
+        @if (!files().length) {
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg
+              class="w-8 h-8 mb-4 text-gray-500"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16">
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+            </svg>
+            <p class="mb-2 text-sm text-gray-500">{{ lang.locals.click_to_upload_or_dnd }}</p>
+            <p class="text-xs text-gray-500">PDF</p>
+          </div>
+        } @else {
+          <ng-container [ngTemplateOutlet]="fileCards" />
+        }
+        <input
+          id="dropzone-file"
+          (change)="onChooseFile($event)"
+          type="file"
+          class="hidden"
+          accept="application/pdf"
+          #inputFile />
+      </label>
+    </div>
   </div>
 
   <!-- File Cards Section -->
   <ng-template #fileCards>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-4">
+    <div class="grid grid-cols-1 gap-4 place-items-center mt-4">
       @for (item of files(); track item.url; let i = $index) {
         <div
           class="relative flex flex-col items-center justify-center p-4 bg-white border border-gray-300 rounded-lg shadow-sm">
@@ -74,7 +89,7 @@
             <path
               d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
           </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-primary mb-2" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-primary mb-2 fill-red-500" viewBox="0 0 24 24">
             <path
               d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M9.5 11.5C9.5 12.3 8.8 13 8 13H7V15H5.5V9H8C8.8 9 9.5 9.7 9.5 10.5V11.5M14.5 13.5C14.5 14.3 13.8 15 13 15H10.5V9H13C13.8 9 14.5 9.7 14.5 10.5V13.5M18.5 10.5H17V11.5H18.5V13H17V15H15.5V9H18.5V10.5M12 10.5H13V13.5H12V10.5M7 10.5H8V11.5H7V10.5Z" />
           </svg>
@@ -84,3 +99,76 @@
     </div>
   </ng-template>
 </div>
+@if (files().length) {
+  <div class="flex flex-col items-center justify-center p-4">
+    <!-- Container for Chips and PDF Viewer -->
+    <div class="flex flex-col w-11/12 max-w-5xl bg-white border border-gray-300 rounded-lg shadow-sm p-4">
+      <!-- Chips Container -->
+      <div class="flex flex-col items-center justify-start mb-4">
+        <mat-form-field class="chip-list w-full" appearance="fill">
+          <mat-chip-grid #chipList>
+            <!-- Make this container scrollable -->
+            <div class="flex flex-wrap gap-2 h-24 overflow-y-auto">
+              @for (word of words(); track word) {
+                <mat-chip-row class="truncate" [removable]="true" (removed)="remove(word)">
+                  <span class="truncate max-w-xs block overflow-hidden text-ellipsis">
+                    {{ word }}
+                  </span>
+                  <button matChipRemove aria-label="'Remove ' + word">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
+                      <path
+                        d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" />
+                    </svg>
+                  </button>
+                </mat-chip-row>
+              }
+              <input
+                placeholder="Add more words"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true"
+                (matChipInputTokenEnd)="add($event)" />
+            </div>
+          </mat-chip-grid>
+        </mat-form-field>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between items-center mb-4">
+        <button
+          type="button"
+          (click)="findPrevious()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
+            <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+          </svg>
+          Previous
+        </button>
+        <button
+          type="button"
+          (click)="findNext()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700">
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
+            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- PDF Viewer -->
+      <div class="rounded-md overflow-hidden">
+        <ngx-extended-pdf-viewer
+          [src]="files()[0].base64"
+          [theme]="'dark'"
+          [language]="lang.currentLanguage"
+          [textLayer]="true"
+          [showFindButton]="'always-visible'"
+          [findbarVisible]="false"
+          [backgroundColor]="'#d1d5db'"
+          (updateFindMatchesCount)="updateFindMatchesCount($event)"
+          (updateFindState)="updateFindState($event)"
+          [showOpenFileButton]="false"></ngx-extended-pdf-viewer>
+      </div>
+    </div>
+  </div>
+}
