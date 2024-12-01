@@ -36,6 +36,7 @@
     "marked": "^15.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.40.0",
     "ng2-charts": "^6.0.1",
+    "ngx-extended-pdf-viewer": "^22.0.0",
     "perfect-scrollbar": "^1.5.6",
     "process": "^0.11.10",
     "rxjs": "~7.8.0",

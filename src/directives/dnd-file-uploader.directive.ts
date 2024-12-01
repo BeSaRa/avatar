@@ -1,7 +1,8 @@
 import { FileUploaderService } from '@/services/file-uploader.service'
+import { DocumentFileType } from '@/types/dcoument-file-type'
 import { DOCUMENT } from '@angular/common'
-import { Directive, HostBinding, HostListener, inject, output } from '@angular/core'
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser'
+import { Directive, ElementRef, HostListener, inject, input, output } from '@angular/core'
+import { DomSanitizer } from '@angular/platform-browser'
 
 @Directive({
   selector: '[appDndUploader]',
@@ -11,36 +12,59 @@ export class DndFileUploaderDirective {
   document = inject(DOCUMENT)
   sanitizer = inject(DomSanitizer)
   uploader = inject(FileUploaderService)
-  files = output<{ file: File; url: SafeUrl }[]>()
-
-  @HostBinding('class.!bg-gray-200') isdraged = false
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef)
+  dragHostClass = input([], {
+    transform: (val: string | string[]) => (Array.isArray(val) ? val : val.split(' ')),
+  })
+  files = output<DocumentFileType[]>()
 
   @HostListener('dragover', ['$event'])
   onDragOver(event: DragEvent) {
-    event.stopPropagation()
-    event.preventDefault()
-    this.isdraged = true
+    this.preventDefaults(event)
+    this.addDragClass()
   }
 
   @HostListener('dragleave', ['$event'])
   onDragLeave(event: DragEvent) {
-    event.stopPropagation()
-    event.preventDefault()
-    this.isdraged = false
+    this.preventDefaults(event)
+    this.removeDragClass()
   }
 
   @HostListener('drop', ['$event'])
   onDropFiles(event: DragEvent) {
-    event.stopPropagation()
+    this.preventDefaults(event)
+    this.removeDragClass()
+    const files = this.getDroppedFiles(event)
+    if (!files.length) return
+
+    this.uploadFiles(files)
+  }
+
+  private preventDefaults(event: DragEvent): void {
     event.preventDefault()
-    this.isdraged = false
+    event.stopPropagation()
+  }
 
+  private addDragClass(): void {
+    this.elementRef.nativeElement.classList.add(...this.dragHostClass())
+  }
+
+  private removeDragClass(): void {
+    this.elementRef.nativeElement.classList.remove(...this.dragHostClass())
+  }
+
+  private getDroppedFiles(event: DragEvent): File[] {
     const { dataTransfer } = event
-    if (!dataTransfer?.files) return
+    if (!dataTransfer?.files) return []
+    return Array.from(dataTransfer.files)
+  }
 
-    const uploadedFiles = Array.from({ length: dataTransfer.files.length }, (_, i) => dataTransfer.files.item(i)!)
-    this.uploader.uploadFiles(uploadedFiles).then(res => {
-      this.files.emit(res)
-    })
+  private async uploadFiles(files: File[]): Promise<void> {
+    try {
+      const result = await this.uploader.uploadFiles(files)
+      this.files.emit(result)
+    } catch (error) {
+      console.error('Error uploading files:', error)
+    }
   }
 }
