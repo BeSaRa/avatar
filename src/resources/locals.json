@@ -338,5 +338,13 @@
  "file_upload": {
   "ar": "رفع الملفات",
   "en": "File upload"
+ },
+ "next": {
+  "ar": "التالي",
+  "en": "Next"
+ },
+ "previous": {
+  "ar": "السابق",
+  "en": "Previous"
  }
 }
