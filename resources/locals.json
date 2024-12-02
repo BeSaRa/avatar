@@ -310,5 +310,53 @@
  "total": {
   "ar": "الإجمالي",
   "en": "Total"
+ },
+ "doc_analyzer": {
+  "ar": "محلل المستندات",
+  "en": "Document Analyzer"
+ },
+ "not_supported_filetype": {
+  "ar": "صيغة الملف غير مدعومة",
+  "en": "File type not supported"
+ },
+ "exceed_file_size": {
+  "ar": "حجم الملف كبير جدا",
+  "en": "File size is too big"
+ },
+ "upload": {
+  "ar": "رفع",
+  "en": "Upload"
+ },
+ "remove": {
+  "ar": "حذف",
+  "en": "Remove"
+ },
+ "click_to_upload_or_dnd": {
+  "ar": "اضغط لرفع ملف أو قم بسحبه و إفلاته",
+  "en": "Click to upload file or drag and drop"
+ },
+ "file_upload": {
+  "ar": "رفع الملفات",
+  "en": "File upload"
+ },
+ "next": {
+  "ar": "التالي",
+  "en": "Next"
+ },
+ "previous": {
+  "ar": "السابق",
+  "en": "Previous"
+ },
+ "extracted_data": {
+  "ar": "العناصر المستخرجة",
+  "en": "Extracted data"
+ },
+ "extracted_words": {
+  "ar": "الكلمات المستخرجة",
+  "en": "Extracted words"
+ },
+ "document_analyze_progress": {
+  "ar": "جاري تحليل الملف",
+  "en": "Analyze Document"
  }
 }
