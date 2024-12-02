@@ -1,0 +1,108 @@
+<mat-accordion class="w-full mt-4">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ lang.locals.extracted_data }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <!-- Extracted Elements Table -->
+    <div class="bg-white border border-gray-300 rounded-lg shadow-sm w-full p-4 my-4">
+      <table class="min-w-full border-collapse">
+        <thead class="bg-primary text-white text-left">
+          <tr>
+            <th class="px-4 py-2">Company Name</th>
+            <th class="px-4 py-2">Address</th>
+            <th class="px-4 py-2">Product Name</th>
+            <th class="px-4 py-2">Physical State</th>
+            <th class="px-4 py-2">Precautions</th>
+            <th class="px-4 py-2">Storage</th>
+          </tr>
+        </thead>
+        <tbody class="text-left">
+          <tr>
+            <td
+              class="px-4 py-2 border-b truncate break-words max-w-40"
+              matTooltip="{{ extractedData()['extracted-elements']['company-name'] }}"
+              matTooltipPosition="above">
+              {{ extractedData()['extracted-elements']['company-name'] }}
+            </td>
+            <td
+              class="px-4 py-2 border-b truncate break-words max-w-40"
+              matTooltip="{{ extractedData()['extracted-elements'].address }}"
+              matTooltipPosition="above">
+              {{ extractedData()['extracted-elements'].address }}
+            </td>
+            <td
+              class="px-4 py-2 border-b truncate break-words max-w-40"
+              matTooltip="{{ extractedData()['extracted-elements']['product-name'] }}"
+              matTooltipPosition="above">
+              {{ extractedData()['extracted-elements']['product-name'] }}
+            </td>
+            <td
+              class="px-4 py-2 border-b truncate break-words max-w-40"
+              matTooltip="{{ extractedData()['extracted-elements']['physical-state'] }}"
+              matTooltipPosition="above">
+              {{ extractedData()['extracted-elements']['physical-state'] }}
+            </td>
+            <td
+              class="px-4 py-2 border-b truncate break-words max-w-40"
+              matTooltip="{{ extractedData()['extracted-elements'].precautions }}"
+              matTooltipPosition="above">
+              {{ extractedData()['extracted-elements'].precautions }}
+            </td>
+            <td
+              class="px-4 py-2 border-b truncate break-words max-w-40"
+              matTooltip="{{ extractedData()['extracted-elements'].storage }}"
+              matTooltipPosition="above">
+              {{ extractedData()['extracted-elements'].storage }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Extracted Table -->
+    <div class="bg-white border border-gray-300 rounded-lg shadow-sm w-full p-4">
+      <table class="min-w-full border-collapse">
+        <thead class="bg-primary text-white text-left">
+          <tr>
+            <th class="px-4 py-2">Chemical Name</th>
+            <th class="px-4 py-2">CAS No</th>
+            <th class="px-4 py-2">EC No</th>
+            <th class="px-4 py-2">CLP Classification</th>
+          </tr>
+        </thead>
+        <tbody class="text-left">
+          @for (element of extractedData()['extracted-table']; track $index) {
+            <tr>
+              <td
+                class="px-4 py-2 border-b truncate break-words max-w-40"
+                matTooltipPosition="above"
+                matTooltip="{{ element['chemical-name'] }}">
+                {{ element['chemical-name'] }}
+              </td>
+              <td
+                class="px-4 py-2 border-b truncate break-words max-w-40"
+                matTooltipPosition="above"
+                matTooltip="{{ element['cas-no'] }}">
+                {{ element['cas-no'] }}
+              </td>
+              <td
+                class="px-4 py-2 border-b truncate break-words max-w-40"
+                matTooltipPosition="above"
+                matTooltip="{{ element['ec-no'] }}">
+                {{ element['ec-no'] }}
+              </td>
+              <td
+                class="px-4 py-2 border-b truncate break-words max-w-40"
+                matTooltipPosition="above"
+                matTooltip="{{ element['clp-classification'] }}">
+                {{ element['clp-classification'] }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

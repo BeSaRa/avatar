@@ -1,1 +1,23 @@
-<app-file-uploader />
+<app-file-uploader
+  [disableAllWhenUpload]="isLoading()"
+  (onRemoveAll)="onFileRemoved()"
+  (loadedFiles)="onFileLoad($event)"
+  (onUpload)="analyzeFile()"></app-file-uploader>
+
+@if (isLoading()) {
+  <div class="flex items-center justify-center pt-4">
+    <div class="flex items-center space-x-2 text-gray-200">
+      <span class="text-lg font-medium">{{ lang.locals.document_analyze_progress }}</span>
+      <span class="flex">
+        <span class="animate-[bounce_1s_ease-in-out_infinite]">.</span>
+        <span class="animate-[bounce_1s_ease-in-out_infinite_0.2s]">.</span>
+        <span class="animate-[bounce_1s_ease-in-out_infinite_0.4s]">.</span>
+      </span>
+    </div>
+  </div>
+} @else if (isDataReady() && files().length) {
+  <div class="flex flex-col justify-center p-2 gap-4">
+    <app-doc-intelligence-viewer [file]="files()[0]" [words]="words()" />
+    <app-doc-intelligence-extracted-data [extractedData]="result" />
+  </div>
+}
