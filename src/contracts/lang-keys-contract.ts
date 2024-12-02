@@ -86,4 +86,7 @@ export interface LangKeysContract {
   file_upload: string
   next: string
   previous: string
+  extracted_data: string
+  extracted_words: string
+  document_analyze_progress: string
 }

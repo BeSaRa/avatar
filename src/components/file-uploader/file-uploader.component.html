@@ -6,10 +6,10 @@
       <h2 class="text-lg font-semibold text-gray-700">{{ lang.locals.file_upload }}</h2>
       <div class="flex space-x-2 gap-3">
         <button
-          (click)="analyzeFile()"
-          [disabled]="!files().length"
+          (click)="onUpload.emit()"
+          [disabled]="!files().length || disableAllWhenUpload()"
           type="button"
-          class="px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-white bg-primary/90 rounded-lg hover:bg-primary focus:ring-2 focus:outline-none focus:ring-primary/50">
+          class="disabled:bg-primary/50 px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-white bg-primary/90 rounded-lg hover:bg-primary focus:ring-2 focus:outline-none focus:ring-primary/50">
           <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 24 24">
             <path
               d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" />
@@ -17,9 +17,10 @@
           {{ lang.locals.upload }}
         </button>
         <button
-          [disabled]="!files().length"
+          (click)="removeAllFiles()"
+          [disabled]="!files().length || disableAllWhenUpload()"
           type="button"
-          class="px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-2 focus:outline-none focus:ring-gray-300">
+          class="disabled:bg-gray-300/50 px-3 py-2 text-xs font-medium text-center inline-flex gap-1 items-center text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-400 focus:ring-2 focus:outline-none focus:ring-gray-300">
           <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="currentColor" viewBox="0 0 24 24">
             <path
               d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
@@ -77,12 +78,12 @@
   <!-- File Cards Section -->
   <ng-template #fileCards>
     <div class="grid grid-cols-1 gap-4 place-items-center mt-4">
-      @for (item of files(); track item.url; let i = $index) {
+      @for (item of files(); track $index; let i = $index) {
         <div
           class="relative flex flex-col items-center justify-center p-4 bg-white border border-gray-300 rounded-lg shadow-sm">
           <svg
             class="absolute top-2 right-2 w-6 h-6 text-gray-400 hover:text-gray-600 cursor-pointer"
-            (click)="removeFile($event)"
+            (click)="removeFile($event, i)"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
             viewBox="0 0 24 24">
@@ -99,76 +100,3 @@
     </div>
   </ng-template>
 </div>
-@if (files().length) {
-  <div class="flex flex-col items-center justify-center p-4">
-    <!-- Container for Chips and PDF Viewer -->
-    <div class="flex flex-col w-11/12 max-w-5xl bg-white border border-gray-300 rounded-lg shadow-sm p-4">
-      <!-- Chips Container -->
-      <div class="flex flex-col items-center justify-start mb-4">
-        <mat-form-field class="chip-list w-full" appearance="fill">
-          <mat-chip-grid #chipList>
-            <!-- Make this container scrollable -->
-            <div class="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
-              @for (word of words(); track word) {
-                <mat-chip-row class="truncate" [removable]="true" (removed)="remove(word)">
-                  <span class="truncate max-w-xs block overflow-hidden text-ellipsis">
-                    {{ word }}
-                  </span>
-                  <button matChipRemove aria-label="'Remove ' + word">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
-                      <path
-                        d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" />
-                    </svg>
-                  </button>
-                </mat-chip-row>
-              }
-              <input
-                placeholder="Add more words"
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="true"
-                (matChipInputTokenEnd)="add($event)" />
-            </div>
-          </mat-chip-grid>
-        </mat-form-field>
-      </div>
-
-      <!-- Navigation Buttons -->
-      <div class="flex justify-between items-center mb-4">
-        <button
-          type="button"
-          (click)="findPrevious()"
-          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
-            <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
-          </svg>
-          {{ lang.locals.previous }}
-        </button>
-        <button
-          type="button"
-          (click)="findNext()"
-          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700">
-          {{ lang.locals.next }}
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
-            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- PDF Viewer -->
-      <div class="rounded-md overflow-hidden">
-        <ngx-extended-pdf-viewer
-          [src]="files()[0].base64"
-          [theme]="'dark'"
-          [language]="lang.currentLanguage"
-          [textLayer]="true"
-          [showFindButton]="'always-visible'"
-          [findbarVisible]="false"
-          [backgroundColor]="'#d1d5db'"
-          (updateFindMatchesCount)="updateFindMatchesCount($event)"
-          (updateFindState)="updateFindState($event)"
-          [showOpenFileButton]="false"></ngx-extended-pdf-viewer>
-      </div>
-    </div>
-  </div>
-}

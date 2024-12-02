@@ -346,5 +346,17 @@
  "previous": {
   "ar": "السابق",
   "en": "Previous"
+ },
+ "extracted_data": {
+  "ar": "العناصر المستخرجة",
+  "en": "Extracted data"
+ },
+ "extracted_words": {
+  "ar": "الكلمات المستخرجة",
+  "en": "Extracted words"
+ },
+ "document_analyze_progress": {
+  "ar": "جاري تحليل الملف",
+  "en": "Analyze Document"
  }
 }
