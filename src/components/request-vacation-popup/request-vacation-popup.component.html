@@ -1,0 +1,65 @@
+<div class="flex flex-col">
+  <div class="bg-primary text-white p-4">{{ lang.locals.vacation_request }}</div>
+  <form class="p-4 min-h-0 flex-auto flex flex-col" [formGroup]="vacationRequestForm" (ngSubmit)="onSubmit()">
+    <!-- Type -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="vacation_type">
+        @for (type of types$ | async; track $index) {
+          <mat-option [value]="type">{{ type }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="flex gap-4 w-full">
+      <!-- Employee Name -->
+      <mat-form-field class="w-1/2" appearance="outline">
+        <mat-label>Employee Name</mat-label>
+        <input matInput formControlName="employee_name" />
+      </mat-form-field>
+
+      <!-- Manager Name -->
+      <mat-form-field class="w-1/2" appearance="outline">
+        <mat-label>Manager Name</mat-label>
+        <input matInput formControlName="manager_name" />
+      </mat-form-field>
+    </div>
+
+    <!-- Department -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Department</mat-label>
+      <mat-select formControlName="employee_department">
+        @for (department of departments$ | async; track $index) {
+          <mat-option [value]="department">{{ department }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="flex gap-4 w-full">
+      <!-- Start Date -->
+      <mat-form-field class="w-1/2" appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="start_date" />
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- End Date -->
+      <mat-form-field class="w-1/2" appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="end_date" />
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Comments -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Comments</mat-label>
+      <textarea matInput rows="3" formControlName="comments"></textarea>
+    </mat-form-field>
+
+    <!-- Submit Button -->
+    <button mat-raised-button color="primary" class="w-full" [disabled]="vacationRequestForm.invalid">Submit</button>
+  </form>
+</div>

@@ -358,5 +358,13 @@
  "document_analyze_progress": {
   "ar": "جاري تحليل الملف",
   "en": "Analyze Document"
+ },
+ "vacation_request": {
+  "ar": "طلب إجازة",
+  "en": "Vacation request"
+ },
+ "interactive_chatbot": {
+  "ar": "البوت التفاعلي",
+  "en": "Interactive Chatbot"
  }
 }

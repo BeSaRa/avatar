@@ -23,6 +23,11 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'interactive-chatbot',
+    loadComponent: () =>
+      import('@/views/interactive-chat/interactive-chat.component').then(c => c.InteractiveChatComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
