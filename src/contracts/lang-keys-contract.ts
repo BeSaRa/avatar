@@ -89,4 +89,6 @@ export interface LangKeysContract {
   extracted_data: string
   extracted_words: string
   document_analyze_progress: string
+  vacation_request: string
+  interactive_chatbot: string
 }
