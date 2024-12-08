@@ -1,4 +1,15 @@
-import { Component, effect, ElementRef, HostListener, inject, Injector, OnInit, signal, viewChild } from '@angular/core'
+import {
+  Component,
+  effect,
+  ElementRef,
+  HostListener,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core'
 import { InteractiveChatService } from '@/services/interactive-chat.service'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
@@ -7,7 +18,7 @@ import { RecorderComponent } from '@/components/recorder/recorder.component'
 import { FeedbackChat } from '@/enums/feedback-chat'
 import { ChatHistoryService } from '@/services/chat-history.service'
 import { ignoreErrors } from '@/utils/utils'
-import { DOCUMENT } from '@angular/common'
+import { DOCUMENT, NgClass } from '@angular/common'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import PerfectScrollbar from 'perfect-scrollbar'
 import { Subject, takeUntil, filter, map, tap, exhaustMap, catchError } from 'rxjs'
@@ -29,6 +40,7 @@ import { slideFromBottom } from '@/animations/fade-in-slide'
     RecorderComponent,
     CdkDrag,
     CdkDragHandle,
+    NgClass,
   ],
   templateUrl: './interactive-chat.component.html',
   styleUrl: './interactive-chat.component.scss',
@@ -43,6 +55,7 @@ export class InteractiveChatComponent extends OnDestroyMixin(class {}) implement
   lang = inject(LocalService)
   chatHistoryService = inject(ChatHistoryService)
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
+  interactiveArea = viewChild.required('interactiveArea', { read: ViewContainerRef })
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
   messageInput = viewChild.required<ElementRef<HTMLTextAreaElement>>('textArea')
   fullscreenStatus = signal(false)
@@ -91,6 +104,7 @@ export class InteractiveChatComponent extends OnDestroyMixin(class {}) implement
   ngOnInit(): void {
     this.listenToSendMessage()
     this.detectFullScreenMode()
+    this.interactiveChatService.interactiveArea = this.interactiveArea()
   }
 
   fullScreenToggle() {

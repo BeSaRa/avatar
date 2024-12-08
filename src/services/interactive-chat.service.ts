@@ -1,5 +1,5 @@
 import { ChatActionResultContract } from '@/contracts/chat-action-result-contract'
-import { inject, Injectable, signal } from '@angular/core'
+import { inject, Injectable, signal, ViewContainerRef } from '@angular/core'
 import { BaseChatService } from './base-chat.service'
 import { Message } from '@/models/message'
 import { ChatMessageResultContract } from '@/contracts/chat-message-result-contract'
@@ -21,7 +21,8 @@ export class InteractiveChatService extends BaseChatService {
   private readonly dialog = inject(MatDialog)
   private ref?: MatDialogRef<RequestVacationPopupComponent>
   private listRef?: MatDialogRef<VacationListPopupComponent>
-
+  isDialogOpened = signal(false)
+  interactiveArea?: ViewContainerRef
   override sendMessage(content: string): Observable<ChatMessageResultContract> {
     this.messages.update(messages => [...messages, new Message(content, 'user')])
     return this.http
@@ -56,9 +57,9 @@ export class InteractiveChatService extends BaseChatService {
       (args?: FunctionArguments<FunctionName>) => void | Observable<ChatActionResultContract>
     > = {
       fill_vacation_form: () => this.openVacationDialog(args as FunctionArguments<'fill_vacation_form'>),
-      approve: () => this.approveVacation(args as FunctionArguments<'approve'>),
-      reject: () => this.rejectVacation(args as FunctionArguments<'reject'>),
-      pending: () => this.pendingVacation(args as FunctionArguments<'pending'>),
+      approve: () => this.checkAndApprove(args as FunctionArguments<'approve'>),
+      reject: () => this.checkAndReject(args as FunctionArguments<'reject'>),
+      pending: () => this.checkAndPending(args as FunctionArguments<'pending'>),
       'submit-form': () => this.submitVactionRequest(),
       'get-all-vacation-forms': () => this.getAllVacations(),
     }
@@ -70,10 +71,19 @@ export class InteractiveChatService extends BaseChatService {
       this.ref.close()
     }
     this.ref = this.dialog.open(RequestVacationPopupComponent, {
-      width: '70vw',
+      position: {
+        top: '50px',
+        left: '650px',
+      },
       hasBackdrop: false,
       data: form,
       disableClose: true,
+    })
+    this.ref?.afterOpened().subscribe(() => {
+      this.isDialogOpened.set(true)
+    })
+    this.ref?.afterClosed().subscribe(() => {
+      this.isDialogOpened.set(false)
     })
   }
 
@@ -82,11 +92,20 @@ export class InteractiveChatService extends BaseChatService {
       this.listRef.close()
     }
     this.listRef = this.dialog.open(VacationListPopupComponent, {
-      width: '80vw',
-      minWidth: 'fit-content',
+      minWidth: '45vw',
+      position: {
+        top: '50px',
+        left: '650px',
+      },
       hasBackdrop: false,
       data: vacations,
       disableClose: true,
+    })
+    this.listRef?.afterOpened().subscribe(() => {
+      this.isDialogOpened.set(true)
+    })
+    this.listRef?.afterClosed().subscribe(() => {
+      this.isDialogOpened.set(false)
     })
   }
 
@@ -121,6 +140,25 @@ export class InteractiveChatService extends BaseChatService {
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
       })
       .pipe(tap(res => this.openVacationListDialog(res.data.action_results)))
+  }
+
+  checkAndApprove(employeeId: FunctionArguments<'approve'>) {
+    if (this.listRef) {
+      const vacation = this.listRef.componentInstance.data.find(el => el.Employee_ID === employeeId.employee_ID)
+      if (vacation) this.listRef.componentInstance.approveVacation(vacation)
+    } else this.approveVacation(employeeId)
+  }
+  checkAndReject(employeeId: FunctionArguments<'reject'>) {
+    if (this.listRef) {
+      const vacation = this.listRef.componentInstance.data.find(el => el.Employee_ID === employeeId.employee_ID)
+      if (vacation) this.listRef.componentInstance.rejectVacation(vacation)
+    } else this.rejectVacation(employeeId)
+  }
+  checkAndPending(employeeId: FunctionArguments<'pending'>) {
+    if (this.listRef) {
+      const vacation = this.listRef.componentInstance.data.find(el => el.Employee_ID === employeeId.employee_ID)
+      if (vacation) this.listRef.componentInstance.pendingVacation(vacation)
+    } else this.pendingVacation(employeeId)
   }
 
   approveVacation(employeeId: FunctionArguments<'approve'>): Observable<ChatActionResultContract<string>> {
