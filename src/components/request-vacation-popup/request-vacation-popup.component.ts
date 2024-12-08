@@ -18,6 +18,7 @@ import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { takeUntil, tap } from 'rxjs'
 import { AsyncPipe } from '@angular/common'
 import { FunctionArguments } from '@/contracts/tool-call-contract'
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-request-vacation-popup',
@@ -31,6 +32,8 @@ import { FunctionArguments } from '@/contracts/tool-call-contract'
     MatDatepickerModule,
     MatNativeDateModule,
     AsyncPipe,
+    CdkDrag,
+    CdkDragHandle,
   ],
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_FORMATS, useValue: MAT_NATIVE_DATE_FORMATS }],
   templateUrl: './request-vacation-popup.component.html',
@@ -77,9 +80,5 @@ export class RequestVacationPopupComponent extends OnDestroyMixin(class {}) impl
   ngOnInit(): void {
     console.log(this.data)
     this.vacationRequestForm.patchValue(this.data)
-  }
-
-  onSubmit() {
-    console.log(this.vacationRequestForm.value)
   }
 }
