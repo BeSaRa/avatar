@@ -358,5 +358,65 @@
  "document_analyze_progress": {
   "ar": "جاري تحليل الملف",
   "en": "Analyze Document"
+ },
+ "vacation_request": {
+  "ar": "طلب إجازة",
+  "en": "Vacation request"
+ },
+ "interactive_chatbot": {
+  "ar": "البوت التفاعلي",
+  "en": "Interactive Chatbot"
+ },
+ "vacations_list": {
+  "ar": "طلبات الإجازة",
+  "en": "Vacations list"
+ },
+ "employee_name": {
+  "ar": "اسم الموظف",
+  "en": "Employee Name"
+ },
+ "manager_name": {
+  "ar": "اسم المدير",
+  "en": "Manager Name"
+ },
+ "department": {
+  "ar": "القسم",
+  "en": "Department"
+ },
+ "start_date": {
+  "ar": "تاريخ البداية",
+  "en": "Start Date"
+ },
+ "end_date": {
+  "ar": "تاريخ النهاية",
+  "en": "End Date"
+ },
+ "total_days": {
+  "ar": "عدد الأيام",
+  "en": "Total Days"
+ },
+ "status": {
+  "ar": "حالة الإجازة",
+  "en": "Status"
+ },
+ "comments": {
+  "ar": "التعليقات",
+  "en": "Comments"
+ },
+ "actions": {
+  "ar": "الأوامر",
+  "en": "Actions"
+ },
+ "approved": {
+  "ar": "مؤكدة",
+  "en": "Approved"
+ },
+ "rejected": {
+  "ar": "مرفوضة",
+  "en": "Rejected"
+ },
+ "pending": {
+  "ar": "قيد الانتظار",
+  "en": "Pending"
  }
 }
