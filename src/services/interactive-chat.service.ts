@@ -59,13 +59,16 @@ export class InteractiveChatService extends BaseChatService {
       approve: () => this.approveVacation(args as FunctionArguments<'approve'>),
       reject: () => this.rejectVacation(args as FunctionArguments<'reject'>),
       pending: () => this.pendingVacation(args as FunctionArguments<'pending'>),
-      submit_form: () => this.submitVactionRequest(),
+      'submit-form': () => this.submitVactionRequest(),
       'get-all-vacation-forms': () => this.getAllVacations(),
     }
     return actionMap[actionName](args)
   }
 
   openVacationDialog(form: FunctionArguments<'fill_vacation_form'>) {
+    if (this.ref) {
+      this.ref.close()
+    }
     this.ref = this.dialog.open(RequestVacationPopupComponent, {
       width: '70vw',
       hasBackdrop: false,
@@ -75,6 +78,9 @@ export class InteractiveChatService extends BaseChatService {
   }
 
   openVacationListDialog(vacations: VacationResultContract[]) {
+    if (this.listRef) {
+      this.listRef.close()
+    }
     this.listRef = this.dialog.open(VacationListPopupComponent, {
       width: '80vw',
       minWidth: 'fit-content',

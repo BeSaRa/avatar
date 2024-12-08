@@ -1,11 +1,21 @@
 <div class="flex flex-col" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
   <div class="bg-primary text-white p-4">
-    <span class="text-lg">{{ lang.locals.vacation_request }}</span>
+    <span class="text-lg mr-8">{{ lang.locals.vacation_request }}</span>
     <button type="button" cdkDragHandle>
-      <svg width="24px" class="absolute cursor-move top-1 left-1 mt-4 ml-4" fill="currentColor" viewBox="0 0 24 24">
+      <svg width="24px" class="absolute cursor-move top-1 right-4 mt-4 ml-4" fill="currentColor" viewBox="0 0 24 24">
         <path
           d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
         <path d="M0 0h24v24H0z" fill="none"></path>
+      </svg>
+    </button>
+    <button type="button" (click)="ref.close()">
+      <svg
+        fill="currentColor"
+        class="absolute top-1 left-1 size-6 m-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24">
+        <path
+          d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
       </svg>
     </button>
   </div>

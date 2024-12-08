@@ -18,7 +18,7 @@ interface FunctionCallMap {
   pending: {
     employee_ID: number
   }
-  submit_form: {
+  'submit-form': {
     'confirm-text': string
   }
   'get-all-vacation-forms': {
