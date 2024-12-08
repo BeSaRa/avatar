@@ -18,6 +18,12 @@ interface FunctionCallMap {
   pending: {
     employee_ID: number
   }
+  submit_form: {
+    'confirm-text': string
+  }
+  'get-all-vacation-forms': {
+    text: string
+  }
 }
 
 export type FunctionName = keyof FunctionCallMap

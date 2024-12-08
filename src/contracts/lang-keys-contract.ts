@@ -91,4 +91,17 @@ export interface LangKeysContract {
   document_analyze_progress: string
   vacation_request: string
   interactive_chatbot: string
+  vacations_list: string
+  employee_name: string
+  manager_name: string
+  department: string
+  start_date: string
+  end_date: string
+  total_days: string
+  status: string
+  comments: string
+  actions: string
+  approved: string
+  rejected: string
+  pending: string
 }
