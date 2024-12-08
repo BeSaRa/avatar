@@ -418,5 +418,9 @@
  "pending": {
   "ar": "قيد الانتظار",
   "en": "Pending"
+ },
+ "vacation_type": {
+  "ar": "نوع الإجازة",
+  "en": "Vacation Type"
  }
 }
