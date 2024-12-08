@@ -13,4 +13,5 @@ export interface VacationResultContract {
   Total_Days: number
   Status: VacationStatus
   Comments: string
+  changeState: boolean
 }

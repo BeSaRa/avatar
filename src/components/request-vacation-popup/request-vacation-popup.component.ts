@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, inject, OnInit, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import {
@@ -45,6 +45,7 @@ export class RequestVacationPopupComponent extends OnDestroyMixin(class {}) impl
   ref = inject(MatDialogRef)
   fb = inject(FormBuilder)
   interactiveChatService = inject(InteractiveChatService)
+  loader = signal(false)
   types$ = this.interactiveChatService
     .getAllVacationTypes()
     .pipe(takeUntil(this.destroy$))
@@ -80,5 +81,13 @@ export class RequestVacationPopupComponent extends OnDestroyMixin(class {}) impl
   ngOnInit(): void {
     console.log(this.data)
     this.vacationRequestForm.patchValue(this.data)
+  }
+
+  onSubmit() {
+    this.loader.set(true)
+    this.interactiveChatService
+      .submitVactionRequest()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.loader.update(() => false))
   }
 }

@@ -104,4 +104,5 @@ export interface LangKeysContract {
   approved: string
   rejected: string
   pending: string
+  vacation_type: string
 }

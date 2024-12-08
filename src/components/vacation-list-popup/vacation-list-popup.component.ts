@@ -2,15 +2,17 @@ import { ChatActionResultContract } from '@/contracts/chat-action-result-contrac
 import { VacationResultContract } from '@/contracts/vacation-result-contract'
 import { VacationStatus } from '@/enums/vacation-status'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { Message } from '@/models/message'
 import { InteractiveChatService } from '@/services/interactive-chat.service'
 import { LocalService } from '@/services/local.service'
+import { formatString, formatText } from '@/utils/utils'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { DatePipe, NgClass } from '@angular/common'
 import { Component, effect, ElementRef, inject, viewChild } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import PerfectScrollbar from 'perfect-scrollbar'
-import { takeUntil, tap } from 'rxjs'
+import { map, takeUntil, tap } from 'rxjs'
 
 @Component({
   selector: 'app-vacation-list-popup',
@@ -29,7 +31,9 @@ export class VacationListPopupComponent extends OnDestroyMixin(class {}) {
 
   chatBodyContainerEffect = effect(() => {
     if (this.vacationWrapper()) {
-      this.scrollbarRef = new PerfectScrollbar(this.vacationWrapper()!.nativeElement, { suppressScrollX: true })
+      this.scrollbarRef = new PerfectScrollbar(this.vacationWrapper()!.nativeElement, {
+        wheelPropagation: false,
+      })
     } else {
       this.scrollbarRef && this.scrollbarRef.destroy()
     }
@@ -51,25 +55,58 @@ export class VacationListPopupComponent extends OnDestroyMixin(class {}) {
   }
 
   approveVacation(element: VacationResultContract) {
+    element.changeState = true
     this.interactiveChatService
       .approveVacation({ employee_ID: element.Employee_ID })
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(res => this.handelVacationStatus(res, element.Employee_ID, VacationStatus.APPROVED)))
-      .subscribe()
+      .pipe(
+        map(res => {
+          res.data.final_message.message.content = formatString(
+            formatText(res.data.final_message.message.content, res.data.final_message.message)
+          )
+          res.data.final_message.message = new Message().clone(res.data.final_message.message)
+          this.interactiveChatService.conversationId.set(res.data.final_message.message.conversation_id)
+          this.interactiveChatService.messages.update(messages => [...messages, res.data.final_message.message])
+        })
+      )
+      .subscribe(() => (element.changeState = false))
   }
   rejectVacation(element: VacationResultContract) {
+    element.changeState = true
     this.interactiveChatService
       .rejectVacation({ employee_ID: element.Employee_ID })
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(res => this.handelVacationStatus(res, element.Employee_ID, VacationStatus.REJECTED)))
-      .subscribe()
+      .pipe(
+        map(res => {
+          res.data.final_message.message.content = formatString(
+            formatText(res.data.final_message.message.content, res.data.final_message.message)
+          )
+          res.data.final_message.message = new Message().clone(res.data.final_message.message)
+          this.interactiveChatService.conversationId.set(res.data.final_message.message.conversation_id)
+          this.interactiveChatService.messages.update(messages => [...messages, res.data.final_message.message])
+        })
+      )
+      .subscribe(() => (element.changeState = false))
   }
   pendingVacation(element: VacationResultContract) {
+    element.changeState = true
     this.interactiveChatService
       .pendingVacation({ employee_ID: element.Employee_ID })
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(res => this.handelVacationStatus(res, element.Employee_ID, VacationStatus.PENDING)))
-      .subscribe()
+      .pipe(
+        map(res => {
+          res.data.final_message.message.content = formatString(
+            formatText(res.data.final_message.message.content, res.data.final_message.message)
+          )
+          res.data.final_message.message = new Message().clone(res.data.final_message.message)
+          this.interactiveChatService.conversationId.set(res.data.final_message.message.conversation_id)
+          this.interactiveChatService.messages.update(messages => [...messages, res.data.final_message.message])
+        })
+      )
+      .subscribe(() => (element.changeState = false))
   }
 
   changeStatus(elementId: number, status: VacationStatus) {
