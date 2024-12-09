@@ -28,6 +28,7 @@ export class InteractiveChatService extends BaseChatService {
     return this.http
       .post<ChatMessageResultContract>(this.urlService.URLS.INTERACTIVE_CHAT, {
         messages: this.messages(),
+        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
       })
       .pipe(
@@ -62,14 +63,27 @@ export class InteractiveChatService extends BaseChatService {
       pending: () => this.checkAndPending(args as FunctionArguments<'pending'>),
       'submit-form': () => this.submitVactionRequest(),
       'get-all-vacation-forms': () => this.getAllVacations(),
+      'filter-vacation-forms-by': () => this.filterForm(args as FunctionArguments<'filter-vacation-forms-by'>),
     }
     return actionMap[actionName](args)
   }
 
+  filterForm(filter: FunctionArguments<'filter-vacation-forms-by'>) {
+    const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/filter-vacation-forms-by`
+    return this.http
+      .post<ChatActionResultContract<VacationResultContract[]>>(url, {
+        arguments: filter,
+        chat_payload: {
+          messages: this.messages(),
+          ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
+          ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
+        },
+      })
+      .pipe(tap(res => this.openVacationListDialog(res.data.action_results)))
+  }
+
   openVacationDialog(form: FunctionArguments<'fill_vacation_form'>) {
-    if (this.ref) {
-      this.ref.close()
-    }
+    this.dialog.closeAll()
     this.ref = this.dialog.open(RequestVacationPopupComponent, {
       position: {
         top: '50px',
@@ -88,9 +102,8 @@ export class InteractiveChatService extends BaseChatService {
   }
 
   openVacationListDialog(vacations: VacationResultContract[]) {
-    if (this.listRef) {
-      this.listRef.close()
-    }
+    this.dialog.closeAll()
+    if (!vacations || !vacations.length || typeof vacations === 'string') return
     this.listRef = this.dialog.open(VacationListPopupComponent, {
       minWidth: '45vw',
       position: {
@@ -126,6 +139,7 @@ export class InteractiveChatService extends BaseChatService {
         form: { ...data, status: 'PENDING' },
         chat_payload: {
           messages: this.messages(),
+          ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
           ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
         },
       })
@@ -137,6 +151,7 @@ export class InteractiveChatService extends BaseChatService {
     return this.http
       .post<ChatActionResultContract<VacationResultContract[]>>(url, {
         messages: this.messages(),
+        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
       })
       .pipe(tap(res => this.openVacationListDialog(res.data.action_results)))
@@ -167,6 +182,7 @@ export class InteractiveChatService extends BaseChatService {
       arguments: employeeId,
       chat_payload: {
         messages: this.messages(),
+        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
       },
     })
@@ -177,6 +193,7 @@ export class InteractiveChatService extends BaseChatService {
       arguments: employeeId,
       chat_payload: {
         messages: this.messages(),
+        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
       },
     })
@@ -187,6 +204,7 @@ export class InteractiveChatService extends BaseChatService {
       arguments: employeeId,
       chat_payload: {
         messages: this.messages(),
+        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
       },
     })

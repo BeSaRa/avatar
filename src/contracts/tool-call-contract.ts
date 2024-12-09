@@ -24,6 +24,10 @@ interface FunctionCallMap {
   'get-all-vacation-forms': {
     text: string
   }
+  'filter-vacation-forms-by': {
+    coulomn_name: string
+    value: string
+  }
 }
 
 export type FunctionName = keyof FunctionCallMap
