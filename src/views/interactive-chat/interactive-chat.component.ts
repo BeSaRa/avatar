@@ -55,7 +55,7 @@ export class InteractiveChatComponent extends OnDestroyMixin(class {}) implement
   lang = inject(LocalService)
   chatHistoryService = inject(ChatHistoryService)
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
-  interactiveArea = viewChild.required('interactiveArea', { read: ViewContainerRef })
+  interactiveArea = viewChild('interactiveArea', { read: ViewContainerRef })
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
   messageInput = viewChild.required<ElementRef<HTMLTextAreaElement>>('textArea')
   fullscreenStatus = signal(false)

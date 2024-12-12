@@ -4,12 +4,13 @@ import { BaseChatService } from './base-chat.service'
 import { Message } from '@/models/message'
 import { ChatMessageResultContract } from '@/contracts/chat-message-result-contract'
 import { formatString, formatText } from '@/utils/utils'
-import { Observable, catchError, forkJoin, isObservable, map, of, switchMap, tap } from 'rxjs'
+import { Observable, catchError, finalize, forkJoin, isObservable, map, of, switchMap, tap } from 'rxjs'
 import { FunctionArguments, FunctionName } from '@/contracts/tool-call-contract'
 import { RequestVacationPopupComponent } from '@/components/request-vacation-popup/request-vacation-popup.component'
-import { MatDialog, MatDialogRef } from '@angular/material/dialog'
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog'
 import { VacationResultContract } from '@/contracts/vacation-result-contract'
 import { VacationListPopupComponent } from '@/components/vacation-list-popup/vacation-list-popup.component'
+import { VacationStatus } from '@/enums/vacation-status'
 
 @Injectable({
   providedIn: 'root',
@@ -23,14 +24,11 @@ export class InteractiveChatService extends BaseChatService {
   private listRef?: MatDialogRef<VacationListPopupComponent>
   isDialogOpened = signal(false)
   interactiveArea?: ViewContainerRef
+
   override sendMessage(content: string): Observable<ChatMessageResultContract> {
     this.messages.update(messages => [...messages, new Message(content, 'user')])
     return this.http
-      .post<ChatMessageResultContract>(this.urlService.URLS.INTERACTIVE_CHAT, {
-        messages: this.messages(),
-        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-        ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-      })
+      .post<ChatMessageResultContract>(this.urlService.URLS.INTERACTIVE_CHAT, this.getChatPayload())
       .pipe(
         catchError(err => {
           new Message().clone({
@@ -58,9 +56,10 @@ export class InteractiveChatService extends BaseChatService {
       (args?: FunctionArguments<FunctionName>) => void | Observable<ChatActionResultContract>
     > = {
       fill_vacation_form: () => this.openVacationDialog(args as FunctionArguments<'fill_vacation_form'>),
-      approve: () => this.checkAndApprove(args as FunctionArguments<'approve'>),
-      reject: () => this.checkAndReject(args as FunctionArguments<'reject'>),
-      pending: () => this.checkAndPending(args as FunctionArguments<'pending'>),
+      approve: () =>
+        this.handleVacationAction(args as FunctionArguments<'approve'>, 'approve', VacationStatus.APPROVED),
+      reject: () => this.handleVacationAction(args as FunctionArguments<'reject'>, 'reject', VacationStatus.REJECTED),
+      pending: () => this.handleVacationAction(args as FunctionArguments<'pending'>, 'pending', VacationStatus.PENDING),
       'submit-form': () => this.submitVactionRequest(),
       'get-all-vacation-forms': () => this.getAllVacations(),
       'filter-vacation-forms-by': () => this.filterForm(args as FunctionArguments<'filter-vacation-forms-by'>),
@@ -73,11 +72,7 @@ export class InteractiveChatService extends BaseChatService {
     return this.http
       .post<ChatActionResultContract<VacationResultContract[]>>(url, {
         arguments: filter,
-        chat_payload: {
-          messages: this.messages(),
-          ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-          ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-        },
+        chat_payload: this.getChatPayload(),
       })
       .pipe(tap(res => this.openVacationListDialog(res.data.action_results)))
   }
@@ -85,41 +80,22 @@ export class InteractiveChatService extends BaseChatService {
   openVacationDialog(form: FunctionArguments<'fill_vacation_form'>) {
     this.dialog.closeAll()
     this.ref = this.dialog.open(RequestVacationPopupComponent, {
-      position: {
-        top: '50px',
-        left: '650px',
-      },
-      hasBackdrop: false,
+      ...this.defaultConfigActionDialog(),
       data: form,
-      disableClose: true,
     })
-    this.ref?.afterOpened().subscribe(() => {
-      this.isDialogOpened.set(true)
-    })
-    this.ref?.afterClosed().subscribe(() => {
-      this.isDialogOpened.set(false)
-    })
+    this.bindDialogState(this.ref)
   }
 
   openVacationListDialog(vacations: VacationResultContract[]) {
     this.dialog.closeAll()
     if (!vacations || !vacations.length || typeof vacations === 'string') return
     this.listRef = this.dialog.open(VacationListPopupComponent, {
-      minWidth: '45vw',
-      position: {
-        top: '50px',
-        left: '650px',
-      },
-      hasBackdrop: false,
+      ...this.defaultConfigActionDialog(),
       data: vacations,
-      disableClose: true,
+      minWidth: '45vw',
     })
-    this.listRef?.afterOpened().subscribe(() => {
-      this.isDialogOpened.set(true)
-    })
-    this.listRef?.afterClosed().subscribe(() => {
-      this.isDialogOpened.set(false)
-    })
+
+    this.bindDialogState(this.listRef)
   }
 
   getAllVacationTypes(): Observable<string[]> {
@@ -131,17 +107,14 @@ export class InteractiveChatService extends BaseChatService {
     const url = `${this.urlService.URLS.INTERACTIVE}/department-types`
     return this.http.get<string[]>(url)
   }
+
   submitVactionRequest(): Observable<ChatActionResultContract<string>> {
     const data = this.ref?.componentInstance.vacationRequestForm.value as FunctionArguments<'fill_vacation_form'>
     const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/submit-form`
     return this.http
       .post<ChatActionResultContract<string>>(url, {
         form: { ...data, status: 'PENDING' },
-        chat_payload: {
-          messages: this.messages(),
-          ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-          ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-        },
+        chat_payload: this.getChatPayload(),
       })
       .pipe(tap(() => this.ref?.close()))
   }
@@ -149,64 +122,29 @@ export class InteractiveChatService extends BaseChatService {
   getAllVacations(): Observable<ChatActionResultContract<VacationResultContract[]>> {
     const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/get-all-vacation-forms`
     return this.http
-      .post<ChatActionResultContract<VacationResultContract[]>>(url, {
-        messages: this.messages(),
-        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-        ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-      })
+      .post<ChatActionResultContract<VacationResultContract[]>>(url, this.getChatPayload())
       .pipe(tap(res => this.openVacationListDialog(res.data.action_results)))
-  }
-
-  checkAndApprove(employeeId: FunctionArguments<'approve'>) {
-    if (this.listRef) {
-      const vacation = this.listRef.componentInstance.data.find(el => el.Employee_ID === employeeId.employee_ID)
-      if (vacation) this.listRef.componentInstance.approveVacation(vacation)
-    } else this.approveVacation(employeeId)
-  }
-  checkAndReject(employeeId: FunctionArguments<'reject'>) {
-    if (this.listRef) {
-      const vacation = this.listRef.componentInstance.data.find(el => el.Employee_ID === employeeId.employee_ID)
-      if (vacation) this.listRef.componentInstance.rejectVacation(vacation)
-    } else this.rejectVacation(employeeId)
-  }
-  checkAndPending(employeeId: FunctionArguments<'pending'>) {
-    if (this.listRef) {
-      const vacation = this.listRef.componentInstance.data.find(el => el.Employee_ID === employeeId.employee_ID)
-      if (vacation) this.listRef.componentInstance.pendingVacation(vacation)
-    } else this.pendingVacation(employeeId)
   }
 
   approveVacation(employeeId: FunctionArguments<'approve'>): Observable<ChatActionResultContract<string>> {
     const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/approve`
     return this.http.post<ChatActionResultContract<string>>(url, {
       arguments: employeeId,
-      chat_payload: {
-        messages: this.messages(),
-        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-        ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-      },
+      chat_payload: this.getChatPayload(),
     })
   }
   rejectVacation(employeeId: FunctionArguments<'reject'>): Observable<ChatActionResultContract<string>> {
     const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/reject`
     return this.http.post<ChatActionResultContract<string>>(url, {
       arguments: employeeId,
-      chat_payload: {
-        messages: this.messages(),
-        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-        ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-      },
+      chat_payload: this.getChatPayload(),
     })
   }
   pendingVacation(employeeId: FunctionArguments<'pending'>): Observable<ChatActionResultContract<string>> {
     const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/pending`
     return this.http.post<ChatActionResultContract<string>>(url, {
       arguments: employeeId,
-      chat_payload: {
-        messages: this.messages(),
-        ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
-        ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
-      },
+      chat_payload: this.getChatPayload(),
     })
   }
 
@@ -252,5 +190,52 @@ export class InteractiveChatService extends BaseChatService {
       res.message = action.data.final_message.message // Replace message with final action message
     }
     return res
+  }
+
+  private getChatPayload() {
+    return {
+      messages: this.messages(),
+      ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
+      ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
+    }
+  }
+  private bindDialogState<TCmp>(ref: MatDialogRef<TCmp>) {
+    ref.afterOpened().subscribe(() => this.isDialogOpened.set(true))
+    ref.afterClosed().subscribe(() => this.isDialogOpened.set(false))
+  }
+  private defaultConfigActionDialog(): MatDialogConfig {
+    return {
+      position: {
+        top: '50px',
+        left: '650px',
+      },
+      hasBackdrop: false,
+      disableClose: true,
+    }
+  }
+
+  handleVacationAction(
+    employeeId: FunctionArguments<'approve' | 'reject' | 'pending'>,
+    action: Extract<FunctionName, 'approve' | 'reject' | 'pending'>,
+    status: VacationStatus
+  ): Observable<ChatActionResultContract<string>> {
+    if (this.listRef && this.listRef.componentInstance) {
+      const vacation = this.listRef.componentInstance?.data?.find(el => el.Employee_ID === employeeId.employee_ID)
+
+      if (vacation) {
+        vacation.changeState = true
+
+        return this[`${action}Vacation`](employeeId).pipe(
+          tap(() => {
+            vacation.Status = status
+          }),
+          finalize(() => {
+            vacation.changeState = false
+          })
+        )
+      }
+    }
+
+    return this[`${action}Vacation`](employeeId)
   }
 }
