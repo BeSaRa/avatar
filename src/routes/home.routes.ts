@@ -28,6 +28,11 @@ const routes: Routes = [
       import('@/views/interactive-chat/interactive-chat.component').then(c => c.InteractiveChatComponent),
   },
   {
+    path: 'web-crawler',
+    loadComponent: () =>
+      import('@/views/web-crawler-report/web-crawler-report.component').then(c => c.WebCrawlerReportComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

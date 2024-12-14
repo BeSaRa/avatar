@@ -105,4 +105,13 @@ export interface LangKeysContract {
   rejected: string
   pending: string
   vacation_type: string
+  web_crawler_and_report_generator: string
+  generate_report: string
+  topics: string
+  web_page_urls: string
+  crawl_web_pages: string
+  search_text_for_report: string
+  invalid_url: string
+  required: string
+  web_crawler: string
 }

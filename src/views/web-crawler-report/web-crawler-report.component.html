@@ -1,0 +1,182 @@
+<div class="shadow bg-gray-100 w-full text-gray-700 rounded-md p-4">
+  <h1 class="font-medium text-xl text-center">{{ lang.locals.web_crawler_and_report_generator }}</h1>
+  <div class="flex justify-between items-center">
+    <form class="contents" [formGroup]="crawlerForm" (ngSubmit)="crawlWebPages()">
+      <section
+        class="flex flex-col w-1/2 p-4 bg-gray-200 rounded-md m-4 border-2 border-gray-300 max-h-[60vh] overflow-auto">
+        <span class="text-gray-400 font-medium text-lg">{{ lang.locals.crawl_web_pages }}</span>
+        <ng-container formArrayName="topics">
+          <div class="mb-4">
+            <label for="topics">{{ lang.locals.topics }}</label>
+            @for (topic of topics.controls; track $index; let i = $index) {
+              @let isInvalidTopic = topic.invalid && topic.touched && topic.dirty;
+              <div [ngClass]="{ 'mb-1': topics.length > 1 }" class="flex gap-2">
+                <div class="relative w-full">
+                  <input
+                    (keyup.enter)="addTopic(); focusLastInput('topic')"
+                    (keyup.backspace)="removeOnErase(i, 'topic')"
+                    [placeholder]="lang.locals.topics"
+                    [formControlName]="i"
+                    id="topics"
+                    #inputTopics
+                    [ngClass]="{ 'bg-red-50 !border-red-400': isInvalidTopic }"
+                    class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary"
+                    type="text" />
+                  @if (isInvalidTopic) {
+                    <svg
+                      [matTooltip]="lang.locals.required"
+                      matTooltipPosition="above"
+                      class="absolute size-5 fill-red-400 left-0 top-3 ml-2 cursor-pointer"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24">
+                      <path
+                        d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" />
+                    </svg>
+                  }
+                </div>
+                <button (click)="addTopic()" type="button" class="bg-primary p-3 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 fill-white" viewBox="0 0 24 24">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                  </svg>
+                </button>
+                <button
+                  [attr.disabled]="topics.controls.length <= 1 ? true : null"
+                  (click)="removeTopic(i)"
+                  type="button"
+                  class="bg-primary p-3 rounded-md disabled:bg-primary/70">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 fill-white" viewBox="0 0 24 24">
+                    <path
+                      d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                  </svg>
+                </button>
+              </div>
+            }
+          </div>
+        </ng-container>
+        <ng-container formArrayName="urls">
+          <div class="mb-4">
+            <label for="page-url">{{ lang.locals.web_page_urls }}</label>
+            @for (url of urls.controls; track $index; let i = $index) {
+              @let isInvalidUrl = url.invalid && url.touched && url.dirty;
+              <div [ngClass]="{ 'mb-1': urls.length > 1 }" class="flex gap-2">
+                <div class="relative w-full">
+                  <input
+                    (keyup.enter)="addUrl(); focusLastInput('urls')"
+                    (keyup.backspace)="removeOnErase(i, 'urls')"
+                    [placeholder]="lang.locals.web_page_urls"
+                    [formControlName]="i"
+                    id="page-url"
+                    #inputURLS
+                    [ngClass]="{ 'bg-red-50 !border-red-400': isInvalidUrl }"
+                    class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary"
+                    type="text" />
+                  @if (isInvalidUrl) {
+                    <svg
+                      [matTooltip]="url.errors?.['pattern'] ? lang.locals.invalid_url : lang.locals.required"
+                      matTooltipPosition="above"
+                      class="absolute size-5 fill-red-400 left-0 top-3 ml-2 cursor-pointer"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24">
+                      <path
+                        d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" />
+                    </svg>
+                  }
+                </div>
+                <button (click)="addUrl()" type="button" class="bg-primary p-3 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 fill-white" viewBox="0 0 24 24">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                  </svg>
+                </button>
+                <button
+                  (click)="removeUrl(i)"
+                  type="button"
+                  [attr.disabled]="urls.controls.length <= 1 ? true : null"
+                  class="bg-primary p-3 rounded-md disabled:bg-primary/70">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 fill-white" viewBox="0 0 24 24">
+                    <path
+                      d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                  </svg>
+                </button>
+              </div>
+            }
+          </div>
+        </ng-container>
+        <button
+          type="submit"
+          (click)="crawlWebPages()"
+          class="bg-primary rounded-md w-1/3 text-white p-1"
+          type="button">
+          <div class="flex justify-center items-center">
+            <span class="me-4">
+              {{ lang.locals.crawl_web_pages }}
+            </span>
+            @if (loaderTopic()) {
+              <ng-container [ngTemplateOutlet]="spinner" />
+            }
+          </div>
+        </button>
+      </section>
+    </form>
+    <section class="flex flex-col w-1/2 p-4 bg-gray-200 rounded-md m-4 border-2 border-gray-300 mb-auto">
+      <span class="text-gray-400 font-medium text-lg">{{ lang.locals.generate_report }}</span>
+      <div class="mb-4">
+        <label for="report-text">{{ lang.locals.search_text_for_report }}</label>
+        <input
+          #generateReportInput
+          [placeholder]="lang.locals.search_text_for_report"
+          type="text"
+          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary" />
+      </div>
+
+      <button
+        (click)="generateReport(generateReportInput.value)"
+        class="bg-primary rounded-md w-1/3 text-white p-1"
+        type="button">
+        <div class="flex justify-center items-center">
+          <span class="me-4">
+            {{ lang.locals.generate_report }}
+          </span>
+          @if (loaderUrl()) {
+            <ng-container [ngTemplateOutlet]="spinner" />
+          }
+        </div>
+      </button>
+
+      @if (reportUrl()) {
+        <div
+          [@fadeInSlideUp]="animateTrigger()"
+          class="flex justify-between items-center bg-blue-100 border border-dashed border-gray-400 rounded-md p-4 mt-4">
+          <span class="font-medium text-lg">{{ reportName() }}</span>
+          <a [href]="reportUrl()" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6 fill-blue-500" viewBox="0 0 24 24">
+              <path
+                d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 15L17.55 9.54L16.13 8.13L13 11.25V2H11V11.25L7.88 8.13L6.46 9.55L12 15Z" />
+            </svg>
+          </a>
+        </div>
+      }
+    </section>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div class="loader flex items-center justify-center">
+    <!-- Your specific loader design -->
+    <div role="status">
+      <svg
+        aria-hidden="true"
+        class="inline size-4 text-gray-200 animate-spin fill-primary"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor" />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill" />
+      </svg>
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>
