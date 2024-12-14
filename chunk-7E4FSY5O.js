@@ -1,1 +1,0 @@
-import{b as s}from"./chunk-3GB32FVU.js";import{Ea as o,ha as a,vb as t}from"./chunk-YASPPE65.js";var i=class e extends s{messages=t([]);status=t(!1);conversationId=t("");static \u0275fac=(()=>{let r;return function(n){return(r||(r=o(e)))(n||e)}})();static \u0275prov=a({token:e,factory:e.\u0275fac,providedIn:"root"})};export{i as a};
