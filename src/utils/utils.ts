@@ -278,3 +278,10 @@ export function extractCitationsAndIntents(input: string) {
     throw new Error(`Failed to parse input: ${error}`)
   }
 }
+
+export function extractFileName(url: string) {
+  const urlObj = new URL(url)
+  const pathName = urlObj.pathname
+  const fileName = decodeURI(pathName.split('/').pop() || 'file')
+  return fileName
+}

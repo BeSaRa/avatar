@@ -422,5 +422,41 @@
  "vacation_type": {
   "ar": "نوع الإجازة",
   "en": "Vacation Type"
+ },
+ "web_crawler_and_report_generator": {
+  "ar": "جمع وتوليد بيانات الويب",
+  "en": "Web Crawler And Report Generator"
+ },
+ "generate_report": {
+  "ar": "توليد التقرير",
+  "en": "Generate Report"
+ },
+ "search_text_for_report": {
+  "ar": "البحث عن نص للتقرير",
+  "en": "Search text for report"
+ },
+ "topics": {
+  "ar": "مواضيع",
+  "en": "Topics"
+ },
+ "web_page_urls": {
+  "ar": "صفحات الويب",
+  "en": "Web Pages URLs"
+ },
+ "crawl_web_pages": {
+  "ar": " استكشاف صفحات الويب",
+  "en": "Crawl Web Pages"
+ },
+ "invalid_url": {
+  "ar": "عنوان الويب غير صالح",
+  "en": "Invalid URL"
+ },
+ "required": {
+  "ar": "الحقل مطلوب",
+  "en": "Field is required"
+ },
+ "web_crawler": {
+  "ar": "تتبع الويب",
+  "en": "Web Crawler"
  }
 }
