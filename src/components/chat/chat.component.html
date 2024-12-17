@@ -12,9 +12,20 @@
 <div [ngClass]="{ hidden: !status() }" #chatContainer>
   <div
     [ngClass]="{ 'w-full h-full inset-0': fullscreenStatus(), 'ltr:left-5 rtl:right-5': !fullscreenStatus() }"
-    class="z-20 bg-white w-[500px] h-[600px] relative shadow-2xl rounded-md overflow-hidden bottom-10 max-h-full max-w-full flex flex-col">
+    class="z-20 bg-white w-[500px] h-[600px] relative shadow-2xl rounded-md overflow-hidden bottom-5 max-h-full max-w-full flex flex-col">
     <div class="bg-gray-200 border-b border-primary/40 flex justify-between items-center px-4 py-2">
-      <span>{{ lang.locals.chat }}</span>
+      <div class="flex justify-center items-center gap-2">
+        <span>{{ lang.locals.chat }}:</span>
+        <select
+          [matTooltip]="lang.locals.change_bot + '\n' + lang.locals.change_bot_note"
+          [matTooltipClass]="'whitespace-pre-line'"
+          [formControl]="chatService.botNameCtrl"
+          class="block p-1 w-24 text-sm border-b-2 bg-transparent border-gray-400 focus:ring-primary focus:border-primary outline-none">
+          @for (chatbot of botNames$ | async; track $index) {
+            <option [value]="chatbot">{{ chatbot }}</option>
+          }
+        </select>
+      </div>
       <div>
         <button
           matRipple

@@ -1,7 +1,7 @@
 export const EndPoints = {
   BASE_URL: '',
   SPEECH_TOKEN: 'speech/token',
-  CHAT: 'chatbot/chat/website',
+  CHAT: 'chatbot/chat',
   INTERACTIVE: 'interactive',
   INTERACTIVE_CHAT: 'chatbot/chat/interactive',
   INTERACTIVE_ACTION: 'interactive/action',

@@ -1,7 +1,7 @@
 import { Component, effect, ElementRef, HostListener, inject, Injector, OnInit, signal, viewChild } from '@angular/core'
 import { MatRipple } from '@angular/material/core'
 import { LocalService } from '@/services/local.service'
-import { DOCUMENT, NgClass } from '@angular/common'
+import { AsyncPipe, DOCUMENT, NgClass } from '@angular/common'
 import { catchError, exhaustMap, filter, map, Subject, takeUntil, tap } from 'rxjs'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
@@ -32,6 +32,7 @@ import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-b
     CdkDrag,
     CdkDragHandle,
     AvatarInterrupterBtnComponent,
+    AsyncPipe,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
@@ -54,6 +55,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   animating = signal(false)
   stopAnimate = signal(false)
   ratingDone = signal(false)
+  botNames$ = this.chatHistoryService.getAllBotNames()
   declare scrollbarRef: PerfectScrollbar
   feedbackOptions = FeedbackChat
   // noinspection JSUnusedGlobalSymbols
@@ -96,7 +98,12 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   ngOnInit(): void {
     this.listenToSendMessage()
+    this.listenToBotNameChange()
     this.detectFullScreenMode()
+  }
+
+  listenToBotNameChange() {
+    this.chatService.onBotNameChange().pipe(takeUntil(this.destroy$)).subscribe()
   }
 
   toggleChat() {
@@ -115,6 +122,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   }
 
   private listenToSendMessage() {
+    const selectedBot = this.chatService.botNameCtrl.value
     return this.sendMessage$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(() => !!this.messageCtrl.value.trim()))
@@ -127,7 +135,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .pipe(
         exhaustMap(value =>
           this.chatService
-            .sendMessage(value)
+            .sendMessage(value, selectedBot)
             .pipe(
               catchError(err => {
                 this.answerInProgress.set(false)

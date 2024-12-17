@@ -114,4 +114,6 @@ export interface LangKeysContract {
   invalid_url: string
   required: string
   web_crawler: string
+  change_bot: string
+  change_bot_note: string
 }

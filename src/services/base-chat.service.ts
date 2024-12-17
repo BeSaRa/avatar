@@ -18,10 +18,11 @@ export abstract class BaseChatService {
   abstract status: WritableSignal<boolean>
   abstract conversationId: WritableSignal<string>
 
-  sendMessage(content: string): Observable<ChatMessageResultContract> {
+  sendMessage(content: string, bot: string): Observable<ChatMessageResultContract> {
+    const url = `${this.urlService.URLS.CHAT}/${bot}`
     this.messages.update(messages => [...messages, new Message(content, 'user')])
     return this.http
-      .post<ChatMessageResultContract>(this.urlService.URLS.CHAT, {
+      .post<ChatMessageResultContract>(url, {
         messages: this.messages(),
         ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),

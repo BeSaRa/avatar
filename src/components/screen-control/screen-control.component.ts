@@ -13,7 +13,7 @@ import {
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { AppStore } from '@/stores/app.store'
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { NgClass } from '@angular/common'
+import { AsyncPipe, NgClass } from '@angular/common'
 import WaveSurfer from 'wavesurfer.js'
 import RecordPlugin from 'wavesurfer.js/plugins/record'
 import {
@@ -34,11 +34,22 @@ import { SpeechService } from '@/services/speech.service'
 import { AvatarService } from '@/services/avatar.service'
 import { MatTooltip } from '@angular/material/tooltip'
 import { LocalService } from '@/services/local.service'
+import { ChatHistoryService } from '@/services/chat-history.service'
+import { ReactiveFormsModule } from '@angular/forms'
 
 @Component({
   selector: 'app-screen-control',
   standalone: true,
-  imports: [CdkDrag, CdkDragHandle, NgClass, MatRipple, MatTooltip, AvatarInterrupterBtnComponent],
+  imports: [
+    CdkDrag,
+    CdkDragHandle,
+    NgClass,
+    MatRipple,
+    MatTooltip,
+    AvatarInterrupterBtnComponent,
+    ReactiveFormsModule,
+    AsyncPipe,
+  ],
   templateUrl: './screen-control.component.html',
   styleUrl: './screen-control.component.scss',
   animations: [
@@ -72,6 +83,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   waves = viewChild.required<ElementRef>('waves')
   store = inject(AppStore)
   chatService = inject(ChatService)
+  chatHistoryService = inject(ChatHistoryService)
   avatarService = inject(AvatarService)
   injector = inject(Injector)
   declare recordingStream: MediaStream
@@ -86,15 +98,20 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   recognized$ = new Subject<void>()
   accept$ = new Subject<void>()
   recognizingStatus = signal<boolean>(false)
+  botNames$ = this.chatHistoryService.getAllBotNames()
 
   settingsOpened = false
   lang = inject(LocalService)
 
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
+    this.listenToBotNameChange()
     await this.prepareRecorder()
   }
 
+  listenToBotNameChange() {
+    this.chatService.onBotNameChange().pipe(takeUntil(this.destroy$)).subscribe()
+  }
   private async prepareRecorder() {
     this.recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     this.waveSurfer = new WaveSurfer({
@@ -190,6 +207,8 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   }
 
   private listenToAccept() {
+    const selectedBot = this.chatService.botNameCtrl.value
+
     this.accept$
       .pipe(map(() => this.recognizedText()))
       .pipe(filter(value => !!value))
@@ -204,7 +223,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
         })
       )
       .pipe(tap(() => this.goToEndOfChat()))
-      .pipe(exhaustMap(value => this.chatService.sendMessage(value)))
+      .pipe(exhaustMap(value => this.chatService.sendMessage(value, selectedBot)))
       .pipe(delay(200))
       .subscribe(() => {
         const assistantList = this.overlayChatComponent().container().nativeElement.querySelectorAll('.assistant')

@@ -458,5 +458,13 @@
  "web_crawler": {
   "ar": "تتبع الويب",
   "en": "Web Crawler"
+ },
+ "change_bot": {
+  "ar": "تغيير البوت",
+  "en": "Change bot"
+ },
+ "change_bot_note": {
+  "ar": "ملاحظة: عند تغيير البوت سيتم مسح جميع المحادثة",
+  "en": " Note: Changing the bot's name will result in the chat history being cleared."
  }
 }
