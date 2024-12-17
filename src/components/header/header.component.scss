@@ -1,0 +1,20 @@
+li a span {
+  display: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition-timing-function: ease-in-out;
+  transition-delay: 0s;
+  transition-property: display opacity;
+  transition-duration: 0s;
+  transition-behavior: allow-discrete;
+}
+
+:is(li:hover, li.active) a span {
+  display: inline;
+  opacity: 1;
+  transition-duration: 0.4s;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
