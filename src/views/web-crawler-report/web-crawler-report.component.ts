@@ -3,12 +3,13 @@ import { URL_PATTERN } from '@/constants/url-pattern'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { LocalService } from '@/services/local.service'
 import { WebCrawlerService } from '@/services/web-crawler.service'
-import { extractFileName } from '@/utils/utils'
+import { convertMarkdownToHtmlHeaders, extractFileName, formatString, formatText } from '@/utils/utils'
 import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { Component, ElementRef, inject, signal, viewChildren } from '@angular/core'
 import { FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatTooltipModule } from '@angular/material/tooltip'
-import { finalize, takeUntil, tap } from 'rxjs'
+import { catchError, finalize, takeUntil, tap } from 'rxjs'
+import html2pdf from 'html2pdf.js'
 
 @Component({
   selector: 'app-web-crawler-report',
@@ -24,6 +25,7 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
   fb = inject(NonNullableFormBuilder)
   reportName = signal('')
   reportUrl = signal('')
+  reportTxt = signal('')
   loaderUrl = signal<boolean>(false)
   loaderTopic = signal<boolean>(false)
   inputURLS = viewChildren<ElementRef<HTMLInputElement>>('inputURLS')
@@ -96,19 +98,55 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
       .subscribe()
   }
 
-  generateReport(text: string) {
+  generateReport(text: string): void {
     if (!text) return
+
     this.loaderUrl.set(true)
+
     this.crawlerService
       .generateReport(text)
-      .pipe(takeUntil(this.destroy$))
-      .pipe(tap(() => this.animateTrigger.set(!this.animateTrigger())))
-      .pipe(finalize(() => this.loaderUrl.set(false)))
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => this.animateTrigger.set(!this.animateTrigger())),
+        finalize(() => this.loaderUrl.set(false)),
+        catchError(error => {
+          console.error('Error generating report:', error)
+          return []
+        })
+      )
       .subscribe(res => {
-        if (res && res.data) {
-          this.reportName.set(extractFileName(res.data!.report_url))
-          this.reportUrl.set(res.data!.report_url)
+        if (!res || !res.data) return
+
+        const {
+          data: { final_response, references, report_url },
+        } = res
+
+        if (final_response?.message?.content && references) {
+          this.reportName.set(extractFileName(report_url).split('.')[0])
+          this.reportUrl.set(report_url)
+
+          const formattedContent = formatString(
+            formatText(convertMarkdownToHtmlHeaders(final_response.message.content), final_response.message)
+          )
+
+          this.reportTxt.set(formattedContent)
         }
       })
+  }
+
+  downloadPdf() {
+    const el = document.getElementById('pdf-content')
+    // Configuration options
+    const options = {
+      margin: 5,
+      filename: `${this.reportName()}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      pagebreak: {
+        mode: ['avoid-all'],
+      },
+      jsPDF: { orientation: 'portrait' },
+    }
+    // Generate the PDF
+    html2pdf().from(el).set(options).save()
   }
 }

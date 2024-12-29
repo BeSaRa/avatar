@@ -219,64 +219,27 @@ export function formatText<T extends { context: { citations: ICitations[] } }>(t
   return formattedText.trim()
 }
 
-export function preprocessInput(rawInput: string): string {
-  try {
-    return rawInput
-      .replace(/'/g, '"') // Replace single quotes with double quotes
-      .replace(/\bNone\b/g, 'null') // Replace Python-style None with JSON null
-      .replace(/\bTrue\b/g, 'true') // Replace Python-style True with JSON true
-      .replace(/\bFalse\b/g, 'false') // Replace Python-style False with JSON false
-      .replace(/\\\\"/g, '"') // Unescape double-escaped quotes inside content
-      .replace(/"{/g, '{') // Remove unnecessary double-quotes around objects
-      .replace(/}"/g, '}') // Remove unnecessary double-quotes around objects
-      .replace(/,\s*([}\]])/g, '$1') // Remove trailing commas in objects and arrays
-      .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):/g, '$1"$2"$3') // Quote unquoted keys
-      .replace(/\\(?!["\\/bfnrtu])/g, '\\\\') // Escape lone backslashes
-      .replace(/'/g, '"') // Replace single quotes with double quotes
-      .replace(/"intent":\s*"(\[.*?\])"/, (_, intent) => {
-        // Fix double-stringified intent field
-        const correctedIntent = intent.replace(/\\"/g, '"')
-        return `"intent": ${correctedIntent}`
-      })
-  } catch (error) {
-    throw new Error(`Preprocessing error: ${error}`)
-  }
-}
+export function convertMarkdownToHtmlHeaders(content: string): string {
+  // Regex to match markdown headers
+  const headerRegex = /^(#+)\s+(.*)$/gm
 
-export function parseEmbeddedContent(citations: ICitations[]) {
-  return citations.map(citation => {
-    try {
-      // Parse 'content' field if it is valid JSON
-      if (typeof citation.content === 'string' && citation.content.trim().startsWith('{')) {
-        citation.content = JSON.parse(citation.content)
-      }
-    } catch (error) {
-      console.warn(`Failed to parse content for citation: "${citation.title}". Error: ${error}`)
+  return content.replace(headerRegex, (_, hashes, text) => {
+    const level: number = hashes.length // Determine the header level (number of #)
+
+    // Define Tailwind classes for each header level
+    const headerClasses: Record<number, string> = {
+      1: 'text-4xl font-bold ml-9', // H1 - Large and bold
+      2: 'text-3xl font-bold', // H2 - Slightly smaller and bold
+      3: 'text-2xl font-bold', // H3 - Medium size and bold
+      4: 'text-xl font-bold', // H4 - Smaller but bold
+      5: 'text-lg font-semibold', // H5 - Small and semi-bold
+      6: 'text-base font-medium', // H6 - Smallest and medium weight
     }
-    return citation
+
+    const classes = headerClasses[level] || 'text-base font-medium' // Default classes
+
+    return `<h${level} class="${classes}">${text}</h${level}>` // Replace with HTML + Tailwind classes
   })
-}
-
-export function extractCitationsAndIntents(input: string) {
-  try {
-    // Preprocess the input
-    const preprocessedInput = preprocessInput(input)
-
-    // Parse the preprocessed input
-    const parsedInput = JSON.parse(preprocessedInput)
-
-    // Extract citations and intents
-    const citations = parsedInput.citations || []
-    const intent = parsedInput.intent || []
-
-    // Parse embedded JSON strings in 'content' fields
-    const cleanedCitations = parseEmbeddedContent(citations)
-
-    return { citations: cleanedCitations, intent }
-  } catch (error) {
-    console.error(`Failed to parse input. Error: ${error}`)
-    throw new Error(`Failed to parse input: ${error}`)
-  }
 }
 
 export function extractFileName(url: string) {
