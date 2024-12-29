@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./src/types/html2pdf.d.ts"],
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
@@ -18,87 +19,35 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
+    "resolveJsonModule": true,
     "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
+    "lib": ["ES2022", "dom"],
     "paths": {
-      "@/directives/*": [
-        "./src/directives/*"
-      ],
-      "@/stores/*": [
-        "./src/stores/*"
-      ],
-      "@/models/*": [
-        "./src/models/*"
-      ],
-      "@/inits/*": [
-        "./src/inits"
-      ],
-      "@/abstracts/*": [
-        "./src/abstracts/*"
-      ],
-      "@/animations/*": [
-        "./src/animations/*"
-      ],
-      "@/components/*": [
-        "./src/components/*"
-      ],
-      "@/configs/*": [
-        "./src/app-configs/*"
-      ],
-      "@/constants/*": [
-        "./src/constants/*"
-      ],
-      "@/contracts/*": [
-        "./src/contracts/*"
-      ],
-      "@/control-value-accessors/*": [
-        "./src/control-value-accessors/*"
-      ],
-      "@/enums/*": [
-        "./src/enums/*"
-      ],
-      "@/guards/*": [
-        "./src/guards/*"
-      ],
-      "@/http-contexts/*": [
-        "./src/http-contexts/*"
-      ],
-      "@/http-interceptors/*": [
-        "./src/http-interceptors/*"
-      ],
-      "@/mixins/*": [
-        "./src/mixins/*"
-      ],
-      "@/model-interceptors/*": [
-        "./src/model-interceptors/*"
-      ],
-      "@/pipes/*": [
-        "./src/pipes/*"
-      ],
-      "@/resolvers/*": [
-        "./src/resolvers/*"
-      ],
-      "@/routes/*": [
-        "./src/routes/*"
-      ],
-      "@/services/*": [
-        "./src/services/*"
-      ],
-      "@/types/*": [
-        "./src/types/*"
-      ],
-      "@/utils/*": [
-        "./src/utils/*"
-      ],
-      "@/validators/*": [
-        "./src/validators/*"
-      ],
-      "@/views/*": [
-        "./src/views/*"
-      ]
+      "@/directives/*": ["./src/directives/*"],
+      "@/stores/*": ["./src/stores/*"],
+      "@/models/*": ["./src/models/*"],
+      "@/inits/*": ["./src/inits"],
+      "@/abstracts/*": ["./src/abstracts/*"],
+      "@/animations/*": ["./src/animations/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/configs/*": ["./src/app-configs/*"],
+      "@/constants/*": ["./src/constants/*"],
+      "@/contracts/*": ["./src/contracts/*"],
+      "@/control-value-accessors/*": ["./src/control-value-accessors/*"],
+      "@/enums/*": ["./src/enums/*"],
+      "@/guards/*": ["./src/guards/*"],
+      "@/http-contexts/*": ["./src/http-contexts/*"],
+      "@/http-interceptors/*": ["./src/http-interceptors/*"],
+      "@/mixins/*": ["./src/mixins/*"],
+      "@/model-interceptors/*": ["./src/model-interceptors/*"],
+      "@/pipes/*": ["./src/pipes/*"],
+      "@/resolvers/*": ["./src/resolvers/*"],
+      "@/routes/*": ["./src/routes/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/validators/*": ["./src/validators/*"],
+      "@/views/*": ["./src/views/*"]
     }
   },
   "angularCompilerOptions": {
