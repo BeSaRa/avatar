@@ -10,6 +10,7 @@ import { FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } fr
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { catchError, finalize, takeUntil, tap } from 'rxjs'
 import html2pdf from 'html2pdf.js'
+import { CrawlerUrl, MediaCrawler } from '@/models/media-crawler'
 
 @Component({
   selector: 'app-web-crawler-report',
@@ -90,9 +91,18 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
     this.crawlerForm.controls.urls.controls.forEach(c => c.markAsDirty())
     if (this.crawlerForm.invalid) return
     const data = this.crawlerForm.getRawValue()
+    const contract = new MediaCrawler()
+    contract.settings.topics = data.topics
+    contract.urls = data.urls.map((url: string) => new CrawlerUrl(url, data.topics, true))
+    contract.urls.forEach(url => {
+      delete url.cookies
+      delete url.headers
+      delete url.payload
+    })
+    console.log(contract)
     this.loaderTopic.set(true)
     this.crawlerService
-      .crawlWebPages(data)
+      .crawlWebPages(contract)
       .pipe(takeUntil(this.destroy$))
       .pipe(finalize(() => this.loaderTopic.set(false)))
       .subscribe()
