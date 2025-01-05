@@ -4,6 +4,7 @@ import { DEFAULT_SEARCH_QUERY } from '@/constants/default-search-query'
 import { SearchQueryContract } from '@/contracts/search-query-contract'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AiSearchService } from '@/services/ai-search.service'
+import { ChatHistoryService } from '@/services/chat-history.service'
 import { LocalService } from '@/services/local.service'
 import { PaginatorIntlService } from '@/services/paginator-intl.service'
 import { AppStore } from '@/stores/app.store'
@@ -12,6 +13,7 @@ import { Component, effect, inject, OnInit, signal, untracked, viewChild } from 
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatTooltipModule } from '@angular/material/tooltip'
 import {
   BehaviorSubject,
   combineLatest,
@@ -37,6 +39,7 @@ import {
     MatProgressSpinnerModule,
     NgTemplateOutlet,
     RecorderComponent,
+    MatTooltipModule,
   ],
   templateUrl: './ai-search.component.html',
   styleUrl: './ai-search.component.scss',
@@ -53,6 +56,8 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   aiSearchService = inject(AiSearchService)
   store = inject(AppStore)
   lang = inject(LocalService)
+  chatHistoryService = inject(ChatHistoryService)
+  botNames$ = this.chatHistoryService.getAllBotNames()
   searchForm = new FormControl('', { nonNullable: true })
   loadingSubject$ = new Subject<boolean>()
   search$ = new BehaviorSubject<string>('')
@@ -62,6 +67,7 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   })
   total = signal<number>(0)
   searchToken = signal<string>('')
+  botNameCtrl = new FormControl('website', { nonNullable: true })
   searchResults$ = this.load()
   isTruncatedContent = signal<boolean[]>([])
   readonly pageSizeOptions = [5, 10, 20, 30, 40, 50, 100]
@@ -79,6 +85,7 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   }
 
   load() {
+    const selectedBot = this.botNameCtrl.value
     return combineLatest([this.search$, this.paginate$]).pipe(
       filter(([search]) => search.trim().length > 0),
       tap(([searchToken]) => this.searchToken.set(searchToken)),
@@ -90,7 +97,9 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
           query: search,
         }
         this.loadingSubject$.next(true)
-        return this.aiSearchService.search(searchQuery).pipe(finalize(() => this.loadingSubject$.next(false)))
+        return this.aiSearchService
+          .search(searchQuery, selectedBot)
+          .pipe(finalize(() => this.loadingSubject$.next(false)))
       }),
       tap(({ total_count, rs }) => {
         this.total.set(total_count)

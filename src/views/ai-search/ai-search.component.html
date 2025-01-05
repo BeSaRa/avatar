@@ -1,6 +1,15 @@
 <div class="flex flex-col justify-center items-center gap-4">
   <h5 class="text-gray-200 text-lg">{{ lang.locals.search_message }}</h5>
   <div class="flex justify-center items-center gap-4 w-full">
+    <select
+      [matTooltip]="lang.locals.change_bot + '\n' + lang.locals.change_bot_note"
+      [matTooltipClass]="'whitespace-pre-line'"
+      [formControl]="botNameCtrl"
+      class="p-1 w-24 text-sm border-b-2 bg-transparent border-gray-400 focus:ring-primary focus:border-primary outline-none">
+      @for (chatbot of botNames$ | async; track $index) {
+        <option [value]="chatbot">{{ chatbot }}</option>
+      }
+    </select>
     <div class="relative flex gap-2 w-6/12">
       <ng-container [ngTemplateOutlet]="searchIcon" />
       <input
