@@ -1,0 +1,180 @@
+<div class="flex w-full h-[75vh] rounded-md">
+  <!-- Sidebar for containers -->
+  <div
+    class="flex flex-col items-start gap-2 p-4 w-1/6 border-l-2 rounded-tr-md rounded-br-md border-gray-500 bg-gray-100 overflow-auto">
+    @if (isContainerLoading()) {
+      <div class="w-full">
+        <div class="animate-pulse flex flex-col gap-4">
+          @for (width of skeletonWidths; track $index) {
+            <div class="h-5 bg-gray-300 rounded w-5/6" [ngStyle]="{ width: width + '%' }"></div>
+          }
+        </div>
+      </div>
+    } @else {
+      @for (container of containers$ | async; track $index) {
+        <button
+          type="button"
+          (click)="updateQueryParams(container)"
+          [ngClass]="{
+            'rounded-md scale-105 !bg-gray-300 p-1 [&_span]:font-semibold [&_svg]:size-6 [&_svg]:fill-gray-700':
+              breadcrumbs()[0] === container,
+          }"
+          class="bg-transparent inline-flex gap-2 justify-around items-center w-full transition-all">
+          <svg class="size-5 fill-gray-700/50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M2 4.6V9.4C2 10.3 2.5 11 3.2 11H20.9C21.5 11 22.1 10.3 22.1 9.4V4.6C22 3.7 21.5 3 20.8 3H3.2C2.5 3 2 3.7 2 4.6M10 8V6H9V8H10M5 8H7V6H5V8M20 9H4V5H20V9M2 14.6V19.4C2 20.3 2.5 21 3.2 21H20.9C21.5 21 22.1 20.3 22.1 19.4V14.6C22.1 13.7 21.6 13 20.9 13H3.2C2.5 13 2 13.7 2 14.6M10 18V16H9V18H10M5 18H7V16H5V18M20 19H4V15H20V19Z" />
+          </svg>
+          <span [title]="container" class="text-gray-500 text-sm truncate w-full">{{ container }}</span>
+        </button>
+      }
+    }
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="relative w-5/6 bg-gray-200 rounded-tl-md rounded-bl-md">
+    <!-- Breadcrumbs -->
+    <div
+      class="w-full sticky top-0 bg-gray-100 border-b border-gray-300 rounded-tl-md h-14 flex items-center px-6 pt-2 gap-4 shadow-md z-10">
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 overflow-hidden">
+        @for (crumb of breadcrumbs(); track $index; let i = $index) {
+          <button
+            (click)="navigateBreadcrumb(i)"
+            class="text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer bg-transparent border-none focus:outline-none focus:ring-2 ring-blue-300 transition-all duration-200">
+            {{ crumb }}
+          </button>
+          @if (i < breadcrumbs().length - 1) {
+            <span class="text-gray-500 font-medium">/</span>
+          }
+        }
+      </nav>
+      @if (selectedItems.size > 0) {
+        <!-- Delete Button -->
+        <div class="mr-auto">
+          <button
+            appIgnoreSelection
+            (click)="onDelete($event)"
+            @slideFromBottom
+            type="button"
+            class="relative inline-flex items-center px-5 py-2 text-sm font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-4 focus:ring-red-300 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="selectedItems.size === 0">
+            <svg class="w-5 h-5 me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+            </svg>
+            <span>{{ lang.locals.delete }}</span>
+
+            <span
+              class="absolute -top-2 -right-2 flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-blue-600 rounded-full ring-2 ring-white">
+              {{ selectedItems.size }}
+            </span>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Content Area -->
+    <div class="overflow-y-auto h-[calc(100%-3.5rem)] p-4">
+      @if (loading()) {
+        <!--Skelton Area-->
+        <div class="grid grid-cols-5 gap-8 mt-4">
+          @for (_ of skeltonList; track $index) {
+            <div class="animate-pulse flex flex-col items-center px-4 pb-4">
+              <div class="w-20 h-20 bg-gray-300 rounded"></div>
+              <div class="w-16 h-4 bg-gray-300 mt-2 rounded"></div>
+            </div>
+          }
+        </div>
+      } @else {
+        @if (content().length) {
+          <p class="text-gray-700 text-base opacity-40">
+            {{ isSubfolder() ? lang.locals.open_folder_tip : lang.locals.selection_tip }}
+          </p>
+        }
+
+        <!--Actual Content-->
+        <div
+          appSelectableContainer
+          (selectionChange)="onSelectionChange($event)"
+          class="relative grid grid-cols-5 gap-8 mt-4"
+          @contentAnimation>
+          @if (!isSubfolder() && breadcrumbs().length) {
+            <button
+              type="button"
+              class="flex flex-col items-center bg-transparent outline-none"
+              (click)="openFileUploadDialog()">
+              <div
+                class="flex size-32 justify-center items-center cursor-pointer hover:bg-gray-400 transition-colors border-dashed border-2 border-gray-500 group rounded-md">
+                <svg
+                  class="size-12 opacity-50 group-hover:opacity-100 fill-gray-700 group-hover:scale-105 transition-transform"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24">
+                  <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                </svg>
+              </div>
+            </button>
+          }
+
+          @for (item of content(); track $index) {
+            @if (isSubfolder()) {
+              <div
+                (dblclick)="updateQueryParams(breadcrumbs()[0], item)"
+                class="content-item relative flex flex-col items-center px-4 pb-4 cursor-pointer group">
+                <img [src]="'assets/images/folder-colored.svg'" alt="folder" class="w-20 h-auto" />
+                <span class="text-sm text-center text-gray-700 mt-2">{{ item }}</span>
+                <button
+                  (click)="deleteFolder(item)"
+                  class="outline-none flex items-center justify-center border-2 border-gray-300 hover:scale-125 transition-all duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto absolute top-0 right-6 rounded-full size-6 bg-red-500 hover:bg-red-600">
+                  <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+                  </svg>
+                </button>
+              </div>
+            } @else {
+              @let extension = item.split('.')[1];
+              @let fileName = item.split('/')[1];
+              <div
+                class="content-item flex flex-col items-center p-4"
+                appSelectableItem
+                [appSelectableItem]="item"
+                [attr.data-item]="item">
+                <img
+                  [src]="'assets/images/' + (extension === 'pdf' ? 'pdf-file.svg' : 'json-file.svg')"
+                  alt="file"
+                  class="w-20 h-auto" />
+                <span [title]="fileName" class="text-sm text-center text-gray-700 mt-2 truncate w-full">{{
+                  fileName
+                }}</span>
+              </div>
+            }
+          }
+        </div>
+        @if (!content().length && breadcrumbs().length) {
+          <div class="flex flex-col justify-center items-center">
+            <img
+              priority="2"
+              class="drop-shadow-md"
+              [ngSrc]="'assets/images/no-files.svg'"
+              alt="no files"
+              width="450"
+              height="300" />
+            <span class="text-gray-700 text-xl">{{ lang.locals.no_files_message }}</span>
+          </div>
+        }
+      }
+      @if (!breadcrumbs().length && !this.isContainerLoading()) {
+        <div class="flex flex-col justify-center items-center">
+          <img
+            priority="3"
+            class="drop-shadow-md"
+            [ngSrc]="'assets/images/select-item.svg'"
+            alt="no files"
+            width="300"
+            height="300" />
+          <span class="text-gray-700 text-xl">{{ lang.locals.select_container_message }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

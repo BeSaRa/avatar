@@ -33,6 +33,10 @@ const routes: Routes = [
       import('@/views/web-crawler-report/web-crawler-report.component').then(c => c.WebCrawlerReportComponent),
   },
   {
+    path: 'admin',
+    loadChildren: () => import('@/routes/admin.routes'),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

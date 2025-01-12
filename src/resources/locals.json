@@ -436,7 +436,7 @@
   "en": "Search text for report"
  },
  "topics": {
-  "ar": "مواضيع",
+  "ar": "المواضيع",
   "en": "Topics"
  },
  "web_page_urls": {
@@ -466,5 +466,209 @@
  "change_bot_note": {
   "ar": "ملاحظة: عند تغيير البوت سيتم مسح جميع المحادثة",
   "en": " Note: Changing the bot's name will result in the chat history being cleared."
+ },
+ "indexers": {
+  "ar": "الفهارس",
+  "en": "Indexers"
+ },
+ "storage": {
+  "ar": "التخزين",
+  "en": "Storage"
+ },
+ "admin_services": {
+  "ar": "خدمات المسؤول",
+  "en": "Admin Services"
+ },
+ "urls": {
+  "ar": "العناوين الالكترونية",
+  "en": "URLs"
+ },
+ "main_settings": {
+  "ar": "الإعدادات الرئيسية",
+  "en": "Main Settings"
+ },
+ "deep_crawling": {
+  "ar": "تتبع عميق",
+  "en": "Deep Crawling"
+ },
+ "media_crawling": {
+  "ar": "تتبع الوسائط",
+  "en": "Media Crawling"
+ },
+ "selectors": {
+  "ar": "ٍالمحددات",
+  "en": "Selectors"
+ },
+ "container_name": {
+  "ar": "اسم الحاوية",
+  "en": "Container Name"
+ },
+ "add_url": {
+  "ar": "إضافة عنوان",
+  "en": "Add URL"
+ },
+ "link": {
+  "ar": "الرابط",
+  "en": "Link"
+ },
+ "headers": {
+  "ar": "الترويسات",
+  "en": "Headers"
+ },
+ "cookies": {
+  "ar": "ملفات الارتباط",
+  "en": "Cookies"
+ },
+ "payload": {
+  "ar": "بيانات الإرسال",
+  "en": "Payload"
+ },
+ "key": {
+  "ar": "المفتاح",
+  "en": "Key"
+ },
+ "value": {
+  "ar": "القيمة",
+  "en": "Value"
+ },
+ "add_header": {
+  "ar": "إضافة ترويسة",
+  "en": "Add Header"
+ },
+ "add_cookie": {
+  "ar": "إضافة ملف ارتباط",
+  "en": "Add Cookie"
+ },
+ "add_payload": {
+  "ar": "إضافة بيانات إرسال",
+  "en": "Add Payload"
+ },
+ "add_selector": {
+  "ar": "إضافة محدد",
+  "en": "Add Selector"
+ },
+ "add_topic": {
+  "ar": "إضافة موضوع",
+  "en": "Add Topic"
+ },
+ "json_preview": {
+  "ar": "معاينة JSON",
+  "en": "JSON Preview"
+ },
+ "copy": {
+  "ar": "نسخ",
+  "en": "Copy"
+ },
+ "url": {
+  "ar": "العنوان",
+  "en": "URL"
+ },
+ "select_container_message": {
+  "ar": "يرجى تحديد حاوية لعرض محتوياتها",
+  "en": "Please select container to view its content"
+ },
+ "no_files_message": {
+  "ar": "لا يوجد ملفات متاحة لعرضها",
+  "en": "There are no files available for preview."
+ },
+ "delete_message": {
+  "ar": "هل أنت متأكد أنك تريد حذف",
+  "en": "Are you sure you want to delete "
+ },
+ "open_folder_tip": {
+  "ar": "يمكنك الضغط مرتين لفتح المجلد",
+  "en": "You can double click on folder to open it"
+ },
+ "selection_tip": {
+  "ar": "يمكنك تحديد جميع العناصر عن طريق الضغط على Ctrl + A.  \nكما يمكنك تحديد العناصر برسم مربع حولها عن طريق الضغط مع السحب باستخدام الماوس.  \nوأيضًا، يمكنك تحديد العناصر بشكل فردي أو الضغط على Ctrl لإضافة عنصر جديد إلى العناصر المحددة.",
+  "en": "You can select all items by pressing Ctrl + A.  \nYou can also select items by drawing a box around them by clicking and dragging with the mouse.  \nAdditionally, you can select items individually or press Ctrl to add a new item to the selected items."
+ },
+ "choose_files": {
+  "ar": "اختر ملفات",
+  "en": "Choose Files"
+ },
+ "errors": {
+  "ar": "الأخطاء",
+  "en": "Errors"
+ },
+ "file_not_supported": {
+  "ar": "صيغة الملف غير مدعومة",
+  "en": "File not supported"
+ },
+ "json_warning": {
+  "ar": "الملف لا يحوي على المفاتيح المطلوبة",
+  "en": "The file does not contain the required keys."
+ },
+ "file_storage": {
+  "ar": "ملفات التخرين",
+  "en": "File Storage"
+ },
+ "indexer_name": {
+  "ar": "اسم المفهرس",
+  "en": "Indexer Name"
+ },
+ "run_indexer": {
+  "ar": "تشغيل الفهرس",
+  "en": "Run Indexer"
+ },
+ "indexer_warning": {
+  "ar": "لا يمكن جلب تفاصيل الفهرس",
+  "en": "Filed to fetch details for indexer"
+ },
+ "loading_content": {
+  "ar": "جلب التفاصيل",
+  "en": "Loading  Contents"
+ },
+ "index_name": {
+  "ar": "اسم الفهرس",
+  "en": "Index Name"
+ },
+ "data_source": {
+  "ar": "مصدر البيانات",
+  "en": "Data Source"
+ },
+ "data_storage_type": {
+  "ar": "نوع تخزين البيانات",
+  "en": "Data Storage Type"
+ },
+ "data_storage_name": {
+  "ar": "اسم تخزين البيانات",
+  "en": "Data Storage Name"
+ },
+ "skillset_name": {
+  "ar": "اسم مجموعة المهارات",
+  "en": "Skillset Name"
+ },
+ "selector": {
+  "ar": "المحدد",
+  "en": "Selector"
+ },
+ "topic": {
+  "ar": "الموضوع",
+  "en": "Topic"
+ },
+ "delete": {
+  "ar": "حذف",
+  "en": "Delete"
+ },
+ "cancel": {
+  "ar": "إلغاء",
+  "en": "Cancel"
+ },
+ "confirm": {
+  "ar": "تأكيد",
+  "en": "Confirm"
+ },
+ "uploading": {
+  "ar": "جاري الرفع",
+  "en": "Uploading"
+ },
+ "not_valid_json": {
+  "ar": "ملف ال JSON غير صالح",
+  "en": "Is not valid JSON file"
+ },
+ "file_already_added": {
+  "ar": "الملف موجود مسبقاً",
+  "en": "File is already added"
  }
 }

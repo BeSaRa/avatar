@@ -12,6 +12,7 @@ export const EndPoints = {
   CHAT_HISTORY: 'chat-history',
   DOC_INTELLIGENCE: 'document-intelligence',
   MEDIA: 'media',
+  ADMIN: 'admin',
 }
 
 export type EndpointsType = typeof EndPoints

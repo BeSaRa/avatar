@@ -248,3 +248,13 @@ export function extractFileName(url: string) {
   const fileName = decodeURI(pathName.split('/').pop() || 'file')
   return fileName
 }
+
+export function transformKeyValueArrayToObject(arr: { key: string; value: string }[]): Record<string, string> {
+  return arr.reduce(
+    (acc, { key, value }) => {
+      acc[key] = value
+      return acc
+    },
+    {} as Record<string, string>
+  )
+}
