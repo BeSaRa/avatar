@@ -1,0 +1,481 @@
+<div class="flex gap-4 max-h-[75vh]">
+  <div class="flex flex-col w-7/12 bg-gray-50 p-6 rounded-lg shadow-lg max-h-full">
+    <div class="flex-grow overflow-auto">
+      <form [formGroup]="crawlerForm" class="space-y-6">
+        <mat-tab-group class="bg-white rounded-lg shadow-sm flex-grow">
+          <mat-tab [label]="lang.locals.urls">
+            <div formArrayName="urls" class="space-y-6 p-4 max-h-[47vh]">
+              <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md z-10">
+                <button
+                  type="button"
+                  (click)="addUrl()"
+                  class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                  {{ lang.locals.add_url }}
+                </button>
+              </div>
+              @for (url of urlsArray.controls; track $index; let urlIndex = $index) {
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>{{ lang.locals.url }} {{ urlIndex + 1 }}</mat-panel-title>
+                    <button
+                      type="button"
+                      (click)="removeUrl(urlIndex); $event.stopPropagation()"
+                      class="mx-4 bg-transparent">
+                      <svg class="fill-gray-700 size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                          d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+                      </svg>
+                    </button>
+                  </mat-expansion-panel-header>
+                  <div [formGroupName]="urlIndex" class="space-y-6 p-6 border border-gray-300 rounded-lg bg-gray-100">
+                    <mat-tab-group>
+                      <mat-tab [label]="lang.locals.link">
+                        <div class="p-4">
+                          <label for="link-{{ urlIndex }}" class="block text-sm font-medium text-gray-800">Link</label>
+                          <input
+                            id="link-{{ urlIndex }}"
+                            type="text"
+                            placeholder="http://www.example.com"
+                            formControlName="link"
+                            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                        </div>
+                      </mat-tab>
+                      <mat-tab [label]="lang.locals.headers">
+                        <div formArrayName="headers" class="space-y-4 max-h-32 overflow-auto">
+                          <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                            <button
+                              type="button"
+                              (click)="addKeyValuePair(urlIndex, 'headers')"
+                              class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                              {{ lang.locals.add_header }}
+                            </button>
+                          </div>
+                          @for (header of headersArray(urlIndex).controls; track $index; let headerIndex = $index) {
+                            <div class="flex space-x-4 gap-4" [formGroupName]="headerIndex">
+                              <div class="flex-1">
+                                <label
+                                  for="key-{{ urlIndex }}-{{ headerIndex }}"
+                                  class="block text-sm font-medium text-gray-800"
+                                  >{{ lang.locals.key }}</label
+                                >
+                                <input
+                                  id="key-{{ urlIndex }}-{{ headerIndex }}"
+                                  type="text"
+                                  formControlName="key"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                              </div>
+                              <div class="flex-1">
+                                <label
+                                  for="value-{{ urlIndex }}-{{ headerIndex }}"
+                                  class="block text-sm font-medium text-gray-800"
+                                  >{{ lang.locals.value }}</label
+                                >
+                                <input
+                                  id="value-{{ urlIndex }}-{{ headerIndex }}"
+                                  type="text"
+                                  formControlName="value"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                              </div>
+                              <button
+                                type="button"
+                                (click)="removeKeyValuePair(urlIndex, headerIndex, 'headers')"
+                                class="mt-4 bg-transparent">
+                                <svg
+                                  class="size-6 fill-red-500 hover:fill-red-600"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24">
+                                  <path
+                                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      </mat-tab>
+                      <mat-tab [label]="lang.locals.cookies">
+                        <div formArrayName="cookies" class="space-y-4 max-h-32 overflow-auto">
+                          <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                            <button
+                              type="button"
+                              (click)="addKeyValuePair(urlIndex, 'cookies')"
+                              class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:primary">
+                              {{ lang.locals.add_cookie }}
+                            </button>
+                          </div>
+                          @for (cookie of cookiesArray(urlIndex).controls; track $index; let cookiesIndex = $index) {
+                            <div class="flex space-x-4 gap-4" [formGroupName]="cookiesIndex">
+                              <div class="flex-1">
+                                <label
+                                  for="cookie-key-{{ urlIndex }}-{{ cookiesIndex }}"
+                                  class="block text-sm font-medium text-gray-800"
+                                  >{{ lang.locals.key }}</label
+                                >
+                                <input
+                                  id="cookie-key-{{ urlIndex }}-{{ cookiesIndex }}"
+                                  type="text"
+                                  formControlName="key"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                              </div>
+                              <div class="flex-1">
+                                <label
+                                  for="cookie-value-{{ urlIndex }}-{{ cookiesIndex }}"
+                                  class="block text-sm font-medium text-gray-800"
+                                  >{{ lang.locals.value }}</label
+                                >
+                                <input
+                                  id="cookie-value-{{ urlIndex }}-{{ cookiesIndex }}"
+                                  type="text"
+                                  formControlName="value"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                              </div>
+                              <button
+                                type="button"
+                                (click)="removeKeyValuePair(urlIndex, cookiesIndex, 'cookies')"
+                                class="mt-4 bg-transparent">
+                                <svg
+                                  class="size-6 fill-red-500 hover:fill-red-600"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24">
+                                  <path
+                                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      </mat-tab>
+                      <mat-tab [label]="lang.locals.payload">
+                        <div formArrayName="payload" class="space-y-4 max-h-32 overflow-auto">
+                          <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                            <button
+                              type="button"
+                              (click)="addKeyValuePair(urlIndex, 'payload')"
+                              class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                              {{ lang.locals.add_payload }}
+                            </button>
+                          </div>
+                          @for (payload of payloadArray(urlIndex).controls; track $index; let payloadIndex = $index) {
+                            <div class="flex space-x-4 gap-4" [formGroupName]="payloadIndex">
+                              <div class="flex-1">
+                                <label
+                                  for="payload-key-{{ urlIndex }}-{{ payloadIndex }}"
+                                  class="block text-sm font-medium text-gray-800"
+                                  >{{ lang.locals.key }}</label
+                                >
+                                <input
+                                  id="payload-key-{{ urlIndex }}-{{ payloadIndex }}"
+                                  type="text"
+                                  formControlName="key"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                              </div>
+                              <div class="flex-1">
+                                <label
+                                  for="payload-value-{{ urlIndex }}-{{ payloadIndex }}"
+                                  class="block text-sm font-medium text-gray-800"
+                                  >{{ lang.locals.value }}</label
+                                >
+                                <input
+                                  id="payload-value-{{ urlIndex }}-{{ payloadIndex }}"
+                                  type="text"
+                                  formControlName="value"
+                                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                              </div>
+                              <button
+                                type="button"
+                                (click)="removeKeyValuePair(urlIndex, payloadIndex, 'payload')"
+                                class="mt-4 bg-transparent">
+                                <svg
+                                  class="size-6 fill-red-500 hover:fill-red-600"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24">
+                                  <path
+                                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                </svg>
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      </mat-tab>
+                      <mat-tab [label]="lang.locals.settings">
+                        <div formGroupName="settings" class="space-y-6 p-4">
+                          <div class="flex justify-between items-center">
+                            <div class="flex gap-4 items-center space-x-3">
+                              <input
+                                id="deep-{{ urlIndex }}"
+                                type="checkbox"
+                                formControlName="deep"
+                                class="size-5 border-gray-300 rounded-lg focus:ring focus:ring-gray-400 accent-primary" />
+                              <label for="deep-{{ urlIndex }}" class="text-sm font-medium text-gray-800">{{
+                                lang.locals.deep_crawling
+                              }}</label>
+                            </div>
+
+                            <div class="flex gap-4 items-center space-x-3">
+                              <input
+                                id="mediaCrawling-{{ urlIndex }}"
+                                type="checkbox"
+                                formControlName="mediaCrawling"
+                                class="size-5 border-gray-300 rounded-lg focus:ring focus:ring-gray-400 accent-primary" />
+                              <label for="mediaCrawling-{{ urlIndex }}" class="text-sm font-medium text-gray-800">{{
+                                lang.locals.media_crawling
+                              }}</label>
+                            </div>
+                          </div>
+                          <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{ lang.locals.selectors }}</mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div formArrayName="selectors" class="space-y-4">
+                              <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                                <button
+                                  type="button"
+                                  (click)="addSelector(urlIndex)"
+                                  class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                                  {{ lang.locals.add_selector }}
+                                </button>
+                              </div>
+                              @for (
+                                selector of selectorsArray(urlIndex).controls;
+                                track $index;
+                                let selectorIndex = $index
+                              ) {
+                                <div class="flex space-x-4 gap-4">
+                                  <div class="flex-1">
+                                    <label
+                                      for="selector-{{ urlIndex }}-{{ selectorIndex }}"
+                                      class="block text-sm font-medium text-gray-800"
+                                      >{{ lang.locals.selector }}</label
+                                    >
+                                    <input
+                                      id="selector-{{ urlIndex }}-{{ selectorIndex }}"
+                                      type="text"
+                                      [formControlName]="selectorIndex"
+                                      class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                                  </div>
+                                  <button
+                                    type="button"
+                                    (click)="removeSelector(urlIndex, selectorIndex)"
+                                    class="mt-4 bg-transparent">
+                                    <svg
+                                      class="size-6 fill-red-500 hover:fill-red-600"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 24 24">
+                                      <path
+                                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                          </mat-expansion-panel>
+
+                          <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{ lang.locals.topics }}</mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div formArrayName="topics" class="space-y-4">
+                              <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                                <button
+                                  type="button"
+                                  (click)="addTopic(urlIndex)"
+                                  class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                                  {{ lang.locals.add_topic }}
+                                </button>
+                              </div>
+                              @for (topic of topicsArray(urlIndex).controls; track $index; let topicIndex = $index) {
+                                <div class="flex space-x-4 gap-4">
+                                  <div class="flex-1">
+                                    <label
+                                      for="topic-{{ urlIndex }}-{{ topicIndex }}"
+                                      class="block text-sm font-medium text-gray-800"
+                                      >{{ lang.locals.topic }}</label
+                                    >
+                                    <input
+                                      id="topic-{{ urlIndex }}-{{ topicIndex }}"
+                                      type="text"
+                                      [formControlName]="topicIndex"
+                                      class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                                  </div>
+                                  <button
+                                    type="button"
+                                    (click)="removeTopic(urlIndex, topicIndex)"
+                                    class="mt-4 bg-transparent">
+                                    <svg
+                                      class="size-6 fill-red-500 hover:fill-red-600"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 24 24">
+                                      <path
+                                        d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                          </mat-expansion-panel>
+
+                          <div class="flex-1">
+                            <label for="containerName-{{ urlIndex }}" class="block text-sm font-medium text-gray-800">{{
+                              lang.locals.container_name
+                            }}</label>
+                            <input
+                              id="containerName-{{ urlIndex }}"
+                              type="text"
+                              formControlName="containerName"
+                              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                          </div>
+                        </div>
+                      </mat-tab>
+                    </mat-tab-group>
+                  </div>
+                </mat-expansion-panel>
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab [label]="lang.locals.main_settings">
+            <div formGroupName="settings" class="space-y-6 p-4 max-h-[47vh]">
+              <div class="flex justify-between items-center">
+                <div class="flex gap-4 items-center space-x-3">
+                  <input
+                    id="deep-main"
+                    type="checkbox"
+                    formControlName="deep"
+                    class="size-5 border-gray-300 rounded-lg focus:ring focus:ring-gray-400 accent-primary" />
+                  <label for="deep-main" class="text-sm font-medium text-gray-800">{{
+                    lang.locals.deep_crawling
+                  }}</label>
+                </div>
+
+                <div class="flex gap-4 items-center space-x-3">
+                  <input
+                    id="mediaCrawling-main"
+                    type="checkbox"
+                    formControlName="mediaCrawling"
+                    class="size-5 border-gray-300 rounded-lg focus:ring focus:ring-gray-400 accent-primary" />
+                  <label for="mediaCrawling-main" class="text-sm font-medium text-gray-800">{{
+                    lang.locals.media_crawling
+                  }}</label>
+                </div>
+              </div>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{ lang.locals.selectors }}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div formArrayName="selectors" class="space-y-4">
+                  <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                    <button
+                      type="button"
+                      (click)="addMainSelector()"
+                      class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                      {{ lang.locals.add_selector }}
+                    </button>
+                  </div>
+                  @for (selector of mainSelectorsArray().controls; track $index; let selectorIndex = $index) {
+                    <div class="flex space-x-4 gap-4">
+                      <div class="flex-1">
+                        <label
+                          for="selector-main-{{ selectorIndex }}"
+                          class="block text-sm font-medium text-gray-800"
+                          >{{ lang.locals.selector }}</label
+                        >
+                        <input
+                          id="selector-main-{{ selectorIndex }}"
+                          type="text"
+                          [formControlName]="selectorIndex"
+                          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                      </div>
+                      <button type="button" (click)="removeMainSelector(selectorIndex)" class="mt-4 bg-transparent">
+                        <svg
+                          class="size-6 fill-red-500 hover:fill-red-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24">
+                          <path
+                            d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title> {{ lang.locals.topics }} </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div formArrayName="topics" class="space-y-4">
+                  <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+                    <button
+                      type="button"
+                      (click)="addMainTopic()"
+                      class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+                      {{ lang.locals.add_topic }}
+                    </button>
+                  </div>
+                  @for (topic of mainTopicsArray().controls; track $index; let topicIndex = $index) {
+                    <div class="flex space-x-4 gap-4">
+                      <div class="flex-1">
+                        <label for="topic-main-{{ topicIndex }}" class="block text-sm font-medium text-gray-800">{{
+                          lang.locals.topic
+                        }}</label>
+                        <input
+                          id="topic-main-{{ topicIndex }}"
+                          type="text"
+                          [formControlName]="topicIndex"
+                          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+                      </div>
+                      <button type="button" (click)="removeMainTopic(topicIndex)" class="mt-4 bg-transparent">
+                        <svg
+                          class="size-6 fill-red-500 hover:fill-red-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24">
+                          <path
+                            d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </mat-expansion-panel>
+              <div class="flex-1">
+                <label for="containerName-main" class="block text-sm font-medium text-gray-800">{{
+                  lang.locals.container_name
+                }}</label>
+                <input
+                  id="containerName-main"
+                  type="text"
+                  formControlName="containerName"
+                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+
+        <button
+          type="button"
+          (click)="submitTheForm()"
+          class="px-6 py-3 bg-primary/90 text-white rounded-lg hover:bg-primary w-full">
+          {{ lang.locals.crawl_web_pages }}
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="w-5/12 bg-gray-100 p-6 rounded-lg shadow max-h-full overflow-auto">
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">{{ lang.locals.json_preview }}</h2>
+      <button
+        class="inline-flex items-center gap-2 bg-primary/90 text-white py-1 px-3 rounded hover:bg-primary focus:outline-none"
+        (click)="copyToClipboard()">
+        {{ lang.locals.copy }}
+        <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+        </svg>
+      </button>
+    </div>
+    <pre
+      dir="ltr"
+      class="bg-gray-800 text-white p-4 rounded-lg overflow-auto max-h-[80%] whitespace-pre-wrap relative"
+      [innerHTML]="formatedValue | jsonHighlight"></pre>
+  </div>
+</div>
