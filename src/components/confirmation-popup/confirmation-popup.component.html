@@ -1,0 +1,38 @@
+<div class="p-6 bg-white rounded-lg shadow-md w-full max-w-md mx-auto" appIgnoreSelection>
+  <!-- Image -->
+  @if (data.imageUrl) {
+    <div class="mb-4">
+      <img [src]="data.imageUrl" alt="Dialog Image" class="w-full h-auto rounded-md" />
+    </div>
+  }
+
+  <!-- Message -->
+  @if (data.message) {
+    <div class="mb-4 text-gray-700 text-center">
+      <p>{{ data.message }}</p>
+    </div>
+  }
+
+  <!-- Custom HTML Content -->
+  @if (data.htmlContent) {
+    <div class="mb-4 text-gray-700" [innerHTML]="data.htmlContent"></div>
+  }
+
+  <!-- Buttons -->
+  <div class="flex justify-end space-x-4 gap-4">
+    <button
+      class="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 {{
+        data.cancelButtonClasses || ''
+      }}"
+      (click)="onCancel()">
+      {{ data.cancelButtonText || lang.locals.cancel }}
+    </button>
+    <button
+      class="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 {{
+        data.confirmButtonClasses || ''
+      }}"
+      (click)="onConfirm()">
+      {{ data.confirmButtonText || lang.locals.confirm }}
+    </button>
+  </div>
+</div>

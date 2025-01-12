@@ -1,0 +1,72 @@
+<div class="flex flex-col w-[min(500px,80vw)]">
+  <div class="p-4 bg-primary text-white">{{ lang.locals.file_storage }}</div>
+  <div class="p-4 min-h-0 flex flex-auto flex-col">
+    <!-- File Input -->
+    <input id="fileInput" type="file" accept=".json,.pdf" multiple class="hidden" (change)="onFileSelected($event)" />
+    <label
+      for="fileInput"
+      class="inline-block cursor-pointer text-center bg-primary/90 text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none">
+      {{ lang.locals.choose_files }}
+    </label>
+
+    <!-- Error Messages -->
+    @if (errorMessages().length > 0) {
+      <div class="mt-4 p-4 rounded-md border-red-400 bg-red-100 border-2">
+        <p class="text-red-600 font-medium">{{ lang.locals.errors }}:</p>
+        <ul class="list-disc list-inside text-red-500 text-sm">
+          @for (error of errorMessages(); track $index) {
+            <li>{{ error }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    <!-- Uploaded Files -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6 max-h-56 overflow-y-auto">
+      @for (file of uploadedFiles; track $index; let i = $index) {
+        <div class="border border-gray-300 rounded-lg p-4 flex flex-col items-center bg-gray-50 relative shadow-md">
+          <!-- File Icon -->
+          <img
+            [src]="file.extension === 'json' ? 'assets/images/json-file.svg' : 'assets/images/pdf-file.svg'"
+            alt="file type"
+            class="size-12" />
+          <!-- File Details -->
+          <div class="mt-2 text-center w-full">
+            <p class="text-gray-700 font-medium text-sm truncate">{{ file.name }}</p>
+            <p class="text-gray-500 text-xs">{{ file.extension }}</p>
+          </div>
+          <!-- Remove Button -->
+          <button
+            class="absolute size-6 top-0.5 right-0.5 bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-1 px-2 rounded-full flex justify-center items-center text-center"
+            (click)="removeFile(i)">
+            <svg class="fill-white size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="flex justify-end mt-6 space-x-2 gap-4 p-4">
+  <button
+    type="button"
+    class="bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none"
+    (click)="ref.close()">
+    {{ lang.locals.cancel }}
+  </button>
+  <button
+    type="button"
+    [disabled]="uploadedFiles.length === 0 || isUploading"
+    (click)="uploadFiles()"
+    class="bg-primary/90 text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:opacity-50">
+    @if (!isUploading) {
+      <span>{{ lang.locals.upload }}</span>
+    } @else {
+      <span>{{ lang.locals.uploading }}...</span>
+    }
+  </button>
+</div>

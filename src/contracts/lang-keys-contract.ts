@@ -116,4 +116,55 @@ export interface LangKeysContract {
   web_crawler: string
   change_bot: string
   change_bot_note: string
+  indexers: string
+  storage: string
+  admin_services: string
+  urls: string
+  main_settings: string
+  deep_crawling: string
+  media_crawling: string
+  selectors: string
+  selector: string
+  container_name: string
+  add_url: string
+  link: string
+  headers: string
+  cookies: string
+  payload: string
+  key: string
+  value: string
+  add_header: string
+  add_cookie: string
+  add_payload: string
+  add_selector: string
+  add_topic: string
+  json_preview: string
+  copy: string
+  url: string
+  select_container_message: string
+  no_files_message: string
+  delete_message: string
+  open_folder_tip: string
+  selection_tip: string
+  choose_files: string
+  errors: string
+  file_not_supported: string
+  json_warning: string
+  file_storage: string
+  indexer_name: string
+  run_indexer: string
+  indexer_warning: string
+  loading_content: string
+  index_name: string
+  data_source: string
+  data_storage_type: string
+  data_storage_name: string
+  skillset_name: string
+  topic: string
+  delete: string
+  cancel: string
+  confirm: string
+  uploading: string
+  not_valid_json: string
+  file_already_added: string
 }
