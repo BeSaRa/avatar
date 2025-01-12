@@ -1,0 +1,80 @@
+<div class="max-w-6xl mx-auto p-4 bg-gray-100 shadow-lg rounded-lg">
+  <div class="overflow-x-auto overflow-y-auto max-h-[70vh] bg-white rounded-lg shadow-md">
+    <table class="w-full table-auto border-collapse">
+      <thead>
+        <tr class="bg-primary text-white sticky top-0">
+          <th class="px-4 py-2 text-left">{{ lang.locals.indexer_name }}</th>
+          <th class="px-4 py-2 text-center">{{ lang.locals.actions }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (indexer of indexers; track $index) {
+          <tr class="hover:bg-gray-100 border-t">
+            <td
+              (click)="toggleExpand(indexer)"
+              class="cursor-pointer px-4 py-2 text-blue-600 font-medium hover:underline">
+              {{ indexer }}
+              @if (loadingIndex === indexer) {
+                <span class="ml-2 text-gray-500 animate-spin">🔄</span>
+              }
+            </td>
+            <td class="px-4 py-2 text-center">
+              <button
+                (click)="resetAndRunIndexer(indexer)"
+                [disabled]="runningIndex === indexer"
+                class="bg-primary/80 text-white px-4 py-2 rounded-md hover:bg-primary disabled:opacity-50">
+                @if (runningIndex === indexer) {
+                  <span class="animate-spin">🔄</span> Running...
+                } @else {
+                  {{ lang.locals.run_indexer }}
+                }
+              </button>
+            </td>
+          </tr>
+          @if (expandedIndex === indexer) {
+            <tr>
+              <td colspan="2" class="p-4 bg-gray-50 border-t">
+                @if (infoErrorMessage) {
+                  <div class="text-red-600 font-semibold">{{ infoErrorMessage }}</div>
+                } @else {
+                  <div class="grid grid-cols-2 gap-4 text-gray-800">
+                    <div>
+                      <span class="font-semibold">{{ lang.locals.index_name }}</span>
+                      {{ selectedIndexerInfo.index_name }}
+                    </div>
+                    <div>
+                      <span class="font-semibold">{{ lang.locals.indexer_name }}</span>
+                      {{ selectedIndexerInfo.indexer_name }}
+                    </div>
+                    <div>
+                      <span class="font-semibold">{{ lang.locals.data_source }}</span>
+                      {{ selectedIndexerInfo.data_source_name }}
+                    </div>
+                    <div>
+                      <span class="font-semibold">{{ lang.locals.data_storage_type }}</span>
+                      {{ selectedIndexerInfo.data_storage_type }}
+                    </div>
+                    <div>
+                      <span class="font-semibold">{{ lang.locals.data_storage_name }}</span>
+                      {{ selectedIndexerInfo.data_storage_name }}
+                    </div>
+                    <div>
+                      <span class="font-semibold">{{ lang.locals.skillset_name }}</span>
+                      {{ selectedIndexerInfo.skillset_name }}
+                    </div>
+                  </div>
+                }
+              </td>
+            </tr>
+          } @else if (loadingIndex === indexer) {
+            <tr>
+              <td colspan="2" class="p-4 bg-gray-50 border-t">
+                <div class="text-gray-500">{{ lang.locals.loading_content }}...</div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
