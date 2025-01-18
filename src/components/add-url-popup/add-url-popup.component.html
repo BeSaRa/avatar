@@ -1,0 +1,28 @@
+<div class="flex flex-col">
+  <div class="p-4 bg-primary text-white">ADD URL</div>
+  <div class="p-4 min-h-0 flex flex-auto flex-col">
+    <form [formGroup]="urlForm" class="flex flex-col space-y-4">
+      <div class="p-0">
+        <label for="link" class="block text-sm font-medium text-gray-800">Link</label>
+        <input
+          id="link"
+          type="text"
+          placeholder="http://www.example.com"
+          formControlName="link"
+          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+      </div>
+      <mat-tab-group>
+        <mat-tab [label]="lang.locals.headers">
+          <app-keyvalue-pair-form arrayName="headers" [buttonLabel]="lang.locals.add_header" />
+        </mat-tab>
+        <mat-tab [label]="lang.locals.cookies">
+          <app-keyvalue-pair-form arrayName="cookies" [buttonLabel]="lang.locals.add_cookie" />
+        </mat-tab>
+        <mat-tab [label]="lang.locals.payload">
+          <app-keyvalue-pair-form arrayName="payload" [buttonLabel]="lang.locals.add_payload" />
+        </mat-tab>
+      </mat-tab-group>
+      <app-settings-form class="p-0" />
+    </form>
+  </div>
+</div>

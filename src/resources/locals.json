@@ -483,9 +483,9 @@
   "ar": "العناوين الالكترونية",
   "en": "URLs"
  },
- "main_settings": {
-  "ar": "الإعدادات الرئيسية",
-  "en": "Main Settings"
+ "general_settings": {
+  "ar": "الإعدادات العامة",
+  "en": "General Settings"
  },
  "deep_crawling": {
   "ar": "تتبع عميق",
@@ -572,8 +572,8 @@
   "en": "There are no files available for preview."
  },
  "delete_message": {
-  "ar": "هل أنت متأكد أنك تريد حذف",
-  "en": "Are you sure you want to delete "
+  "ar": "هل أنت متأكد أنك تريد حذف ؟",
+  "en": "Are you sure you want to delete ?"
  },
  "open_folder_tip": {
   "ar": "يمكنك الضغط مرتين لفتح المجلد",
@@ -670,5 +670,21 @@
  "file_already_added": {
   "ar": "الملف موجود مسبقاً",
   "en": "File is already added"
+ },
+ "search_indexer": {
+  "ar": "ابحث عن فهرس...",
+  "en": "Search for an indexer..."
+ },
+ "delete_confirmation": {
+  "ar": "تأكيد الحذف",
+  "en": "Delete Confirmation"
+ },
+ "confirm_action": {
+  "ar": "تأكيد الإجراء",
+  "en": "Confirm Action"
+ },
+ "web_crawling_btn": {
+  "ar": "بدأ عملية تتبع البيانات",
+  "en": "Start web crawling"
  }
 }

@@ -1,7 +1,7 @@
-<div class="flex w-full h-[75vh] rounded-md">
+<div class="flex flex-wrap gap-4 md:gap-0 md:flex-nowrap w-full h-[75vh] rounded-md">
   <!-- Sidebar for containers -->
   <div
-    class="flex flex-col items-start gap-2 p-4 w-1/6 border-l-2 rounded-tr-md rounded-br-md border-gray-500 bg-gray-100 overflow-auto">
+    class="flex flex-col items-start md:max-h-full max-h-80 gap-2 p-4 w-full md:w-1/6 border-l-2 rounded-md md:rounded-tr-md md:rounded-br-md border-gray-500 bg-gray-100 overflow-auto">
     @if (isContainerLoading()) {
       <div class="w-full">
         <div class="animate-pulse flex flex-col gap-4">
@@ -31,16 +31,15 @@
   </div>
 
   <!-- Main Content Area -->
-  <div class="relative w-5/6 bg-gray-200 rounded-tl-md rounded-bl-md">
+  <div class="relative w-full md:w-5/6 bg-gray-200 rounded-md md:rounded-none md:rounded-tl-md md:rounded-bl-md">
     <!-- Breadcrumbs -->
     <div
-      class="w-full sticky top-0 bg-gray-100 border-b border-gray-300 rounded-tl-md h-14 flex items-center px-6 pt-2 gap-4 shadow-md z-10">
-      <!-- Breadcrumbs -->
+      class="w-full sticky top-0 bg-gray-100 border-b border-gray-300 rounded-tr-md rounded-tl-md h-14 flex flex-nowrap items-center px-6 pt-2 gap-4 shadow-md z-10">
       <nav class="flex items-center gap-2 overflow-hidden">
         @for (crumb of breadcrumbs(); track $index; let i = $index) {
           <button
             (click)="navigateBreadcrumb(i)"
-            class="text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer bg-transparent border-none focus:outline-none focus:ring-2 ring-blue-300 transition-all duration-200">
+            class="text-primary/80 truncate hover:underline hover:text-primary text-sm font-medium cursor-pointer bg-transparent border-none focus:outline-none focus:ring-2 ring-blue-300 transition-all duration-200">
             {{ crumb }}
           </button>
           @if (i < breadcrumbs().length - 1) {
@@ -50,13 +49,13 @@
       </nav>
       @if (selectedItems.size > 0) {
         <!-- Delete Button -->
-        <div class="mr-auto">
+        <div class="rtl:mr-auto ltr:ml-auto">
           <button
             appIgnoreSelection
-            (click)="onDelete($event)"
+            (click)="deleteFiles()"
             @slideFromBottom
             type="button"
-            class="relative inline-flex items-center px-5 py-2 text-sm font-semibold text-white bg-red-500 rounded-md hover:bg-red-600 focus:ring-4 focus:ring-red-300 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="relative inline-flex items-center px-5 py-2 text-sm font-semibold text-white bg-gray-500 rounded-md hover:bg-gray-600 focus:ring-4 focus:ring-primary/60 focus:outline-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             [disabled]="selectedItems.size === 0">
             <svg class="w-5 h-5 me-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
               <path
@@ -65,7 +64,7 @@
             <span>{{ lang.locals.delete }}</span>
 
             <span
-              class="absolute -top-2 -right-2 flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-blue-600 rounded-full ring-2 ring-white">
+              class="absolute -top-2 -right-2 flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-primary rounded-full ring-2 ring-white">
               {{ selectedItems.size }}
             </span>
           </button>
@@ -76,9 +75,9 @@
     <!-- Content Area -->
     <div class="overflow-y-auto h-[calc(100%-3.5rem)] p-4">
       @if (loading()) {
-        <!--Skelton Area-->
-        <div class="grid grid-cols-5 gap-8 mt-4">
-          @for (_ of skeltonList; track $index) {
+        <!--Skeleton Area-->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mt-4">
+          @for (_ of skeletonList; track $index) {
             <div class="animate-pulse flex flex-col items-center px-4 pb-4">
               <div class="w-20 h-20 bg-gray-300 rounded"></div>
               <div class="w-16 h-4 bg-gray-300 mt-2 rounded"></div>
@@ -95,8 +94,9 @@
         <!--Actual Content-->
         <div
           appSelectableContainer
+          [container]="content()"
           (selectionChange)="onSelectionChange($event)"
-          class="relative grid grid-cols-5 gap-8 mt-4"
+          class="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mt-4"
           @contentAnimation>
           @if (!isSubfolder() && breadcrumbs().length) {
             <button
@@ -104,7 +104,7 @@
               class="flex flex-col items-center bg-transparent outline-none"
               (click)="openFileUploadDialog()">
               <div
-                class="flex size-32 justify-center items-center cursor-pointer hover:bg-gray-400 transition-colors border-dashed border-2 border-gray-500 group rounded-md">
+                class="flex size-32 justify-center items-center cursor-pointer hover:bg-gray-300 transition-colors border-dashed border-2 border-gray-500 group rounded-lg">
                 <svg
                   class="size-12 opacity-50 group-hover:opacity-100 fill-gray-700 group-hover:scale-105 transition-transform"
                   xmlns="http://www.w3.org/2000/svg"
@@ -118,10 +118,11 @@
           @for (item of content(); track $index) {
             @if (isSubfolder()) {
               <div
+                [matTooltip]="lang.locals.open_folder_tip"
                 (dblclick)="updateQueryParams(breadcrumbs()[0], item)"
                 class="content-item relative flex flex-col items-center px-4 pb-4 cursor-pointer group">
                 <img [src]="'assets/images/folder-colored.svg'" alt="folder" class="w-20 h-auto" />
-                <span class="text-sm text-center text-gray-700 mt-2">{{ item }}</span>
+                <span [title]="item" class="text-sm text-center text-gray-700 mt-2 truncate w-full">{{ item }}</span>
                 <button
                   (click)="deleteFolder(item)"
                   class="outline-none flex items-center justify-center border-2 border-gray-300 hover:scale-125 transition-all duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto absolute top-0 right-6 rounded-full size-6 bg-red-500 hover:bg-red-600">
@@ -135,9 +136,9 @@
               @let extension = item.split('.')[1];
               @let fileName = item.split('/')[1];
               <div
-                class="content-item flex flex-col items-center p-4"
+                class="content-item flex flex-col items-center p-4 rounded-lg [&.selected]:shadow-lg"
                 appSelectableItem
-                [appSelectableItem]="item"
+                [item]="item"
                 [attr.data-item]="item">
                 <img
                   [src]="'assets/images/' + (extension === 'pdf' ? 'pdf-file.svg' : 'json-file.svg')"

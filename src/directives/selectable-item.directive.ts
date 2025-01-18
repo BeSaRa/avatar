@@ -1,14 +1,14 @@
-import { Directive, ElementRef, HostListener, Input, inject } from '@angular/core'
+import { Directive, ElementRef, HostListener, inject, input } from '@angular/core'
 import { SelectableContainerDirective } from './selectable-container.directive'
 
 @Directive({
   selector: '[appSelectableItem]',
   standalone: true,
 })
-export class SelectableItemDirective {
-  @Input('appSelectableItem') item: unknown // Input to identify the item
+export class SelectableItemDirective<TItem> {
+  item = input.required<TItem>() // Input to identify the item
   el = inject(ElementRef)
-  container = inject(SelectableContainerDirective)
+  container = inject<SelectableContainerDirective<TItem>>(SelectableContainerDirective)
 
   constructor() {
     this.container.registerItem(this)
@@ -31,15 +31,15 @@ export class SelectableItemDirective {
 
   @HostListener('click', ['$event.ctrlKey'])
   onClick(ctrlPressed: boolean): void {
-    const isSelected = this.container.isSelected(this.item)
+    const isSelected = this.container.isSelected(this.item())
 
     if (ctrlPressed) {
       // Toggle selection when Ctrl is pressed
-      this.container.toggleSelection(this.item, !isSelected)
+      this.container.toggleSelection(this.item(), !isSelected)
     } else {
       // Clear previous selection and select this item
       this.container.clearSelection()
-      this.container.toggleSelection(this.item, !isSelected)
+      this.container.toggleSelection(this.item(), !isSelected)
     }
   }
 }

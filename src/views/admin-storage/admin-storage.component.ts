@@ -35,27 +35,29 @@ import { catchError, distinctUntilChanged, filter, finalize, map, of, switchMap,
 })
 export class AdminStorageComponent {
   lang = inject(LocalService)
-  adminService = inject(AdminService)
-  router = inject(Router)
-  route = inject(ActivatedRoute)
+  private readonly adminService = inject(AdminService)
+  private readonly router = inject(Router)
+  private readonly route = inject(ActivatedRoute)
+  private readonly dialog = inject(MatDialog)
+
   isContainerLoading = signal(true)
+  loading = signal(false)
+
   containers$ = this.adminService.getContainers().pipe(finalize(() => this.isContainerLoading.set(false)))
   breadcrumbs = signal<string[]>([])
   isSubfolder = signal<boolean | undefined>(undefined)
   content = signal<string[]>([])
-  skeltonList = Array.from({ length: 10 }, (_, k) => k).fill(0)
+
+  //skeleton UI
+  skeletonList = Array.from({ length: 10 }, (_, k) => k).fill(0)
   skeletonWidths = Array.from({ length: 20 }, () => Math.floor(Math.random() * 50) + 50)
 
-  loading = signal(false)
-  dialog = inject(MatDialog)
   selectedItems = new Set<string>() // Track selected items
 
-  /**
-   *
-   */
   constructor() {
     this.listenToQueryParams()
   }
+
   listenToQueryParams() {
     this.containers$
       .pipe(
@@ -77,20 +79,18 @@ export class AdminStorageComponent {
         )
       )
       .subscribe(({ containerName, folderName }) => {
-        if (containerName) {
-          this.updateBreadcrumbs(containerName, folderName)
-
-          if (folderName) {
-            this.openFolder(containerName, folderName)
-          } else {
-            this.openContainer(containerName)
-          }
-        } else {
-          this.resetState()
-        }
+        this.handleNavigation(containerName, folderName)
       })
   }
 
+  handleNavigation(containerName?: string, folderName?: string) {
+    if (containerName) {
+      this.updateBreadcrumbs(containerName, folderName)
+      folderName ? this.openFolder(containerName, folderName) : this.openContainer(containerName)
+    } else {
+      this.resetState()
+    }
+  }
   updateQueryParams(containerName?: string, folderName?: string) {
     const queryParams: Record<string, string | null> = {}
 
@@ -110,20 +110,38 @@ export class AdminStorageComponent {
 
   openContainer(containerName: string) {
     this.loading.set(true)
-    this.adminService.getSubfolder(containerName).subscribe(folders => {
-      this.content.set(folders)
-      this.isSubfolder.set(true) // Indicate that it's a subfolder
-      this.loading.set(false)
-    })
+    this.adminService
+      .getSubfolder(containerName)
+      .pipe(
+        tap(folders => {
+          this.content.set(folders)
+          this.isSubfolder.set(true)
+        }),
+        catchError(error => {
+          console.error('Error loading container:', error)
+          return of([])
+        }),
+        finalize(() => this.loading.set(false))
+      )
+      .subscribe()
   }
 
   openFolder(containerName: string, folderName: string) {
     this.loading.set(true)
-    this.adminService.getBlobs(containerName, folderName).subscribe(blobs => {
-      this.content.set(blobs)
-      this.isSubfolder.set(false) // Indicate that it's files, not subfolders
-      this.loading.set(false)
-    })
+    this.adminService
+      .getBlobs(containerName, folderName)
+      .pipe(
+        tap(blobs => {
+          this.content.set(blobs)
+          this.isSubfolder.set(false)
+        }),
+        catchError(error => {
+          console.error('Error loading folder:', error)
+          return of([])
+        }),
+        finalize(() => this.loading.set(false))
+      )
+      .subscribe()
   }
 
   navigateBreadcrumb(index: number) {
@@ -142,8 +160,7 @@ export class AdminStorageComponent {
   }
 
   updateBreadcrumbs(containerName: string, folderName?: string) {
-    const newBreadcrumbs = folderName ? [containerName, folderName] : [containerName]
-    this.breadcrumbs.set(newBreadcrumbs)
+    this.breadcrumbs.set(folderName ? [containerName, folderName] : [containerName])
   }
 
   resetState() {
@@ -153,82 +170,71 @@ export class AdminStorageComponent {
   }
 
   openFileUploadDialog() {
+    const [containerName, folderName] = this.breadcrumbs()
     this.dialog.open(UploadStorageFilePopupComponent, {
       data: {
-        container_name: this.route.snapshot.queryParamMap.get('containerName'),
-        subfolder_name: this.route.snapshot.queryParamMap.get('folderName'),
+        container_name: containerName,
+        subfolder_name: folderName,
       },
     })
   }
 
   onSelectionChange(selected: Set<string>): void {
-    console.log(selected)
     this.selectedItems = selected
   }
   deleteFolder(folderName: string) {
+    const containerName = this.breadcrumbs()[0]
+    if (!containerName) return
+
     this.dialog
       .open<ConfirmationPopupComponent, ConfirmationDialogDataContact, boolean>(ConfirmationPopupComponent, {
         data: {
           // eslint-disable-next-line max-len
-          htmlContent: `<p class="text-center text-xl text-gray-700">${this.lang.locals.delete_message} ? <span class="italic text-base">${folderName}<span> ? </p>`,
-          confirmButtonText: this.lang.locals.delete,
-          confirmButtonClasses: '!bg-red-500 hover:!bg-red-600',
+          htmlContent: `<p class="flex flex-col gap-4 text-center text-xl text-gray-700">${this.lang.locals.delete_message} <span class="italic text-sm text-primary">${folderName}<span> ? </p>`,
         },
       })
       .afterClosed()
       .pipe(
-        switchMap(res => {
-          if (!res) {
-            return of(null) // Exit if the dialog is canceled
-          }
-
-          const [containerName] = this.breadcrumbs()
-
-          // Call delete API and chain the openFolder API
-          return this.adminService
-            .deleteSubfolder(containerName, folderName)
-            .pipe(switchMap(() => of(this.openContainer(containerName))))
-        }),
-        catchError(err => {
-          console.error('An error occurred:', err)
-          return of(null) // Continue gracefully even if there's an error
+        switchMap(confirmed => {
+          if (!confirmed) return of(null)
+          return this.adminService.deleteSubfolder(containerName, folderName).pipe(
+            tap(() => this.openContainer(containerName)),
+            catchError(error => {
+              console.error('Error deleting folder:', error)
+              return of(null)
+            })
+          )
         })
       )
-      .subscribe() // No next or error handling in the subscribe block
+      .subscribe()
   }
-  onDelete(event: MouseEvent): void {
-    event.stopPropagation() // Prevent the click from propagating to the container
+  deleteFiles(): void {
+    const [containerName, subFolderName] = this.breadcrumbs()
+    const fileNames = Array.from(this.selectedItems)
+    if (!fileNames.length) return
 
     this.dialog
       .open<ConfirmationPopupComponent, ConfirmationDialogDataContact, boolean>(ConfirmationPopupComponent, {
         data: {
           htmlContent: this.generateSelectedItemsHtml(Array.from(this.selectedItems)),
-          confirmButtonText: this.lang.locals.delete,
-          confirmButtonClasses: '!bg-red-500 hover:!bg-red-600',
         },
       })
       .afterClosed()
       .pipe(
-        switchMap(res => {
-          if (!res) {
-            return of(null) // Exit if the dialog is canceled
-          }
-
-          const [containerName, subFolderName] = this.breadcrumbs()
-          const fileNames = Array.from(this.selectedItems)
-
+        switchMap(confirmed => {
+          if (!confirmed) return of(null)
           // Call delete API and chain the openFolder API
           return this.adminService.deleteByListOfTitles(containerName, subFolderName, fileNames).pipe(
-            switchMap(() => of(this.openFolder(containerName, subFolderName))),
-            tap(() => this.selectedItems.clear())
+            tap(() => this.openFolder(containerName, subFolderName)),
+            tap(() => this.selectedItems.clear()),
+            catchError(err => {
+              console.error('An error occurred:', err)
+              return of(null) // Continue gracefully even if there's an error
+            })
           )
-        }),
-        catchError(err => {
-          console.error('An error occurred:', err)
-          return of(null) // Continue gracefully even if there's an error
         })
       )
-      .subscribe() // No next or error handling in the subscribe block
+      .subscribe()
   }
 
   generateSelectedItemsHtml(selectedItems: string[]): string {
@@ -239,7 +245,7 @@ export class AdminStorageComponent {
       } else if (extension === 'json') {
         return 'assets/images/json-file.svg'
       }
-      return 'assets/images/default-file.svg' // Fallback for unknown types
+      return 'assets/images/json-file.svg'
     }
 
     const listItemsHtml = selectedItems

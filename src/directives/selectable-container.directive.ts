@@ -8,6 +8,7 @@ import {
   Output,
   Renderer2,
   inject,
+  input,
 } from '@angular/core'
 import { SelectableItemDirective } from './selectable-item.directive'
 
@@ -16,16 +17,17 @@ import { SelectableItemDirective } from './selectable-item.directive'
   standalone: true,
   exportAs: 'selectableContainer',
 })
-export class SelectableContainerDirective implements OnDestroy {
-  @Output() selectionChange = new EventEmitter<Set<unknown>>() // Emits selected items
-  private items: SelectableItemDirective[] = [] // List of registered items
+export class SelectableContainerDirective<TItem> implements OnDestroy {
+  container = input.required<TItem[]>() // dummy just for infer the type
+  @Output() selectionChange = new EventEmitter<Set<TItem>>() // Emits selected items
+  private items: SelectableItemDirective<TItem>[] = [] // List of registered items
   private selectionBox: HTMLElement | null = null
   private overlay: HTMLElement | null = null
   private isSelecting = false
   private isDragging = false
   private boxStartX = 0
   private boxStartY = 0
-  private selectedItems = new Set<unknown>()
+  private selectedItems = new Set<TItem>()
 
   private el = inject(ElementRef)
   private renderer = inject(Renderer2)
@@ -37,12 +39,12 @@ export class SelectableContainerDirective implements OnDestroy {
     })
   }
 
-  registerItem(item: SelectableItemDirective): void {
+  registerItem(item: SelectableItemDirective<TItem>): void {
     this.items.push(item)
   }
 
-  toggleSelection(item: unknown, selected: boolean): void {
-    const selectableItem = this.items.find(i => i.item === item)
+  toggleSelection(item: TItem, selected: boolean): void {
+    const selectableItem = this.items.find(i => i.item() === item)
     if (!selectableItem) return
 
     selectableItem.setSelected(selected)
@@ -56,12 +58,12 @@ export class SelectableContainerDirective implements OnDestroy {
     this.emitSelectionChange()
   }
 
-  addSelection(item: unknown): void {
+  addSelection(item: TItem): void {
     this.selectedItems.add(item)
     this.emitSelectionChange()
   }
 
-  isSelected(item: unknown): boolean {
+  isSelected(item: TItem): boolean {
     return this.selectedItems.has(item)
   }
 
@@ -169,7 +171,7 @@ export class SelectableContainerDirective implements OnDestroy {
   }
 
   private updateSelectedItems(boxLeft: number, boxTop: number, boxRight: number, boxBottom: number): void {
-    const newSelectedItems = new Set<unknown>()
+    const newSelectedItems = new Set<TItem>()
 
     this.items.forEach(item => {
       const itemRect = item.getBoundingClientRect()
@@ -184,7 +186,7 @@ export class SelectableContainerDirective implements OnDestroy {
       item.setSelected(itemInSelection)
 
       if (itemInSelection) {
-        newSelectedItems.add(item.item)
+        newSelectedItems.add(item.item())
       }
     })
 
@@ -194,7 +196,7 @@ export class SelectableContainerDirective implements OnDestroy {
     }
   }
 
-  private areSetsEqual(setA: Set<unknown>, setB: Set<unknown>): boolean {
+  private areSetsEqual(setA: Set<TItem>, setB: Set<TItem>): boolean {
     if (setA.size !== setB.size) return false
     for (const item of setA) {
       if (!setB.has(item)) return false
@@ -249,7 +251,7 @@ export class SelectableContainerDirective implements OnDestroy {
   selectAllItems(): void {
     this.items.forEach(item => {
       item.setSelected(true)
-      this.selectedItems.add(item.item)
+      this.selectedItems.add(item.item())
     })
 
     this.emitSelectionChange()

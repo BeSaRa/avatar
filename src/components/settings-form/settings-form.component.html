@@ -1,0 +1,119 @@
+<ng-container [formGroup]="parentFormGroup">
+  <div formGroupName="settings" class="space-y-6">
+    <div class="flex justify-between items-center">
+      <div class="flex gap-4 items-center space-x-3">
+        <input
+          id="deep-{{ urlIndex() }}"
+          type="checkbox"
+          formControlName="deep"
+          class="size-5 border-gray-300 rounded-lg focus:ring focus:ring-gray-400 accent-primary" />
+        <label for="deep-{{ urlIndex() }}" class="text-sm font-medium text-gray-800">{{
+          lang.locals.deep_crawling
+        }}</label>
+      </div>
+
+      <div class="flex gap-4 items-center space-x-3">
+        <input
+          id="mediaCrawling-{{ urlIndex() }}"
+          type="checkbox"
+          formControlName="mediaCrawling"
+          class="size-5 border-gray-300 rounded-lg focus:ring focus:ring-gray-400 accent-primary" />
+        <label for="mediaCrawling-{{ urlIndex() }}" class="text-sm font-medium text-gray-800">{{
+          lang.locals.media_crawling
+        }}</label>
+      </div>
+    </div>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ lang.locals.selectors }}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div formArrayName="selectors" class="space-y-4">
+        <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+          <button
+            type="button"
+            (click)="addSelector()"
+            class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+            {{ lang.locals.add_selector }}
+          </button>
+        </div>
+        @for (selector of selectorsArray.controls; track $index; let selectorIndex = $index) {
+          <div class="flex space-x-4 gap-4">
+            <div class="flex-1">
+              <label
+                for="selector-{{ urlIndex() }}-{{ selectorIndex }}"
+                class="block text-sm font-medium text-gray-800"
+                >{{ lang.locals.selector }}</label
+              >
+              <input
+                id="selector-{{ urlIndex() }}-{{ selectorIndex }}"
+                type="text"
+                [formControlName]="selectorIndex"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+            </div>
+            <button type="button" (click)="removeSelector(selectorIndex)" class="mt-4 bg-transparent">
+              <svg
+                class="size-6 fill-red-500 hover:fill-red-600"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24">
+                <path
+                  d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+    </mat-expansion-panel>
+
+    @if (showTopics()) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ lang.locals.topics }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div formArrayName="topics" class="space-y-4">
+          <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+            <button
+              type="button"
+              (click)="addTopic()"
+              class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+              {{ lang.locals.add_topic }}
+            </button>
+          </div>
+          @for (topic of topicsArray.controls; track $index; let topicIndex = $index) {
+            <div class="flex space-x-4 gap-4">
+              <div class="flex-1">
+                <label for="topic-{{ urlIndex() }}-{{ topicIndex }}" class="block text-sm font-medium text-gray-800">{{
+                  lang.locals.topic
+                }}</label>
+                <input
+                  id="topic-{{ urlIndex() }}-{{ topicIndex }}"
+                  type="text"
+                  [formControlName]="topicIndex"
+                  class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+              </div>
+              <button type="button" (click)="removeTopic(topicIndex)" class="mt-4 bg-transparent">
+                <svg
+                  class="size-6 fill-red-500 hover:fill-red-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
+      </mat-expansion-panel>
+    }
+
+    <div class="flex-1">
+      <label for="containerName-{{ urlIndex() }}" class="block text-sm font-medium text-gray-800">{{
+        lang.locals.container_name
+      }}</label>
+      <input
+        id="containerName-{{ urlIndex() }}"
+        type="text"
+        formControlName="containerName"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
+    </div>
+  </div>
+</ng-container>

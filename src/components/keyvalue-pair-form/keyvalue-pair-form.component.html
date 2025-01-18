@@ -1,0 +1,66 @@
+<ng-container [formGroup]="parentFormGroup">
+  <div [formArrayName]="arrayName()" class="space-y-4 overflow-auto">
+    <!-- Add Key-Value Pair Button -->
+    <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
+      <button
+        type="button"
+        (click)="addKeyValuePair()"
+        class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
+        {{ buttonLabel() }}
+      </button>
+    </div>
+
+    <!-- Key-Value Table -->
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 border border-gray-300 text-left text-gray-800">{{ lang.locals.key }}</th>
+            <th class="p-2 border border-gray-300 text-left text-gray-800">{{ lang.locals.value }}</th>
+            <th class="p-2 border border-gray-300 text-center text-gray-800"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of getKeyValuePairArray.controls; track $index; let keyValuePairIdx = $index) {
+            <tr [formGroupName]="keyValuePairIdx">
+              <!-- Key Input -->
+              <td class="p-0 border border-gray-300">
+                <input
+                  id="key-{{ urlIndex() }}-{{ keyValuePairIdx }}"
+                  type="text"
+                  formControlName="key"
+                  class="w-full p-2 border-0 focus:ring focus:ring-gray-400 focus:outline-none text-gray-800" />
+              </td>
+
+              <!-- Value Input -->
+              <td class="p-0 border border-gray-300">
+                <input
+                  id="value-{{ urlIndex() }}-{{ keyValuePairIdx }}"
+                  type="text"
+                  formControlName="value"
+                  class="w-full p-2 border-0 focus:ring focus:ring-gray-400 focus:outline-none text-gray-800" />
+              </td>
+
+              <!-- Delete Button -->
+              <td class="border border-gray-300 text-center">
+                <button
+                  type="button"
+                  (click)="removeKeyValuePair(keyValuePairIdx)"
+                  class="bg-transparent hover:bg-red-100 rounded-full group focus:outline-gray-300">
+                  <svg
+                    class="w-6 h-6 fill-red-500 group-hover:fill-red-600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24">
+                    <title>{{ lang.locals.delete }}</title>
+                    <path
+                      d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-container>
