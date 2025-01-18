@@ -158,7 +158,7 @@
           </div>
         }
         <div class="flex-auto overflow-hidden flex flex-col relative min-h-0 p-4">
-          @for (message of chats(); track message.id) {
+          @for (message of chats(); track $index) {
             @if (message.isUser()) {
               <div
                 class="user-message chat-message ltr:self-end min-w-[min(400px,100%)] rtl:self-start rtl:!rounded-tr-none ltr:!rounded-tr-none">
