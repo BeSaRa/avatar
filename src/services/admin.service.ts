@@ -5,6 +5,7 @@ import { MediaCrawler } from '@/models/media-crawler'
 import { map, Observable } from 'rxjs'
 import { UploadBlobsOptions } from '@/types/upload-blobs.type'
 import { IndexerInfoContract } from '@/contracts/indexer-info-contract'
+import { FormGroup, NonNullableFormBuilder } from '@angular/forms'
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ import { IndexerInfoContract } from '@/contracts/indexer-info-contract'
 export class AdminService {
   private readonly http = inject(HttpClient)
   private readonly urlService = inject(UrlService)
+  private readonly fb = inject(NonNullableFormBuilder)
 
   crawlWeb(crawlerOptions: MediaCrawler) {
     const url = `${this.urlService.URLS.ADMIN}/crawler`
@@ -75,5 +77,29 @@ export class AdminService {
   runIndexer(indexName: string) {
     const url = `${this.urlService.URLS.ADMIN}/run-indexer/${indexName}`
     return this.http.post(url, null)
+  }
+  secureUrl(blobUrl: string) {
+    const url = `${this.urlService.URLS.ADMIN}/sas-token`
+    const param = new HttpParams().append('blob_url', blobUrl)
+    return this.http.get<string>(url, { params: param })
+  }
+
+  createUrlGroup(): FormGroup {
+    return this.fb.group({
+      link: this.fb.control(''),
+      headers: this.fb.array([]),
+      cookies: this.fb.array([]),
+      payload: this.fb.array([]),
+      settings: this.createSettingsGroup(),
+    })
+  }
+
+  createSettingsGroup(): FormGroup {
+    return this.fb.group({
+      deep: this.fb.control(false),
+      selectors: this.fb.array([]),
+      mediaCrawling: this.fb.control(false),
+      containerName: this.fb.control('rera-storage'),
+    })
   }
 }

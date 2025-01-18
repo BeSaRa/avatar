@@ -4,8 +4,9 @@ import { AppStore } from '@/stores/app.store'
 import { formatString, formatText } from '@/utils/utils'
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable, WritableSignal } from '@angular/core'
-import { Observable, catchError, map } from 'rxjs'
+import { Observable, catchError, forkJoin, map, of, switchMap } from 'rxjs'
 import { UrlService } from './url.service'
+import { AdminService } from './admin.service'
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ import { UrlService } from './url.service'
 export abstract class BaseChatService {
   protected readonly http = inject(HttpClient)
   protected readonly urlService = inject(UrlService)
+  private readonly adminService = inject(AdminService)
   protected readonly store = inject(AppStore)
   abstract messages: WritableSignal<Message[]>
   abstract status: WritableSignal<boolean>
@@ -21,6 +23,7 @@ export abstract class BaseChatService {
   sendMessage(content: string, bot: string): Observable<ChatMessageResultContract> {
     const url = `${this.urlService.URLS.CHAT}/${bot}`
     this.messages.update(messages => [...messages, new Message(content, 'user')])
+
     return this.http
       .post<ChatMessageResultContract>(url, {
         messages: this.messages(),
@@ -34,16 +37,69 @@ export abstract class BaseChatService {
             role: 'error',
           })
           throw new Error(err)
-        })
-      )
-      .pipe(
+        }),
         map(res => {
-          res.message.content = formatString(formatText(res.message.content, res.message))
-          res.message = new Message().clone(res.message)
-          this.conversationId.set(res.message.conversation_id)
-          this.messages.update(messages => [...messages, res.message])
+          // Apply initial formatting
+          res.message.content = formatText(res.message.content, res.message)
           return res
-        })
+        }),
+        switchMap(res =>
+          this.processFormattedText(res.message.content).pipe(
+            map(formattedText => {
+              res.message.content = formatString(formattedText)
+              res.message = new Message().clone(res.message)
+              this.conversationId.set(res.message.conversation_id)
+              this.messages.update(messages => [...messages, res.message])
+              return res
+            })
+          )
+        )
       )
+  }
+
+  processFormattedText(formattedText: string) {
+    const matches = [...formattedText.matchAll(/href="(.*?)"/g)]
+
+    // Handle empty matches
+    if (matches.length === 0) {
+      console.log('No matches found in formatted text.')
+      return of(formattedText) // Return the unmodified text as an Observable
+    }
+
+    const replacementObservables = matches.map(match => {
+      const url = match[1]
+
+      if (url.includes('blob.core.windows.net')) {
+        // Fetch API result for URLs containing the sequence
+        return this.adminService.secureUrl(url).pipe(
+          map(apiResponse => {
+            return {
+              match: match[0],
+              replacement: match[0].replace(url, apiResponse), // Replace the original encoded URL
+            }
+          }),
+          catchError(() => {
+            return of({
+              match: match[0],
+              replacement: match[0], // Keep the original if there's an error
+            })
+          })
+        )
+      }
+      // If no API call is needed, return the original
+      return of({
+        match: match[0],
+        replacement: match[0],
+      })
+    })
+
+    return forkJoin(replacementObservables).pipe(
+      map(replacements => {
+        replacements.forEach(({ match, replacement }) => {
+          formattedText = formattedText.replace(match, replacement)
+        })
+        return formattedText
+      })
+    )
   }
 }
