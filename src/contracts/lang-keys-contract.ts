@@ -120,7 +120,7 @@ export interface LangKeysContract {
   storage: string
   admin_services: string
   urls: string
-  main_settings: string
+  general_settings: string
   deep_crawling: string
   media_crawling: string
   selectors: string
@@ -167,4 +167,8 @@ export interface LangKeysContract {
   uploading: string
   not_valid_json: string
   file_already_added: string
+  search_indexer: string
+  delete_confirmation: string
+  confirm_action: string
+  web_crawling_btn: string
 }

@@ -68,6 +68,10 @@ export class RecorderComponent extends OnDestroyMixin(class {}) {
     const langDetection = AutoDetectSourceLanguageConfig.fromLanguages(['ar-QA', 'en-US'])
 
     this.recognizer = SpeechRecognizer.FromConfig(
+      // SpeechConfig.fromEndpoint(
+      //   new URL('qatarcentral.stt.speech.microsoft.com/speech/recognition/conversation/'),
+      //   'b8ed193e693f42f1bfe5f9702865fbbc'
+      // ),
       SpeechConfig.fromAuthorizationToken(this.store.speechToken.token(), this.store.speechToken.region()),
       langDetection,
       audioConfig

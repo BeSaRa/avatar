@@ -1,18 +1,23 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
-import { catchError, finalize, switchMap, of } from 'rxjs'
+import { catchError, finalize, switchMap, of, debounceTime, distinctUntilChanged, tap } from 'rxjs'
 import { AdminService } from '@/services/admin.service'
 import { IndexerInfoContract } from '@/contracts/indexer-info-contract'
 import { LocalService } from '@/services/local.service'
+import { expandCollapse } from '@/animations/expand-collapse'
+import { FormControl, ReactiveFormsModule } from '@angular/forms'
 
 @Component({
   selector: 'app-admin-indexer',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './admin-indexer.component.html',
   styleUrls: ['./admin-indexer.component.scss'],
+  animations: [expandCollapse],
 })
 export class AdminIndexerComponent implements OnInit {
   indexers: string[] = []
+  filteredIndexers: string[] = []
+  searchControl = new FormControl('', { nonNullable: true })
   declare selectedIndexerInfo: IndexerInfoContract
   loading = false
   errorMessage = ''
@@ -26,6 +31,7 @@ export class AdminIndexerComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchIndexers()
+    this.listenToSearch()
   }
 
   fetchIndexers(): void {
@@ -34,13 +40,17 @@ export class AdminIndexerComponent implements OnInit {
     this.adminService
       .getIndexes()
       .pipe(
+        tap(data => {
+          this.indexers = data
+          this.filteredIndexers = data
+        }),
         catchError(() => {
           this.errorMessage = 'Failed to fetch indexers.'
           return of([])
         }),
         finalize(() => (this.loading = false))
       )
-      .subscribe(data => (this.indexers = data))
+      .subscribe()
   }
 
   resetAndRunIndexer(indexerName: string): void {
@@ -62,8 +72,8 @@ export class AdminIndexerComponent implements OnInit {
   }
 
   toggleExpand(indexerName: string): void {
-    this.expandedIndex = null
     if (this.expandedIndex === indexerName) {
+      this.expandedIndex = null
       this.selectedIndexerInfo = {} as IndexerInfoContract // Clear details
       this.infoErrorMessage = null // Clear error message
     } else {
@@ -72,6 +82,7 @@ export class AdminIndexerComponent implements OnInit {
   }
 
   fetchIndexerInfo(indexerName: string): void {
+    this.expandedIndex = null
     this.loadingIndex = indexerName
     this.infoErrorMessage = null
     this.errorMessage = ''
@@ -96,5 +107,11 @@ export class AdminIndexerComponent implements OnInit {
           }, 100)
         }
       })
+  }
+
+  listenToSearch(): void {
+    this.searchControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe(searchTerm => {
+      this.filteredIndexers = this.indexers.filter(indexer => indexer.toLowerCase().includes(searchTerm.toLowerCase()))
+    })
   }
 }

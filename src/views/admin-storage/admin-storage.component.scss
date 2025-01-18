@@ -1,8 +1,5 @@
 .selected {
-  background-color: #e0f2ff; /* Light blue */
-  border: 2px dashed #007bff; /* Blue border */
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Soft shadow */
-  transition: all 0.1s ease-in-out; /* Smooth effect */
+  @apply bg-gray-300 shadow-md border-2 border-dashed border-primary rounded-md transition-all ease-in-out duration-150;
 }
 .content-item > *::selection {
   background-color: transparent !important;

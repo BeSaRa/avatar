@@ -90,7 +90,7 @@
   </div>
 
   <ul class="max-w-md">
-    @for (conversation of filteredConversations(); track conversation.conversation_id; let i = $index) {
+    @for (conversation of filteredConversations(); track $index; let i = $index) {
       <li
         tabindex="1"
         (keyup.enter)="OnSelectConversation(conversation.conversation_id)"
