@@ -7,7 +7,7 @@
       [formControl]="botNameCtrl"
       class="p-1 w-24 text-sm border-b-2 bg-transparent border-gray-400 focus:ring-primary focus:border-primary outline-none">
       @for (chatbot of botNames$ | async; track $index) {
-        <option [value]="chatbot">{{ chatbot }}</option>
+        <option class="text-gray-700" [value]="chatbot">{{ chatbot }}</option>
       }
     </select>
     <div class="relative flex gap-2 w-6/12">
