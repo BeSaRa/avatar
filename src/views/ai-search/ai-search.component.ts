@@ -85,7 +85,6 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   }
 
   load() {
-    const selectedBot = this.botNameCtrl.value
     return combineLatest([this.search$, this.paginate$]).pipe(
       filter(([search]) => search.trim().length > 0),
       tap(([searchToken]) => this.searchToken.set(searchToken)),
@@ -98,7 +97,7 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
         }
         this.loadingSubject$.next(true)
         return this.aiSearchService
-          .search(searchQuery, selectedBot)
+          .search(searchQuery, this.botNameCtrl.value)
           .pipe(finalize(() => this.loadingSubject$.next(false)))
       }),
       tap(({ total_count, rs }) => {

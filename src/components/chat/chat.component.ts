@@ -122,7 +122,6 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   }
 
   private listenToSendMessage() {
-    const selectedBot = this.chatService.botNameCtrl.value
     return this.sendMessage$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(() => !!this.messageCtrl.value.trim()))
@@ -135,7 +134,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .pipe(
         exhaustMap(value =>
           this.chatService
-            .sendMessage(value, selectedBot)
+            .sendMessage(value, this.chatService.botNameCtrl.value)
             .pipe(
               catchError(err => {
                 this.answerInProgress.set(false)
