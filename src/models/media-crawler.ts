@@ -11,7 +11,7 @@ class CrawlerSettings {
   deep: boolean
   selectors: string[]
   mediaCrawling: boolean
-  topics: string[]
+  topics?: string[]
   containerName: string
 
   constructor(mediaCrawling = false) {

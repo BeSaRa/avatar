@@ -1,6 +1,7 @@
 <div class="flex flex-wrap gap-4 md:gap-0 md:flex-nowrap w-full h-[75vh] rounded-md">
   <!-- Sidebar for containers -->
   <div
+    appPerfectScroll
     class="flex flex-col items-start md:max-h-full max-h-80 gap-2 p-4 w-full md:w-1/6 border-l-2 rounded-md md:rounded-tr-md md:rounded-br-md border-gray-500 bg-gray-100 overflow-auto">
     @if (isContainerLoading()) {
       <div class="w-full">
@@ -73,7 +74,7 @@
     </div>
 
     <!-- Content Area -->
-    <div class="overflow-y-auto h-[calc(100%-3.5rem)] p-4">
+    <div appPerfectScroll class="overflow-y-auto h-[calc(100%-3.5rem)] p-4">
       @if (loading()) {
         <!--Skeleton Area-->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mt-4">

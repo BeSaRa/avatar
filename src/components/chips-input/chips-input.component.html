@@ -1,23 +1,29 @@
 <div class="relative">
   <!-- Chips List -->
   <mat-chip-grid
+    appPerfectScroll
+    [observeContent]="true"
+    [perfectScrollOptions]="{ suppressScrollX: true }"
+    [formControl]="formControl"
     #chipGrid
-    class="w-full p-2 border max-h-20 overflow-y-auto border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800">
+    class="w-full p-2 border max-h-20 border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-gray-300 text-gray-800">
     <!-- Existing Chips -->
-    <mat-chip-row *ngFor="let chip of chips; let i = index" [removable]="true" (removed)="removeChip(i)">
-      {{ chip }}
-      <button matChipRemove [attr.aria-label]="'remove ' + chip" type="button" class="!text-primary">&times;</button>
-    </mat-chip-row>
-
+    @for (chip of chips; track $index; let i = $index) {
+      <mat-chip-row [removable]="true" (removed)="removeChip(i)">
+        {{ chip }}
+        <button matChipRemove [attr.aria-label]="'remove ' + chip" type="button" class="!text-primary">&times;</button>
+      </mat-chip-row>
+    }
     <!-- Input Field -->
     <input
       [matChipInputFor]="chipGrid"
-      [placeholder]="placeholder"
-      [(ngModel)]="inputValue"
-      (matChipInputTokenEnd)="addChip()"
-      class="border-none outline-none" />
+      [placeholder]="placeholder()"
+      (matChipInputTokenEnd)="addChip($event)"
+      class="border-none outline-none bg-transparent" />
   </mat-chip-grid>
 </div>
 
 <!-- Error Message -->
-<p *ngIf="error" class="mt-2 text-sm text-red-500">{{ error }}</p>
+@if (error) {
+  <p class="mt-2 text-sm text-red-500">{{ error }}</p>
+}

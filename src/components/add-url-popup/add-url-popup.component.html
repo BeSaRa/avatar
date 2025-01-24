@@ -1,28 +1,68 @@
 <div class="flex flex-col">
-  <div class="p-4 bg-primary text-white">ADD URL</div>
-  <div class="p-4 min-h-0 flex flex-auto flex-col">
-    <form [formGroup]="urlForm" class="flex flex-col space-y-4">
-      <div class="p-0">
-        <label for="link" class="block text-sm font-medium text-gray-800">Link</label>
-        <input
-          id="link"
-          type="text"
-          placeholder="http://www.example.com"
-          formControlName="link"
-          class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400 text-gray-800" />
-      </div>
-      <mat-tab-group>
-        <mat-tab [label]="lang.locals.headers">
-          <app-keyvalue-pair-form arrayName="headers" [buttonLabel]="lang.locals.add_header" />
-        </mat-tab>
-        <mat-tab [label]="lang.locals.cookies">
-          <app-keyvalue-pair-form arrayName="cookies" [buttonLabel]="lang.locals.add_cookie" />
-        </mat-tab>
-        <mat-tab [label]="lang.locals.payload">
-          <app-keyvalue-pair-form arrayName="payload" [buttonLabel]="lang.locals.add_payload" />
-        </mat-tab>
-      </mat-tab-group>
-      <app-settings-form class="p-0" />
-    </form>
-  </div>
+  <div class="p-4 bg-primary text-white">{{ isAdd() ? lang.locals.add_url : lang.locals.edit_url }}</div>
+  <mat-dialog-content appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }">
+    <div class="p-4 min-h-0 flex flex-auto flex-col">
+      <form [formGroup]="urlForm" class="flex flex-col space-y-4">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ lang.locals.url_details }}</mat-panel-title>
+              <mat-panel-description class="opacity-50">{{ lang.locals.url_details_desc }}</mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="p-2">
+              @let isInvalidLink =
+                urlForm.get('link')?.invalid && urlForm.get('link')?.touched && urlForm.get('link')?.dirty;
+              <label for="link" class="block text-sm font-medium text-gray-800">Link</label>
+              <input
+                id="link"
+                type="text"
+                [ngClass]="{ 'bg-red-50 !border-red-400': isInvalidLink }"
+                placeholder="http://www.example.com"
+                formControlName="link"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-gray-300 text-gray-800" />
+              @if (isInvalidLink) {
+                <small class="text-red-400">{{
+                  urlForm.get('link')?.errors?.['pattern'] ? lang.locals.invalid_url : lang.locals.required
+                }}</small>
+              }
+            </div>
+            <mat-tab-group>
+              <mat-tab [label]="lang.locals.headers">
+                <app-keyvalue-pair-form arrayName="headers" [buttonLabel]="lang.locals.add_header" />
+              </mat-tab>
+              <mat-tab [label]="lang.locals.cookies">
+                <app-keyvalue-pair-form arrayName="cookies" [buttonLabel]="lang.locals.add_cookie" />
+              </mat-tab>
+              <mat-tab [label]="lang.locals.payload">
+                <app-keyvalue-pair-form arrayName="payload" [buttonLabel]="lang.locals.add_payload" />
+              </mat-tab>
+            </mat-tab-group>
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{ lang.locals.url_settings }}</mat-panel-title>
+              <mat-panel-description class="opacity-50">{{ lang.locals.url_settings_desc }}</mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-settings-form class="p-2" />
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="flex w-full justify-center mt-6 space-x-2 gap-4 p-4">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="bg-gray-300 w-3/12 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
+        {{ lang.locals.cancel }}
+      </button>
+      <button
+        type="button"
+        (click)="addURL()"
+        class="bg-primary/90 w-3/12 text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:opacity-50">
+        {{ isAdd() ? lang.locals.add_url : lang.locals.edit_url }}
+      </button>
+    </div>
+  </mat-dialog-actions>
 </div>

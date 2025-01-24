@@ -1,0 +1,21 @@
+<div class="felx flex-col w-[min(500,80vw)]">
+  <div class="p-4 bg-primary text-white">{{ lang.locals.json_preview }}</div>
+  <div class="p-4 min-h-0 flex flex-col flex-auto">
+    <div class="rounded-lg relative">
+      <button
+        class="inline-flex items-center gap-2 bg-transparent text-white py-1 px-3 hover:scale-110 focus:outline-none m-2 absolute z-10"
+        (click)="copyToClipboard()">
+        <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+        </svg>
+      </button>
+      <pre
+        dir="ltr"
+        appPerfectScroll
+        [perfectScrollOptions]="{ suppressScrollX: true }"
+        class="bg-gray-800 text-left text-white p-4 rounded-lg overflow-auto max-h-96 whitespace-pre-wrap relative"
+        [innerHTML]="formatedValue | jsonHighlight"></pre>
+    </div>
+  </div>
+</div>

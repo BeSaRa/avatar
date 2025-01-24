@@ -1,13 +1,15 @@
 import { LocalService } from '@/services/local.service'
 import { Component, inject, OnInit, signal } from '@angular/core'
-import { ControlContainer, FormArray, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms'
+import { ControlContainer, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { MatExpansionModule } from '@angular/material/expansion'
-import { tap } from 'rxjs'
+import { startWith, takeUntil, tap } from 'rxjs'
+import { ChipsInputComponent } from '../chips-input/chips-input.component'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 
 @Component({
   selector: 'app-settings-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatExpansionModule],
+  imports: [ReactiveFormsModule, MatExpansionModule, ChipsInputComponent],
   templateUrl: './settings-form.component.html',
   styleUrl: './settings-form.component.scss',
   viewProviders: [
@@ -17,7 +19,7 @@ import { tap } from 'rxjs'
     },
   ],
 })
-export class SettingsFormComponent implements OnInit {
+export class SettingsFormComponent extends OnDestroyMixin(class {}) implements OnInit {
   lang = inject(LocalService)
   fb = inject(NonNullableFormBuilder)
   container = inject(ControlContainer)
@@ -40,30 +42,13 @@ export class SettingsFormComponent implements OnInit {
     return this.parentFormGroup.get('settings') as FormGroup
   }
 
-  get selectorsArray(): FormArray {
-    return this.settings.get('selectors') as FormArray
-  }
-
-  get topicsArray(): FormArray {
-    return this.settings.get('topics') as FormArray
-  }
-
-  addSelector() {
-    this.selectorsArray.push(this.fb.control(''))
-  }
-  removeSelector(index: number) {
-    this.selectorsArray.removeAt(index)
-  }
-  addTopic() {
-    this.topicsArray.push(this.fb.control(''))
-  }
-  removeTopic(index: number) {
-    this.topicsArray.removeAt(index)
+  get mediaCrawling(): FormControl<boolean> {
+    return this.settings.get('mediaCrawling') as FormControl<boolean>
   }
 
   toggleTopicsList(isMediaCrawling: boolean) {
     if (isMediaCrawling) {
-      this.settings.addControl('topics', this.fb.array([]))
+      this.settings.addControl('topics', this.fb.control([]))
     } else {
       const topics = this.settings.get('topics')
       if (topics) {
@@ -72,9 +57,10 @@ export class SettingsFormComponent implements OnInit {
     }
   }
   listenToMediaCrawlingChange() {
-    this.settings
-      .get('mediaCrawling')
-      ?.valueChanges.pipe(
+    this.mediaCrawling?.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        startWith(this.mediaCrawling?.value),
         tap(val => {
           this.showTopics.set(val)
           this.toggleTopicsList(val)

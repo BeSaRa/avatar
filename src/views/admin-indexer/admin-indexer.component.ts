@@ -1,20 +1,22 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
-import { catchError, finalize, switchMap, of, debounceTime, distinctUntilChanged, tap } from 'rxjs'
+import { catchError, finalize, switchMap, of, debounceTime, distinctUntilChanged, tap, takeUntil } from 'rxjs'
 import { AdminService } from '@/services/admin.service'
 import { IndexerInfoContract } from '@/contracts/indexer-info-contract'
 import { LocalService } from '@/services/local.service'
 import { expandCollapse } from '@/animations/expand-collapse'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
+import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 
 @Component({
   selector: 'app-admin-indexer',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PerfectScrollDirective],
   templateUrl: './admin-indexer.component.html',
   styleUrls: ['./admin-indexer.component.scss'],
   animations: [expandCollapse],
 })
-export class AdminIndexerComponent implements OnInit {
+export class AdminIndexerComponent extends OnDestroyMixin(class {}) implements OnInit {
   indexers: string[] = []
   filteredIndexers: string[] = []
   searchControl = new FormControl('', { nonNullable: true })
@@ -40,6 +42,7 @@ export class AdminIndexerComponent implements OnInit {
     this.adminService
       .getIndexes()
       .pipe(
+        takeUntil(this.destroy$),
         tap(data => {
           this.indexers = data
           this.filteredIndexers = data
@@ -59,6 +62,7 @@ export class AdminIndexerComponent implements OnInit {
     this.adminService
       .resetIndex(indexerName)
       .pipe(
+        takeUntil(this.destroy$),
         switchMap(() => this.adminService.runIndexer(indexerName)),
         catchError(() => {
           this.errorMessage = `Failed to reset and run indexer: ${indexerName}`
@@ -89,6 +93,7 @@ export class AdminIndexerComponent implements OnInit {
     this.adminService
       .getIndexInfo(indexerName)
       .pipe(
+        takeUntil(this.destroy$),
         catchError(() => {
           this.infoErrorMessage = `${this.lang.locals.indexer_warning} ${indexerName}.`
           this.expandedIndex = indexerName // Expand row to show the error
@@ -110,8 +115,12 @@ export class AdminIndexerComponent implements OnInit {
   }
 
   listenToSearch(): void {
-    this.searchControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe(searchTerm => {
-      this.filteredIndexers = this.indexers.filter(indexer => indexer.toLowerCase().includes(searchTerm.toLowerCase()))
-    })
+    this.searchControl.valueChanges
+      .pipe(takeUntil(this.destroy$), debounceTime(500), distinctUntilChanged())
+      .subscribe(searchTerm => {
+        this.filteredIndexers = this.indexers.filter(indexer =>
+          indexer.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      })
   }
 }

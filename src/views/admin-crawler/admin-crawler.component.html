@@ -91,27 +91,103 @@
   </div>
 </div> -->
 
-<div class="flex h-[70vh] max-h-[70vh] bg-transparent w-full">
-  <div class="flex flex-col h-full bg-transparent gap-2 w-1/12 items-end">
+<div class="flex h-[75vh] max-h-[75vh] bg-transparent w-full p-4 overflow-hidden">
+  <!-- Sidebar -->
+  <div class="flex flex-col h-full bg-transparent gap-4 w-1/12 items-end">
     <button
       type="button"
-      class="inline-flex justify-center items-center h-full p-4 mt-2 bg-gray-300 text-gray-700 border-gray-300 border active:bg-primary active:text-white outline-none text-lg hover:bg-primary hover:text-white w-1/2 focus:w-3/4 rounded-md rounded-se-none rounded-ee-none">
+      (click)="selectedTab.set('urls')"
+      [ngClass]="{
+        'bg-primary  border-2 text-white shadow-lg scale-105 w-full': selectedTab() === 'urls',
+      }"
+      class="relative z-10 inline-flex flex-col gap-2 justify-center transition-all ease-in-out items-center h-full p-3 mt-4 bg-gray-300 text-gray-700 border-gray-300 border active:bg-primary active:text-white outline-none text-lg hover:bg-primary hover:text-white w-3/4 focus:w-full rounded-2xl rounded-se-none rounded-ee-none border-l-0">
       <span class="block rotate-[0.25turn]">URLS</span>
+      <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M10.59,13.41C11,13.8 11,14.44 10.59,14.83C10.2,15.22 9.56,15.22 9.17,14.83C7.22,12.88 7.22,9.71 9.17,7.76V7.76L12.71,4.22C14.66,2.27 17.83,2.27 19.78,4.22C21.73,6.17 21.73,9.34 19.78,11.29L18.29,12.78C18.3,11.96 18.17,11.14 17.89,10.36L18.36,9.88C19.54,8.71 19.54,6.81 18.36,5.64C17.19,4.46 15.29,4.46 14.12,5.64L10.59,9.17C9.41,10.34 9.41,12.24 10.59,13.41M13.41,9.17C13.8,8.78 14.44,8.78 14.83,9.17C16.78,11.12 16.78,14.29 14.83,16.24V16.24L11.29,19.78C9.34,21.73 6.17,21.73 4.22,19.78C2.27,17.83 2.27,14.66 4.22,12.71L5.71,11.22C5.7,12.04 5.83,12.86 6.11,13.65L5.64,14.12C4.46,15.29 4.46,17.19 5.64,18.36C6.81,19.54 8.71,19.54 9.88,18.36L13.41,14.83C14.59,13.66 14.59,11.76 13.41,10.59C13,10.2 13,9.56 13.41,9.17Z" />
+      </svg>
     </button>
     <button
       type="button"
-      class="inline-flex justify-center items-center h-full p-4 mb-2 bg-gray-300 text-gray-700 border-gray-300 border active:bg-primary active:text-white outline-none text-lg hover:bg-primary hover:text-white w-1/2 focus:w-3/4 rounded-md rounded-se-none rounded-ee-none">
-      <span class="block rotate-[0.25turn]">General Settings</span>
+      (click)="selectedTab.set('settings')"
+      [ngClass]="{
+        'bg-primary border-2 text-white shadow-lg scale-105 w-full mb-4': selectedTab() === 'settings',
+      }"
+      class="relative z-20 inline-flex flex-col gap-2 justify-center transition-all ease-in-out items-center h-full p-3 mt-4 bg-gray-300 text-gray-700 border-gray-300 border active:bg-primary active:text-white outline-none text-lg hover:bg-primary hover:text-white w-3/4 focus:w-full rounded-2xl rounded-se-none rounded-ee-none border-l-0 mb-2">
+      <span class="block rotate-[0.25turn]">{{ lang.locals.general_settings }}</span>
+      <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M15.9,18.45C17.25,18.45 18.35,17.35 18.35,16C18.35,14.65 17.25,13.55 15.9,13.55C14.54,13.55 13.45,14.65 13.45,16C13.45,17.35 14.54,18.45 15.9,18.45M21.1,16.68L22.58,17.84C22.71,17.95 22.75,18.13 22.66,18.29L21.26,20.71C21.17,20.86 21,20.92 20.83,20.86L19.09,20.16C18.73,20.44 18.33,20.67 17.91,20.85L17.64,22.7C17.62,22.87 17.47,23 17.3,23H14.5C14.32,23 14.18,22.87 14.15,22.7L13.89,20.85C13.46,20.67 13.07,20.44 12.71,20.16L10.96,20.86C10.81,20.92 10.62,20.86 10.54,20.71L9.14,18.29C9.05,18.13 9.09,17.95 9.22,17.84L10.7,16.68L10.65,16L10.7,15.31L9.22,14.16C9.09,14.05 9.05,13.86 9.14,13.71L10.54,11.29C10.62,11.13 10.81,11.07 10.96,11.13L12.71,11.84C13.07,11.56 13.46,11.32 13.89,11.15L14.15,9.29C14.18,9.13 14.32,9 14.5,9H17.3C17.47,9 17.62,9.13 17.64,9.29L17.91,11.15C18.33,11.32 18.73,11.56 19.09,11.84L20.83,11.13C21,11.07 21.17,11.13 21.26,11.29L22.66,13.71C22.75,13.86 22.71,14.05 22.58,14.16L21.1,15.31L21.15,16L21.1,16.68M6.69,8.07C7.56,8.07 8.26,7.37 8.26,6.5C8.26,5.63 7.56,4.92 6.69,4.92A1.58,1.58 0 0,0 5.11,6.5C5.11,7.37 5.82,8.07 6.69,8.07M10.03,6.94L11,7.68C11.07,7.75 11.09,7.87 11.03,7.97L10.13,9.53C10.08,9.63 9.96,9.67 9.86,9.63L8.74,9.18L8,9.62L7.81,10.81C7.79,10.92 7.7,11 7.59,11H5.79C5.67,11 5.58,10.92 5.56,10.81L5.4,9.62L4.64,9.18L3.5,9.63C3.41,9.67 3.3,9.63 3.24,9.53L2.34,7.97C2.28,7.87 2.31,7.75 2.39,7.68L3.34,6.94L3.31,6.5L3.34,6.06L2.39,5.32C2.31,5.25 2.28,5.13 2.34,5.03L3.24,3.47C3.3,3.37 3.41,3.33 3.5,3.37L4.63,3.82L5.4,3.38L5.56,2.19C5.58,2.08 5.67,2 5.79,2H7.59C7.7,2 7.79,2.08 7.81,2.19L8,3.38L8.74,3.82L9.86,3.37C9.96,3.33 10.08,3.37 10.13,3.47L11.03,5.03C11.09,5.13 11.07,5.25 11,5.32L10.03,6.06L10.06,6.5L10.03,6.94Z" />
+      </svg>
     </button>
   </div>
-  <div class="flex flex-col bg-gray-100 rounded-md w-11/12">
-    <div class="sticky top-0 p-0.5 bg-white rounded-md shadow-md">
-      <button
-        (click)="addUrl()"
-        type="button"
-        class="inline-flex rounded-md justify-center items-center bg-primary p-2 m-2 w-40">
-        Add Url
-      </button>
+
+  <!-- Main Content -->
+  <div class="relative z-20 flex flex-col bg-gray-100 rounded-lg w-11/12 overflow-hidden">
+    <div class="flex items-center sticky top-0 p-2 bg-white rounded-lg shadow-md z-20">
+      <div class="w-1/2">
+        <button
+          (click)="addUrl()"
+          type="button"
+          class="inline-flex gap-2 rounded-md justify-center items-center bg-primary p-3 m-2 w-1/3 text-white hover:shadow-lg">
+          {{ lang.locals.add_url }}
+          <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M7,7H11V9H7A3,3 0 0,0 4,12A3,3 0 0,0 7,15H11V17H7A5,5 0 0,1 2,12A5,5 0 0,1 7,7M17,7A5,5 0 0,1 22,12H20A3,3 0 0,0 17,9H13V7H17M8,11H16V13H8V11M17,12H19V15H22V17H19V20H17V17H14V15H17V12Z" />
+          </svg>
+        </button>
+        @if (urlsSignal().length) {
+          <button
+            (click)="previewJson()"
+            type="button"
+            class="inline-flex gap-2 rounded-md justify-center items-center bg-primary p-3 m-2 w-1/3 text-white hover:shadow-lg">
+            {{ lang.locals.json_preview }}
+            <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                d="M5,3H7V5H5V10A2,2 0 0,1 3,12A2,2 0 0,1 5,14V19H7V21H5C3.93,20.73 3,20.1 3,19V15A2,2 0 0,0 1,13H0V11H1A2,2 0 0,0 3,9V5A2,2 0 0,1 5,3M19,3A2,2 0 0,1 21,5V9A2,2 0 0,0 23,11H24V13H23A2,2 0 0,0 21,15V19A2,2 0 0,1 19,21H17V19H19V14A2,2 0 0,1 21,12A2,2 0 0,1 19,10V5H17V3H19M12,15A1,1 0 0,1 13,16A1,1 0 0,1 12,17A1,1 0 0,1 11,16A1,1 0 0,1 12,15M8,15A1,1 0 0,1 9,16A1,1 0 0,1 8,17A1,1 0 0,1 7,16A1,1 0 0,1 8,15M16,15A1,1 0 0,1 17,16A1,1 0 0,1 16,17A1,1 0 0,1 15,16A1,1 0 0,1 16,15Z" />
+            </svg>
+          </button>
+        }
+      </div>
+      @if (urlsSignal().length) {
+        <div class="flex justify-end items-center w-1/2">
+          <button
+            (click)="startCrawling()"
+            type="button"
+            class="inline-flex gap-2 rounded-md justify-center items-center bg-primary p-3 m-2 w-1/3 text-white hover:shadow-lg">
+            {{ lang.locals.web_crawling_btn }}
+            <svg
+              [@searchAnimation]="isloading() ? 'searching' : 'idle'"
+              class="size-6"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24">
+              <path
+                d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+
+    <div
+      appPerfectScroll
+      [perfectScrollOptions]="{ suppressScrollX: true }"
+      [ngClass]="{ 'grid grid-cols-3 gap-6': selectedTab() === 'urls', 'w-full': selectedTab() === 'settings' }"
+      class="p-4 overflow-auto max-h-[60vh]">
+      <!-- Card -->
+      @if (selectedTab() === 'urls') {
+        @for (url of urlsSignal(); track url) {
+          <app-url-summary-card [urlForm]="url" (onUrlDelete)="removeUrl($index)" />
+        }
+      } @else {
+        <ng-container [formGroup]="crawlerForm">
+          <app-settings-form />
+        </ng-container>
+      }
+
+      <!-- Duplicate cards with similar structure -->
+      <!-- Add more cards as necessary -->
     </div>
   </div>
 </div>

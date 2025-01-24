@@ -1,0 +1,184 @@
+@let urlData = urlForm().getRawValue();
+<div class="flex flex-col bg-gray-50 shadow-lg rounded-lg w-full">
+  <!-- Sticky Card Header -->
+  <div
+    class="flex justify-between items-center text-gray-800 text-lg font-bold text-end bg-gray-50 p-2 rounded-lg shadow-sm">
+    <a
+      target="_blank"
+      [title]="urlData.link"
+      [href]="urlData.link"
+      class="truncate no-underline text-gray-700 hover:text-primary transition-colors"
+      >{{ urlData.link }}</a
+    >
+    <div class="flex gap-2 flex-nowrap">
+      <button
+        [matTooltip]="lang.locals.edit"
+        type="button"
+        (click)="editUrl()"
+        class="inline-flex items-center p-2 hover:scale-105 transition-all border border-gray-200 rounded-full size-8 bg-primary text-white">
+        <svg class="size-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+        </svg>
+      </button>
+      <button
+        [matTooltip]="lang.locals.json_preview"
+        type="button"
+        (click)="previewUrlAsJSON()"
+        class="inline-flex items-center p-2 hover:scale-105 transition-all border border-gray-200 rounded-full size-8 bg-primary text-white">
+        <svg class="size-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M5,3H7V5H5V10A2,2 0 0,1 3,12A2,2 0 0,1 5,14V19H7V21H5C3.93,20.73 3,20.1 3,19V15A2,2 0 0,0 1,13H0V11H1A2,2 0 0,0 3,9V5A2,2 0 0,1 5,3M19,3A2,2 0 0,1 21,5V9A2,2 0 0,0 23,11H24V13H23A2,2 0 0,0 21,15V19A2,2 0 0,1 19,21H17V19H19V14A2,2 0 0,1 21,12A2,2 0 0,1 19,10V5H17V3H19M12,15A1,1 0 0,1 13,16A1,1 0 0,1 12,17A1,1 0 0,1 11,16A1,1 0 0,1 12,15M8,15A1,1 0 0,1 9,16A1,1 0 0,1 8,17A1,1 0 0,1 7,16A1,1 0 0,1 8,15M16,15A1,1 0 0,1 17,16A1,1 0 0,1 16,17A1,1 0 0,1 15,16A1,1 0 0,1 16,15Z" />
+        </svg>
+      </button>
+      <button
+        [matTooltip]="lang.locals.delete"
+        (click)="deleteUrl()"
+        type="button"
+        class="inline-flex items-center p-2 hover:scale-105 transition-all border border-gray-200 rounded-full size-8 bg-primary text-white">
+        <svg class="size-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scrollable Card Content -->
+  <div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="w-full p-4 max-h-64">
+    <!-- Tabs -->
+    <div class="relative flex justify-between items-center m-2 bg-gray-200 rounded-md">
+      <button
+        #tab
+        type="button"
+        (click)="setActiveTab('headers')"
+        [class.text-white]="activeTab() === 'headers'"
+        class="relative text-sm p-2 focus:outline-none rounded-md text-primary font-semibold hover:underline hover:cursor-pointer z-10">
+        {{ lang.locals.headers }} ({{ urlData.headers.length }})
+      </button>
+      <button
+        #tab
+        type="button"
+        (click)="setActiveTab('cookies')"
+        [class.text-white]="activeTab() === 'cookies'"
+        class="relative text-sm p-2 focus:outline-none rounded-md text-primary font-semibold hover:underline hover:cursor-pointer z-10">
+        {{ lang.locals.cookies }} ({{ urlData.cookies.length }})
+      </button>
+      <button
+        #tab
+        type="button"
+        (click)="setActiveTab('payload')"
+        [class.text-white]="activeTab() === 'payload'"
+        class="relative text-sm p-2 focus:outline-none rounded-md text-primary font-semibold hover:underline hover:cursor-pointer z-10">
+        {{ lang.locals.payload }} ({{ urlData.payload.length }})
+      </button>
+
+      <div
+        class="absolute top-0 left-0 h-full bg-primary transition-all duration-300 rounded-md z-0"
+        [style.width]="indicatorWidth()"
+        [style.transform]="indicatorTransform()"></div>
+    </div>
+
+    <!-- Table -->
+    <div
+      appPerfectScroll
+      [perfectScrollOptions]="{ suppressScrollX: true }"
+      class="rounded-lg border border-gray-200 shadow-sm max-h-40 m-4">
+      <table class="table-auto w-full text-center text-sm text-gray-700">
+        <thead class="bg-gray-300 sticky top-0 z-10">
+          <tr>
+            <th class="p-2">{{ lang.locals.key }}</th>
+            <th class="p-2">{{ lang.locals.value }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @switch (activeTab()) {
+            @case ('cookies') {
+              <ng-container *ngTemplateOutlet="rows; context: { $implicit: urlData.cookies }"></ng-container>
+            }
+            @case ('payload') {
+              <ng-container *ngTemplateOutlet="rows; context: { $implicit: urlData.payload }"></ng-container>
+            }
+            @default {
+              <ng-container *ngTemplateOutlet="rows; context: { $implicit: urlData.headers }"></ng-container>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="mt-4">
+      <span class="text-lg font-semibold text-gray-800">{{ lang.locals.settings }}</span>
+      <div class="flex flex-col gap-4 text-gray-700 mt-2">
+        <div class="flex justify-between items-center">
+          <div class="inline-flex gap-2">
+            <span class="font-semibold text-sm ms-2">{{ lang.locals.deep_crawling }}</span>
+            <!-- <span class="text-sm">{{ urlData.settings.deep }}</span> -->
+            @if (urlData.settings.deep) {
+              <svg class="size-4 fill-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+              </svg>
+            } @else {
+              <svg class="size-4 fill-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+              </svg>
+            }
+          </div>
+          <div class="inline-flex gap-2">
+            <span class="font-semibold text-sm ms-2">{{ lang.locals.media_crawling }}</span>
+            @if (urlData.settings.mediaCrawling) {
+              <svg class="size-4 fill-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+              </svg>
+            } @else {
+              <svg class="size-4 fill-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+              </svg>
+            }
+            <!-- <span class="text-sm">{{ urlData.settings.mediaCrawling }}</span> -->
+          </div>
+        </div>
+
+        <div>
+          <span class="text-sm font-semibold">{{ lang.locals.selectors }}</span>
+          <div class="flex gap-2 flex-wrap mt-2">
+            @for (selector of urlData.settings.selectors; track $index) {
+              <span
+                [title]="selector"
+                class="p-1 truncate text-xs text-center border border-primary bg-primary/30 text-primary rounded-md">
+                {{ selector }}
+              </span>
+            }
+          </div>
+        </div>
+
+        @if (urlData.settings.mediaCrawling) {
+          <div>
+            <span class="text-sm font-semibold">{{ lang.locals.topics }}</span>
+            <div class="flex gap-2 flex-wrap mt-2">
+              @for (topic of urlData.settings.topics; track $index) {
+                <span
+                  [title]="topic"
+                  class="p-1 truncate text-xs text-center border border-primary bg-primary/30 text-primary rounded-md">
+                  {{ topic }}
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #rows let-list>
+  @for (item of list; track $index) {
+    <tr class="hover:bg-gray-100 transition-all">
+      <td class="p-2">{{ item.key }}</td>
+      <td class="p-2">{{ item.value }}</td>
+    </tr>
+  }
+</ng-template>
