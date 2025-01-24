@@ -5,8 +5,10 @@ import { ConfirmationPopupComponent } from '@/components/confirmation-popup/conf
 import { UploadStorageFilePopupComponent } from '@/components/upload-storage-file-popup/upload-storage-file-popup.component'
 import { ConfirmationDialogDataContact } from '@/contracts/confirmation-dialog-data-contract'
 import { IgnoreSelectionDirective } from '@/directives/ignore-selection.directive'
+import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { SelectableContainerDirective } from '@/directives/selectable-container.directive'
 import { SelectableItemDirective } from '@/directives/selectable-item.directive'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AdminService } from '@/services/admin.service'
 import { LocalService } from '@/services/local.service'
 import { AsyncPipe, NgClass, NgOptimizedImage, NgStyle } from '@angular/common'
@@ -14,7 +16,7 @@ import { Component, inject, signal } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { ActivatedRoute, Router } from '@angular/router'
-import { catchError, distinctUntilChanged, filter, finalize, map, of, switchMap, tap } from 'rxjs'
+import { catchError, distinctUntilChanged, filter, finalize, map, of, switchMap, takeUntil, tap } from 'rxjs'
 
 @Component({
   selector: 'app-admin-storage',
@@ -28,12 +30,13 @@ import { catchError, distinctUntilChanged, filter, finalize, map, of, switchMap,
     SelectableItemDirective,
     IgnoreSelectionDirective,
     MatTooltipModule,
+    PerfectScrollDirective,
   ],
   animations: [slideFromBottom, contentAnimation],
   templateUrl: './admin-storage.component.html',
   styleUrl: './admin-storage.component.scss',
 })
-export class AdminStorageComponent {
+export class AdminStorageComponent extends OnDestroyMixin(class {}) {
   lang = inject(LocalService)
   private readonly adminService = inject(AdminService)
   private readonly router = inject(Router)
@@ -55,12 +58,14 @@ export class AdminStorageComponent {
   selectedItems = new Set<string>() // Track selected items
 
   constructor() {
+    super()
     this.listenToQueryParams()
   }
 
   listenToQueryParams() {
     this.containers$
       .pipe(
+        takeUntil(this.destroy$),
         // Combine the containers list with query params
         switchMap((containers: string[]) =>
           this.route.queryParams.pipe(
@@ -113,6 +118,7 @@ export class AdminStorageComponent {
     this.adminService
       .getSubfolder(containerName)
       .pipe(
+        takeUntil(this.destroy$),
         tap(folders => {
           this.content.set(folders)
           this.isSubfolder.set(true)
@@ -131,6 +137,7 @@ export class AdminStorageComponent {
     this.adminService
       .getBlobs(containerName, folderName)
       .pipe(
+        takeUntil(this.destroy$),
         tap(blobs => {
           this.content.set(blobs)
           this.isSubfolder.set(false)
@@ -198,6 +205,7 @@ export class AdminStorageComponent {
         switchMap(confirmed => {
           if (!confirmed) return of(null)
           return this.adminService.deleteSubfolder(containerName, folderName).pipe(
+            takeUntil(this.destroy$),
             tap(() => this.openContainer(containerName)),
             catchError(error => {
               console.error('Error deleting folder:', error)
@@ -225,6 +233,7 @@ export class AdminStorageComponent {
           if (!confirmed) return of(null)
           // Call delete API and chain the openFolder API
           return this.adminService.deleteByListOfTitles(containerName, subFolderName, fileNames).pipe(
+            takeUntil(this.destroy$),
             tap(() => this.openFolder(containerName, subFolderName)),
             tap(() => this.selectedItems.clear()),
             catchError(err => {

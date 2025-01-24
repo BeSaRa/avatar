@@ -1,9 +1,36 @@
 import { ICitations } from '@/models/base-message'
+import { TransformedData, TransformedGrouped } from '@/types/url-crawler'
 // noinspection JSUnusedGlobalSymbols
 
-import { FormControlDirective, FormControlName, NgModel } from '@angular/forms'
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormControlDirective,
+  FormControlName,
+  FormGroup,
+  NgModel,
+} from '@angular/forms'
 import { catchError, filter, MonoTypeOperatorFunction, Observable, of } from 'rxjs'
 
+export function markAllControlsAsTouchedAndDirty(control: AbstractControl) {
+  const markRecursive = (control: AbstractControl): void => {
+    if (control instanceof FormGroup) {
+      Object.values(control.controls).forEach(childControl => {
+        markRecursive(childControl)
+      })
+    } else if (control instanceof FormArray) {
+      control.controls.forEach(childControl => {
+        markRecursive(childControl)
+      })
+    } else if (control instanceof FormControl) {
+      control.markAsTouched()
+      control.markAsDirty()
+    }
+  }
+
+  markRecursive(control)
+}
 /**
  * to check if the NgControl is NgModel
  * @param control
@@ -257,4 +284,28 @@ export function transformKeyValueArrayToObject(arr: { key: string; value: string
     },
     {} as Record<string, string>
   )
+}
+
+// Enhanced version of the transformData function
+export function transformData<TData extends TransformedGrouped>(input: TData): TransformedData<TData> {
+  if ('urls' in input) {
+    // Input is of type { urls: UrlGroupRawValue[]; settings: SettingsGroupRawValue }
+    return {
+      ...input,
+      urls: input.urls.map(url => ({
+        ...url,
+        headers: url.headers ? transformKeyValueArrayToObject(url.headers) : {},
+        cookies: url.cookies ? transformKeyValueArrayToObject(url.cookies) : {},
+        payload: url.payload ? transformKeyValueArrayToObject(url.payload) : {},
+      })),
+    } as unknown as TransformedData<TData> // Explicit type assertion due to TypeScript's structural type system
+  } else {
+    // Input is of type UrlGroupRawValue
+    return {
+      ...input,
+      headers: input.headers ? transformKeyValueArrayToObject(input.headers) : {},
+      cookies: input.cookies ? transformKeyValueArrayToObject(input.cookies) : {},
+      payload: input.payload ? transformKeyValueArrayToObject(input.payload) : {},
+    } as unknown as TransformedData<TData> // Explicit type assertion due to TypeScript's structural type system
+  }
 }

@@ -171,4 +171,16 @@ export interface LangKeysContract {
   delete_confirmation: string
   confirm_action: string
   web_crawling_btn: string
+  url_details: string
+  url_settings: string
+  url_details_desc: string
+  url_settings_desc: string
+  edit: string
+  chips_tip: string
+  tag_exist: string
+  tag_empty: string
+  storage_desc: string
+  indexers_desc: string
+  web_crawling_desc: string
+  edit_url: string
 }

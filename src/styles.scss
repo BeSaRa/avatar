@@ -40,6 +40,13 @@ $avatar-theme: mat.define-theme(
       container-shape-radius: 0.375rem,
     )
   );
+  @include mat.tabs-overrides(
+    (
+      active-indicator-color: var(--app-primary-color),
+      active-focus-indicator-color: var(--app-primary-color),
+      active-hover-indicator-color: var(--app-primary-color),
+    )
+  );
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.

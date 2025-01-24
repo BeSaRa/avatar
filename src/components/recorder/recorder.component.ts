@@ -66,13 +66,14 @@ export class RecorderComponent extends OnDestroyMixin(class {}) {
     // noinspection DuplicatedCode
     const audioConfig = AudioConfig.fromDefaultMicrophoneInput()
     const langDetection = AutoDetectSourceLanguageConfig.fromLanguages(['ar-QA', 'en-US'])
-
+    const config = SpeechConfig.fromAuthorizationToken(this.store.speechToken.token(), this.store.speechToken.region())
+    config.authorizationToken = this.store.speechToken.token()
     this.recognizer = SpeechRecognizer.FromConfig(
       // SpeechConfig.fromEndpoint(
       //   new URL('qatarcentral.stt.speech.microsoft.com/speech/recognition/conversation/'),
       //   'b8ed193e693f42f1bfe5f9702865fbbc'
       // ),
-      SpeechConfig.fromAuthorizationToken(this.store.speechToken.token(), this.store.speechToken.region()),
+      config,
       langDetection,
       audioConfig
     )
@@ -93,7 +94,9 @@ export class RecorderComponent extends OnDestroyMixin(class {}) {
       }
     }
 
-    this.recognizer.canceled = () => {
+    this.recognizer.canceled = (s, e) => {
+      console.error(`Canceled: ${e.reason}`)
+      console.error(`Error Details: ${e.errorDetails}`)
       this.store.recordingInProgress()
       this.speechService
         .generateSpeechToken()

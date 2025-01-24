@@ -97,7 +97,7 @@ export class AdminService {
   createSettingsGroup(): FormGroup {
     return this.fb.group({
       deep: this.fb.control(false),
-      selectors: this.fb.array([]),
+      selectors: this.fb.control([]),
       mediaCrawling: this.fb.control(false),
       containerName: this.fb.control('rera-storage'),
     })

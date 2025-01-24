@@ -1,44 +1,52 @@
 <ng-container [formGroup]="parentFormGroup">
   <div [formArrayName]="arrayName()" class="space-y-4 overflow-auto">
-    <!-- Add Key-Value Pair Button -->
-    <div class="sticky top-0 w-full p-2 bg-gray-200/50 mt-1 rounded-md backdrop-blur-md">
-      <button
-        type="button"
-        (click)="addKeyValuePair()"
-        class="p-2 w-3/12 bg-primary/90 text-white rounded-lg hover:bg-primary">
-        {{ buttonLabel() }}
-      </button>
-    </div>
-
     <!-- Key-Value Table -->
-    <div class="overflow-x-auto">
+    <div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="max-h-40 overflow-auto">
       <table class="table-auto w-full border-collapse border border-gray-300">
-        <thead class="bg-gray-100">
+        <thead class="bg-gray-100 sticky top-0 z-10">
           <tr>
-            <th class="p-2 border border-gray-300 text-left text-gray-800">{{ lang.locals.key }}</th>
-            <th class="p-2 border border-gray-300 text-left text-gray-800">{{ lang.locals.value }}</th>
-            <th class="p-2 border border-gray-300 text-center text-gray-800"></th>
+            <th class="p-2 border border-gray-300 text-center text-sm text-gray-800">{{ lang.locals.key }}</th>
+            <th class="p-2 border border-gray-300 text-center text-sm text-gray-800">{{ lang.locals.value }}</th>
+            <th class="p-2 border border-gray-300 text-center text-gray-800">
+              <button
+                type="button"
+                (click)="addKeyValuePair()"
+                class="px-4 py-1 bg-primary/90 text-white text-sm font-medium rounded-lg hover:bg-primary/80 focus:outline-none focus:ring focus:ring-gray-300">
+                {{ buttonLabel() }}
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody>
           @for (item of getKeyValuePairArray.controls; track $index; let keyValuePairIdx = $index) {
             <tr [formGroupName]="keyValuePairIdx">
+              @let isInvalidKey = item.get('key')?.invalid && item.get('key')?.touched && item.get('key')?.dirty;
+              @let isInvalidValue =
+                item.get('value')?.invalid && item.get('value')?.touched && item.get('value')?.dirty;
               <!-- Key Input -->
-              <td class="p-0 border border-gray-300">
+              <td
+                [ngClass]="{ '[&_input]:bg-red-50 !border-red-400 !border-2': isInvalidKey }"
+                class="p-0 border border-gray-300 focus-within:!border-primary/60 focus-within:!border-2">
                 <input
+                  #keyInput
                   id="key-{{ urlIndex() }}-{{ keyValuePairIdx }}"
                   type="text"
                   formControlName="key"
-                  class="w-full p-2 border-0 focus:ring focus:ring-gray-400 focus:outline-none text-gray-800" />
+                  class="w-full text-sm p-2 border-0 focus:ring-0 focus:outline-none text-gray-800"
+                  (keydown)="handleEnter($event, keyValuePairIdx, 'key')" />
               </td>
 
               <!-- Value Input -->
-              <td class="p-0 border border-gray-300">
+              <td
+                [ngClass]="{ '[&_input]:bg-red-50 !border-red-400 !border-2': isInvalidValue }"
+                class="p-0 border border-gray-300 focus-within:!border-primary/60 focus-within:!border-2">
                 <input
+                  #valueInput
                   id="value-{{ urlIndex() }}-{{ keyValuePairIdx }}"
                   type="text"
                   formControlName="value"
-                  class="w-full p-2 border-0 focus:ring focus:ring-gray-400 focus:outline-none text-gray-800" />
+                  class="w-full text-sm p-2 border-0 focus:ring-0 focus:outline-none text-gray-800"
+                  (keydown)="handleEnter($event, keyValuePairIdx, 'value')" />
               </td>
 
               <!-- Delete Button -->
@@ -46,9 +54,9 @@
                 <button
                   type="button"
                   (click)="removeKeyValuePair(keyValuePairIdx)"
-                  class="bg-transparent hover:bg-red-100 rounded-full group focus:outline-gray-300">
+                  class="bg-transparent hover:bg-primary/10 rounded-full group focus:outline-gray-300">
                   <svg
-                    class="w-6 h-6 fill-red-500 group-hover:fill-red-600"
+                    class="w-6 h-6 fill-primary/80 group-hover:fill-primary"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24">
                     <title>{{ lang.locals.delete }}</title>

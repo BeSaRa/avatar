@@ -496,7 +496,7 @@
   "en": "Media Crawling"
  },
  "selectors": {
-  "ar": "ٍالمحددات",
+  "ar": "المحددات",
   "en": "Selectors"
  },
  "container_name": {
@@ -686,5 +686,53 @@
  "web_crawling_btn": {
   "ar": "بدأ عملية تتبع البيانات",
   "en": "Start web crawling"
+ },
+ "url_details": {
+  "ar": "تفاصيل الرابط",
+  "en": "URL Details"
+ },
+ "url_settings": {
+  "ar": "إعدادات الرابط",
+  "en": "URL Settings"
+ },
+ "url_details_desc": {
+  "ar": "قم بإضافة الرابط مع بيانات الكوكيز والحزمة لتكوين سلوكه",
+  "en": "Provide the URL along with its cookies and payload data to configure its behavior."
+ },
+ "url_settings_desc": {
+  "ar": "خصص إعدادات الرابط، بما في ذلك التفضيلات والتكوينات",
+  "en": "Customize the settings for the URL, including preferences and configurations."
+ },
+ "edit": {
+  "ar": "تعديل",
+  "en": "Edit"
+ },
+ "chips_tip": {
+  "ar": "بعد الكتابة قم بضغط Enter للإدخال",
+  "en": "After typing press Enter to add the word"
+ },
+ "tag_exist": {
+  "ar": "الوسم موجود مسبقاً",
+  "en": "Tag already exists"
+ },
+ "tag_empty": {
+  "ar": "لا يمكن إضافة وسم فارغ",
+  "en": "Tag cannot be empty"
+ },
+ "storage_desc": {
+  "ar": "أضف، احذف، ونظّم الملفات والمجلدات.",
+  "en": "Manage files and folders: add, delete, or organize."
+ },
+ "indexers_desc": {
+  "ar": "إدارة وعرض الفهرسة على Azure.\n",
+  "en": "View and manage Azure indexers."
+ },
+ "web_crawling_desc": {
+  "ar": "إدارة تتبع الويب بإضافة الروابط والإعدادات.",
+  "en": "Configure and manage web crawling with URLs, cookies, and settings."
+ },
+ "edit_url": {
+  "ar": "تعديل العنوان",
+  "en": "Edit URL"
  }
 }

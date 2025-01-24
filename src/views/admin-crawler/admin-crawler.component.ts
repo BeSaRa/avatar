@@ -1,19 +1,22 @@
-import { DOCUMENT, NgIf } from '@angular/common'
-import { Component, inject, OnInit } from '@angular/core'
-import { FormGroup, FormArray, ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms'
+import { CommonModule, DOCUMENT, NgClass } from '@angular/common'
+import { Component, inject, signal } from '@angular/core'
+import { FormArray, ReactiveFormsModule } from '@angular/forms'
 import { MatExpansionModule } from '@angular/material/expansion'
 import { MatTabsModule } from '@angular/material/tabs'
-import { JsonHighlightPipe } from '../../pipes/json-highlight.pipe'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
-import { transformKeyValueArrayToObject } from '@/utils/utils'
 import { MediaCrawler } from '@/models/media-crawler'
-import { startWith, tap } from 'rxjs'
+import { finalize, takeUntil, tap } from 'rxjs'
 import { LocalService } from '@/services/local.service'
 import { AdminService } from '@/services/admin.service'
-import { KeyvaluePairFormComponent } from '../../components/keyvalue-pair-form/keyvalue-pair-form.component'
 import { SettingsFormComponent } from '../../components/settings-form/settings-form.component'
 import { MatDialog } from '@angular/material/dialog'
 import { AddUrlPopupComponent } from '@/components/add-url-popup/add-url-popup.component'
+import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
+import { UrlSummaryCardComponent } from '../../components/url-summary-card/url-summary-card.component'
+import { createCrawlerGroup, UrlGroup } from '@/types/url-crawler'
+import { JsonPreviewerPopupComponent } from '@/components/json-previewer-popup/json-previewer-popup.component'
+import { transformData } from '@/utils/utils'
+import { searchAnimation } from '@/animations/search-animation'
 
 @Component({
   selector: 'app-admin-crawler',
@@ -22,104 +25,71 @@ import { AddUrlPopupComponent } from '@/components/add-url-popup/add-url-popup.c
     MatTabsModule,
     ReactiveFormsModule,
     MatExpansionModule,
-    JsonHighlightPipe,
-    KeyvaluePairFormComponent,
     SettingsFormComponent,
-    NgIf,
+    CommonModule,
+    PerfectScrollDirective,
+    UrlSummaryCardComponent,
+    NgClass,
   ],
   templateUrl: './admin-crawler.component.html',
   styleUrls: ['./admin-crawler.component.scss'],
+  animations: [searchAnimation],
 })
-export class AdminCrawlerComponent extends OnDestroyMixin(class {}) implements OnInit {
-  crawlerForm!: FormGroup
-  fb = inject(NonNullableFormBuilder)
-  formatedValue!: MediaCrawler
+export class AdminCrawlerComponent extends OnDestroyMixin(class {}) {
+  crawlerForm = createCrawlerGroup()
   doc = inject(DOCUMENT)
   lang = inject(LocalService)
   adminService = inject(AdminService)
   dialog = inject(MatDialog)
-
-  showJsonPreview = false
-
-  toggleJsonPreview() {
-    this.showJsonPreview = !this.showJsonPreview
-  }
+  selectedTab = signal<'urls' | 'settings'>('urls')
+  urlsSignal = signal(this.urlsArray.controls)
+  isloading = signal(false)
 
   constructor() {
     super()
-    this.createCrawlerForm()
-  }
-  ngOnInit(): void {
-    this.listenToCrawlerFormChange()
-  }
-  createCrawlerForm() {
-    this.crawlerForm = this.fb.group({
-      urls: this.fb.array([]),
-      settings: this.adminService.createSettingsGroup(),
-    })
-  }
-
-  transformData(input: ReturnType<(typeof this.crawlerForm)['getRawValue']>) {
-    return {
-      ...input,
-      urls: input.urls.map(
-        (url: {
-          headers: { key: string; value: string }[]
-          cookies: { key: string; value: string }[]
-          payload: { key: string; value: string }[]
-        }) => ({
-          ...url,
-          headers: transformKeyValueArrayToObject(url.headers),
-          cookies: transformKeyValueArrayToObject(url.cookies),
-          payload: transformKeyValueArrayToObject(url.payload),
-        })
-      ),
-    }
-  }
-  listenToCrawlerFormChange() {
-    this.crawlerForm.valueChanges.pipe(startWith(this.crawlerForm.value)).subscribe(val => {
-      this.formatedValue = this.transformData(val)
-    })
   }
 
   // Form Array Accessors
-  get urlsArray(): FormArray {
-    return this.crawlerForm.get('urls') as FormArray
+  get urlsArray(): FormArray<UrlGroup> {
+    return this.crawlerForm.get('urls') as FormArray<UrlGroup>
   }
 
   // Utility methods for adding controls dynamically
   addUrl(): void {
     this.dialog
-      .open(AddUrlPopupComponent, {
+      .open<AddUrlPopupComponent, undefined, UrlGroup>(AddUrlPopupComponent, {
         width: '70vw',
       })
       .afterClosed()
       .pipe(
+        takeUntil(this.destroy$),
         tap(res => {
           if (res) {
             this.urlsArray.push(res)
           }
         })
       )
+      .subscribe()
   }
 
   removeUrl(index: number) {
     this.urlsArray.removeAt(index)
   }
 
-  submitTheForm() {
-    this.adminService.crawlWeb(this.formatedValue).subscribe()
+  previewJson() {
+    this.dialog.open<JsonPreviewerPopupComponent<MediaCrawler>, MediaCrawler, boolean>(JsonPreviewerPopupComponent, {
+      data: transformData(this.crawlerForm.getRawValue()),
+    })
   }
-
-  copyToClipboard(): void {
-    const txt = JSON.stringify(this.formatedValue, null, 2)
-    this.doc.defaultView?.navigator.clipboard.writeText(txt).then(
-      () => {
-        console.log('JSON copied to clipboard successfully!')
-      },
-      err => {
-        console.error('Failed to copy JSON:', err)
-      }
-    )
+  startCrawling() {
+    this.isloading.set(true)
+    const formattedValue = transformData(this.crawlerForm.getRawValue())
+    this.adminService
+      .crawlWeb(formattedValue)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isloading.set(false))
+      )
+      .subscribe()
   }
 }
