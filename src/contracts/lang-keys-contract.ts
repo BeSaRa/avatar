@@ -183,5 +183,22 @@ export interface LangKeysContract {
   indexers_desc: string
   web_crawling_desc: string
   edit_url: string
+  users: string
+  username: string
+  edit_permissions: string
+  search_username: string
+  no_users: string
+  never_expire: string
+  add_user: string
+  usernameTip: string
+  usernameLetters: string
+  usernameNumbers: string
+  usernameSpecialChars: string
+  usernameRequired: string
+  usernameMinLength: string
+  usernameMaxLength: string
+  usernamePattern: string
+  operationSuccess: string
+  users_desc: string
   stop_chat: string
 }

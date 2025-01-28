@@ -1,0 +1,82 @@
+@if (!done()) {
+  <div class="flex flex-col w-[min(500px,80vw)]">
+    <div class="p-4 bg-primary text-white">{{ lang.locals.add_user }}</div>
+    <div class="p-4 min-h-0 flex flex-auto flex-col">
+      <input
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-gray-300 text-gray-800"
+        type="text"
+        [ngClass]="{
+          'bg-red-50 !border-red-400': usernameControl.invalid && usernameControl.touched && usernameControl.dirty,
+        }"
+        [placeholder]="lang.locals.username"
+        [formControl]="usernameControl" />
+
+      <!-- Static Tip -->
+      <small class="block mt-1 text-sm text-gray-400">
+        {{ lang.locals.usernameTip }}
+        <ul class="list-disc list-inside">
+          <li>{{ lang.locals.usernameLetters }}</li>
+          <li>{{ lang.locals.usernameNumbers }}</li>
+          <li>{{ lang.locals.usernameSpecialChars }}</li>
+        </ul>
+      </small>
+
+      <!-- Dynamic Validation Feedback -->
+      @if (usernameControl.errors?.['required'] && usernameControl.touched) {
+        <small class="block mt-1 text-sm text-red-500"> {{ lang.locals.usernameRequired }} </small>
+      } @else if (usernameControl.errors?.['minlength'] && usernameControl.touched) {
+        <small class="block mt-1 text-sm text-red-500"> {{ lang.locals.usernameMinLength }} </small>
+      } @else if (usernameControl.errors?.['maxlength'] && usernameControl.touched) {
+        <small class="block mt-1 text-sm text-red-500"> {{ lang.locals.usernameMaxLength }} </small>
+      } @else if (usernameControl.errors?.['pattern'] && usernameControl.touched) {
+        <small class="block mt-1 text-sm text-red-500">
+          {{ lang.locals.usernamePattern }}
+        </small>
+      }
+    </div>
+  </div>
+  <div class="flex justify-between mt-6 space-x-2 gap-4 p-4">
+    <button
+      type="button"
+      (click)="cancel()"
+      class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
+      {{ lang.locals.cancel }}
+    </button>
+    <button
+      type="button"
+      (click)="addUser()"
+      class="bg-primary/90 w-1/2 text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:opacity-50">
+      {{ lang.locals.add_user }}
+    </button>
+  </div>
+} @else {
+  <div class="flex flex-col w-[min(500px,80vw)] h-48 justify-center items-center transition-all">
+    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+    <div class="animated-svg">
+      <svg width="100" height="200" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+        <g id="SVGRepo_iconCarrier">
+          <rect width="48" height="48" fill="white" fill-opacity="0.01" />
+          <path
+            class="path"
+            d="M24 4L29.2533 7.83204L35.7557 7.81966L37.7533 14.0077L43.0211 17.8197L41 24L43.0211 30.1803L37.7533 33.9923L35.7557 40.1803L29.2533 40.168L24 44L18.7467 40.168L12.2443 40.1803L10.2467 33.9923L4.97887 30.1803L7 24L4.97887 17.8197L10.2467 14.0077L12.2443 7.81966L18.7467 7.83204L24 4Z"
+            fill="#8a1538"
+            stroke="#b0b0b0"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path
+            class="checkmark"
+            d="M17 24L22 29L32 19"
+            stroke="white"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+        </g>
+      </svg>
+    </div>
+
+    <p class="p-2 text-gray-700 font-semibold">{{ lang.locals.operationSuccess }}</p>
+  </div>
+}

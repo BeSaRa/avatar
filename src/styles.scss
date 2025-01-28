@@ -47,6 +47,11 @@ $avatar-theme: mat.define-theme(
       active-hover-indicator-color: var(--app-primary-color),
     )
   );
+  @include mat.snack-bar-overrides(
+    (
+      container-color: transparent,
+    )
+  );
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
@@ -175,6 +180,7 @@ mat-expansion-panel,
 mat-expansion-panel-header,
 mat-panel-title,
 mat-panel-description,
+mat-dialog-content,
 .mat-expansion-panel-content,
 .mat-expansion-panel-body {
   font-family: inherit !important;
