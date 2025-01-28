@@ -1,0 +1,52 @@
+.animated-svg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+}
+
+/* Draw effect for the hexagonal shape */
+.path {
+  stroke-dasharray: 300; /* Total length of the path */
+  stroke-dashoffset: 300; /* Hidden initially */
+  animation: draw 1s ease-in-out forwards;
+}
+
+/* Draw effect for the checkmark */
+.checkmark {
+  stroke-dasharray: 50; /* Total length of the checkmark path */
+  stroke-dashoffset: 50; /* Hidden initially */
+  animation: draw-check 0.5s 0.5s ease-in-out forwards;
+}
+
+/* Animation for the hexagonal path */
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 300; /* Completely hidden */
+  }
+  100% {
+    stroke-dashoffset: 0; /* Fully drawn */
+  }
+}
+
+/* Animation for the checkmark */
+@keyframes draw-check {
+  0% {
+    stroke-dashoffset: 50; /* Completely hidden */
+  }
+  100% {
+    stroke-dashoffset: 0; /* Fully drawn */
+  }
+}
+
+/* Subtle pulsing for the entire SVG */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* Slightly larger at the peak */
+  }
+}
