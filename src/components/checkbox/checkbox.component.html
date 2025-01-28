@@ -1,0 +1,24 @@
+<label [for]="id()" class="flex gap-3 items-center {{ classes() }}">
+  <input
+    [id]="id()"
+    type="checkbox"
+    class="hidden"
+    [checked]="checked()"
+    (change)="onChecked($event)"
+    (blur)="markAsTouched()" />
+  <span
+    class="size-5 min-h-5 min-w-5 flex items-center justify-center border-2 border-gray-300 rounded-md transition-all duration-200 ease-in-out"
+    [ngClass]="checked() ? 'bg-primary border-primary' : 'bg-white'">
+    @if (checked()) {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4 text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+    }
+  </span>
+  <span class="text-sm font-medium text-gray-800">{{ label() }}</span>
+</label>

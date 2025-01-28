@@ -1,3 +1,4 @@
+import { UsersComponent } from '@/components/users/users.component'
 import { AdminCrawlerComponent } from '@/views/admin-crawler/admin-crawler.component'
 import { AdminIndexerComponent } from '@/views/admin-indexer/admin-indexer.component'
 import { AdminStorageComponent } from '@/views/admin-storage/admin-storage.component'
@@ -20,6 +21,10 @@ const routes: Routes = [
   {
     path: 'crawler',
     component: AdminCrawlerComponent,
+  },
+  {
+    path: 'users',
+    component: UsersComponent,
   },
   {
     path: '**',
