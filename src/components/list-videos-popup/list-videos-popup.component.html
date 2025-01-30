@@ -1,0 +1,56 @@
+<div class="flex flex-col w-[min(500,80vw)]">
+  <div class="p-4 bg-primary text-white">{{ lang.locals.videos_list }}</div>
+  <mat-dialog-content appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }">
+    <div class="p-4 min-h-0 flex flex-auto flex-col">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        @if (isLoading()) {
+          @for (skeleton of [1, 2, 3, 4, 5, 6]; track $index) {
+            <div class="flex flex-col space-y-4 p-4 size-60 animate-pulse">
+              <div class="bg-gray-200 rounded-md h-36 w-full"></div>
+              <div class="bg-gray-200 rounded h-4 w-3/4 mx-auto"></div>
+            </div>
+          }
+        } @else {
+          @for (video of videos(); track video.id) {
+            <button
+              [ngClass]="{
+                'border-2 bg-gray-100 p-2 shadow-md rounded-md !border-primary/50 [&_span]:font-bold':
+                  selectedVideo()?.id === video.id,
+              }"
+              type="button"
+              (click)="selectedVideo.set(video)"
+              class="flex flex-col group justify-center items-center space-y-4 size-60 hover:border-2 hover:bg-gray-100 hover:p-2 hover:shadow-md hover:rounded-md hover:border-primary/20 cursor-pointer transition-all focus:outline-none">
+              <img
+                class="border border-transparent rounded-md"
+                [src]="video.thumbnail_url"
+                loading="lazy"
+                [alt]="'video_thumb' + video.name" />
+              <span [title]="video.name" class="group-hover:font-bold text-pretty text-center truncate">{{
+                video.name
+              }}</span>
+            </button>
+          }
+        }
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>
+
+<!-- Buttons -->
+<mat-dialog-actions>
+  <div class="flex w-full justify-between mt-6 space-x-2 gap-4 p-4">
+    <button
+      type="button"
+      class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none"
+      mat-dialog-close>
+      {{ lang.locals.cancel }}
+    </button>
+    <button
+      [disabled]="!selectedVideo()"
+      type="button"
+      (click)="onVideoSelect()"
+      class="bg-primary/90 w-1/2 text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:opacity-50">
+      {{ lang.locals.confirm }}
+    </button>
+  </div>
+</mat-dialog-actions>

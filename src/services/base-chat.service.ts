@@ -4,9 +4,10 @@ import { AppStore } from '@/stores/app.store'
 import { formatString, formatText } from '@/utils/utils'
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable, WritableSignal } from '@angular/core'
-import { Observable, catchError, forkJoin, map, of } from 'rxjs'
+import { Observable, catchError, distinctUntilChanged, forkJoin, map, of, tap } from 'rxjs'
 import { UrlService } from './url.service'
 import { AdminService } from './admin.service'
+import { FormControl } from '@angular/forms'
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export abstract class BaseChatService {
   protected readonly urlService = inject(UrlService)
   private readonly adminService = inject(AdminService)
   protected readonly store = inject(AppStore)
+  readonly botNameCtrl = new FormControl('', { nonNullable: true })
   abstract messages: WritableSignal<Message[]>
   abstract status: WritableSignal<boolean>
   abstract conversationId: WritableSignal<string>
@@ -90,6 +92,16 @@ export abstract class BaseChatService {
           formattedText = formattedText.replace(match, replacement)
         })
         return formattedText
+      })
+    )
+  }
+
+  onBotNameChange() {
+    return this.botNameCtrl.valueChanges.pipe(
+      distinctUntilChanged(),
+      tap(() => {
+        this.conversationId.set('')
+        this.messages.set([])
       })
     )
   }

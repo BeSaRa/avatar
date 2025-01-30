@@ -1,0 +1,123 @@
+<div class="flex justify-between items-center">
+  @if (video() || videoData()) {
+    <div class="w-1/2" [@slideIn]>
+      <app-chat-container
+        #chatBox
+        containerClass="!static !w-full !h-[400px] m-4 text-gray-700"
+        [botNameOptions]="{ showBotSelection: false, botName: botName() }"
+        [title]="lang.locals.video_analyzer"
+        [showAvatarBtn]="false"
+        [showFullScreenBtn]="false"
+        [showHideBtn]="false"
+        [clearMessageOnly]="true" />
+    </div>
+  }
+  <div
+    [ngClass]="{ '!w-full': !video() && !videoData() }"
+    class="flex flex-col justify-center items-center space-y-6 w-1/2 transition-all ease-out duration-200">
+    <input type="file" accept="video/*" class="hidden" id="video_uploader" (change)="uploadVideo($event)" />
+    <label
+      for="video_uploader"
+      class="inline-flex gap-2 justify-center items-center text-xl shadow-lg border-none w-2/5 text-center focus:outline-none hover:scale-110 hover:border-gray-500 cursor-pointer bg-gray-300 text-gray-700 rounded-md p-4 transition-all ease-in-out duration-200"
+      >{{ lang.locals.upload_video }}
+      <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" /></svg
+    ></label>
+    @if (video()) {
+      <div
+        class="relative flex justify-center items-center w-2/3 h-60 rounded-md border border-gray-300 shadow-sm bg-black overflow-hidden">
+        <div class="absolute w-full flex justify-center items-center top-0 bg-black/40 p-2">
+          <span [title]="video()?.file?.name" class="truncate">{{ video()?.file?.name }}</span>
+        </div>
+        <video #selectedVideo class="h-full bg-transparent bg-cover" [poster]="poster()" controls>
+          <source [src]="video()?.base64" />
+        </video>
+      </div>
+    }
+    <hr class="h-1 block w-1/2" />
+    <button
+      type="button"
+      (click)="openVideosList()"
+      class="inline-flex gap-2 justify-center items-center text-xl shadow-lg text-gray-300 bg-transparent p-4 w-2/5 text-center border border-gray-300 focus:outline-none hover:scale-110 rounded-md transition-all ease-in-out duration-200">
+      {{ lang.locals.choose_video_from_list }}
+      <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+      </svg>
+    </button>
+    @if (videoData()) {
+      <div
+        class="relative flex justify-center items-center w-2/3 h-60 rounded-md border border-gray-300 shadow-sm bg-black overflow-hidden">
+        <div class="absolute w-full flex justify-center items-center top-0 bg-black/40 p-2">
+          <span [title]="videoData()?.name" class="truncate">{{ videoData()?.name }}</span>
+        </div>
+        <img [src]="videoData()?.thumbnail_url" loading="lazy" alt="thumbnails_{{ videoData()?.name }}" />
+      </div>
+    }
+  </div>
+</div>
+
+@if (isLoading()) {
+  <div class="bg-black opacity-50 fixed inset-0 z-50"></div>
+
+  <!-- Wrapper to keep SVG and text fully visible -->
+  <div class="fixed inset-0 z-50 flex flex-col items-center justify-center text-white">
+    <!-- Animated SVG -->
+    @if (isLoading() === 'UPLOAD') {
+      <svg
+        width="228px"
+        height="228px"
+        viewBox="0 0 1024.00 1024.00"
+        class="icon opacity-100"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#000000"
+        stroke="#000000"
+        stroke-width="0.01024">
+        <g class="cloud">
+          <path
+            class="fill-gray-100"
+            d="M768 810.7c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7c94.1 0 170.7-76.6 170.7-170.7 0-89.6-70.1-164.3-159.5-170.1L754 383l-10.7-22.7c-42.2-89.3-133-147-231.3-147s-189.1 57.7-231.3 147L270 383l-25.1 1.6c-89.5 5.8-159.5 80.5-159.5 170.1 0 94.1 76.6 170.7 170.7 170.7 23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7c-141.2 0-256-114.8-256-256 0-126.1 92.5-232.5 214.7-252.4C274.8 195.7 388.9 128 512 128s237.2 67.7 297.3 174.2C931.5 322.1 1024 428.6 1024 554.7c0 141.1-114.8 256-256 256z" />
+        </g>
+        <g class="arrow">
+          <path
+            class="fill-gray-400"
+            d="M640 789.3c-10.9 0-21.8-4.2-30.2-12.5L512 679l-97.8 97.8c-16.6 16.7-43.7 16.7-60.3 0-16.7-16.7-16.7-43.7 0-60.3l128-128c16.6-16.7 43.7-16.7 60.3 0l128 128c16.7 16.7 16.7 43.7 0 60.3-8.4 8.4-19.3 12.5-30.2 12.5z" />
+          <path
+            class="fill-gray-400"
+            d="M512 960c-23.6 0-42.7-19.1-42.7-42.7V618.7c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v298.7c0 23.5-19.1 42.6-42.7 42.6z" />
+        </g>
+      </svg>
+      <!-- Loading Message -->
+      <p class="mt-4 text-lg animate-pulse opacity-100">{{ lang.locals.uploading_file_msg }}</p>
+    }
+    @if (isLoading() === 'GET_INFO') {
+      <svg
+        width="228px"
+        height="228px"
+        fill="#000000"
+        viewBox="0 0 24 24"
+        id="analysis-left"
+        data-name="Line Color"
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon line-color magnifier-animation">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+          <path
+            class="stroke-gray-300"
+            id="secondary"
+            d="M5.83,12.12,3,15M8,7a3,3,0,1,0,3,3A3,3,0,0,0,8,7Zm3,10h6m-2-4h2"
+            style="fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2"></path>
+          <path
+            class="stroke-gray-400"
+            id="primary"
+            d="M8,3H20a1,1,0,0,1,1,1V20a1,1,0,0,1-1,1H8a1,1,0,0,1-1-1V17"
+            style="fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2"></path>
+        </g>
+      </svg>
+      <!-- Loading Message -->
+      <p class="mt-4 text-lg animate-pulse opacity-100">{{ lang.locals.file_info_msg }}</p>
+    }
+  </div>
+}

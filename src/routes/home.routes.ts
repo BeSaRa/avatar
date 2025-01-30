@@ -60,6 +60,10 @@ const routes: Routes = [
     data: { permissions: ['ADMIN'], hasAnyPermission: true } as PermissionRouteData,
   },
   {
+    path: 'video_analyzer',
+    loadComponent: () => import('@/views/video-analyzer/video-analyzer.component').then(c => c.VideoAnalyzerComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
