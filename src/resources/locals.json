@@ -879,10 +879,6 @@
     "ar": "الوصف",
     "en": "Description"
   },
-  "fuel-source": {
-    "ar": "مصدر الوقود",
-    "en": "Fuel Source"
-  },
   "fuel-type": {
     "ar": "نوع الوقود",
     "en": "Fuel Type"
@@ -1144,7 +1140,6 @@
     "en": "Get file data, please wait..."
   },
   "insights": {
-    "ar": "المشاهد",
     "en": "Insights"
   },
   "locations": {

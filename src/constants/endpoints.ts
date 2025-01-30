@@ -14,6 +14,7 @@ export const EndPoints = {
   MEDIA: 'media',
   ADMIN: 'admin',
   USER: 'user',
+  VIDEO_ANALYZER: 'vi',
 }
 
 export type EndpointsType = typeof EndPoints

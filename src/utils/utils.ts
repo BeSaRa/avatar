@@ -1,5 +1,7 @@
+import { UploadProgressContract } from '@/contracts/upload-progress-contract'
 import { ICitations } from '@/models/base-message'
 import { TransformedData, TransformedGrouped } from '@/types/url-crawler'
+import { HttpEvent, HttpResponse, HttpEventType, HttpProgressEvent } from '@angular/common/http'
 // noinspection JSUnusedGlobalSymbols
 
 import {
@@ -11,7 +13,7 @@ import {
   FormGroup,
   NgModel,
 } from '@angular/forms'
-import { catchError, filter, MonoTypeOperatorFunction, Observable, of } from 'rxjs'
+import { catchError, filter, MonoTypeOperatorFunction, Observable, of, scan } from 'rxjs'
 
 export function markAllControlsAsTouchedAndDirty(control: AbstractControl) {
   const markRecursive = (control: AbstractControl): void => {
@@ -326,4 +328,74 @@ export function transformData<TData extends TransformedGrouped>(input: TData): T
 
 export const handleNull = (value: string | null | undefined): string | null => {
   return value && value.trim() !== '' ? value : null
+}
+
+export function isHttpResponse<T>(event: HttpEvent<T>): event is HttpResponse<T> {
+  return event.type === HttpEventType.Response
+}
+
+export function isHttpProgressEvent(event: HttpEvent<unknown>): event is HttpProgressEvent {
+  return event.type === HttpEventType.DownloadProgress || event.type === HttpEventType.UploadProgress
+}
+
+export function upload(): (source: Observable<HttpEvent<unknown>>) => Observable<UploadProgressContract> {
+  const initialState: UploadProgressContract = { state: 'PENDING', progress: 0 }
+  const calculateState = (upload: UploadProgressContract, event: HttpEvent<unknown>): UploadProgressContract => {
+    if (isHttpProgressEvent(event)) {
+      return {
+        progress: event.total ? Math.round((100 * event.loaded) / event.total) : upload.progress,
+        state: 'IN_PROGRESS',
+      }
+    }
+    if (isHttpResponse(event)) {
+      return {
+        progress: 100,
+        state: 'DONE',
+      }
+    }
+    return upload
+  }
+  return source => source.pipe(scan(calculateState, initialState))
+}
+
+export function captureVideoThumbnail(video: HTMLVideoElement, captureTime = 1): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (!video || !(video instanceof HTMLVideoElement)) {
+      return reject('Invalid video element.')
+    }
+
+    // Wait for the video to be loaded
+    if (video.readyState < 2) {
+      // Ensure metadata is loaded
+      video.addEventListener('loadeddata', () => processCapture(), { once: true })
+    } else {
+      processCapture()
+    }
+
+    function processCapture() {
+      video.currentTime = captureTime
+
+      video.addEventListener(
+        'seeked',
+        () => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+
+          if (!ctx) return reject('Canvas not supported.')
+
+          // Set canvas dimensions to match the video frame
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+
+          // Draw the video frame to the canvas
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+          // Convert to base64 image URL
+          const thumbnailURL = canvas.toDataURL('image/jpeg')
+          resolve(thumbnailURL)
+        },
+        { once: true }
+      )
+    }
+  })
 }
