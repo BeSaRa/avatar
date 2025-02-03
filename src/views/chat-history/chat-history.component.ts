@@ -12,6 +12,7 @@ import { ConversationListComponent } from '../../components/conversation-list/co
 import { HistoryMessage } from '@/models/history-message'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { MatTooltip } from '@angular/material/tooltip'
+import { SecureUrlDirective } from '@/directives/secure-url.directive'
 
 @Component({
   selector: 'app-chat-history',
@@ -25,6 +26,7 @@ import { MatTooltip } from '@angular/material/tooltip'
     ConversationListComponent,
     OverlayModule,
     MatTooltip,
+    SecureUrlDirective,
   ],
   templateUrl: './chat-history.component.html',
   styleUrl: './chat-history.component.scss',

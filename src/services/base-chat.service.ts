@@ -4,7 +4,7 @@ import { AppStore } from '@/stores/app.store'
 import { formatString, formatText } from '@/utils/utils'
 import { HttpClient } from '@angular/common/http'
 import { inject, Injectable, WritableSignal } from '@angular/core'
-import { Observable, catchError, forkJoin, map, of, switchMap } from 'rxjs'
+import { Observable, catchError, forkJoin, map, of } from 'rxjs'
 import { UrlService } from './url.service'
 import { AdminService } from './admin.service'
 
@@ -39,21 +39,12 @@ export abstract class BaseChatService {
           throw new Error(err)
         }),
         map(res => {
-          // Apply initial formatting
-          res.message.content = formatText(res.message.content, res.message)
+          res.message.content = formatString(formatText(res.message.content, res.message))
+          res.message = new Message().clone(res.message)
+          this.conversationId.set(res.message.conversation_id)
+          this.messages.update(messages => [...messages, res.message])
           return res
-        }),
-        switchMap(res =>
-          this.processFormattedText(res.message.content).pipe(
-            map(formattedText => {
-              res.message.content = formatString(formattedText)
-              res.message = new Message().clone(res.message)
-              this.conversationId.set(res.message.conversation_id)
-              this.messages.update(messages => [...messages, res.message])
-              return res
-            })
-          )
-        )
+        })
       )
   }
 

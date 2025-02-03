@@ -734,5 +734,9 @@
  "edit_url": {
   "ar": "تعديل العنوان",
   "en": "Edit URL"
+ },
+ "stop_chat": {
+  "ar": "إيقاف المحادثة",
+  "en": "Stop Chat"
  }
 }
