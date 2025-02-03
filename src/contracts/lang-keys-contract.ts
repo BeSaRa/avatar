@@ -183,4 +183,5 @@ export interface LangKeysContract {
   indexers_desc: string
   web_crawling_desc: string
   edit_url: string
+  stop_chat: string
 }

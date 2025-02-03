@@ -17,6 +17,7 @@ import { slideFromBottom } from '@/animations/fade-in-slide'
 import { ChatHistoryService } from '@/services/chat-history.service'
 import { FeedbackChat } from '@/enums/feedback-chat'
 import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
+import { SecureUrlDirective } from '@/directives/secure-url.directive'
 
 @Component({
   selector: 'app-chat',
@@ -33,6 +34,7 @@ import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-b
     CdkDragHandle,
     AvatarInterrupterBtnComponent,
     AsyncPipe,
+    SecureUrlDirective,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',

@@ -65,6 +65,7 @@
           <div
             class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
             <span
+              appSecureUrl
               appTextWriterAnimator
               (animating)="animating.set($event)"
               [stop]="stopAnimate()"
@@ -141,7 +142,7 @@
           class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" />
         @if (animating()) {
           <button
-            [matTooltip]="lang.locals.send"
+            [matTooltip]="lang.locals.stop_chat"
             (click)="stopAnimate.set(true)"
             class="absolute top-2 right-0 mr-1 rounded-full bg-white text-primary hover:bg-gray-200 overflow-hidden border-primary border-2 flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-7">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 24 24">

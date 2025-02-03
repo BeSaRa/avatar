@@ -167,7 +167,7 @@
             } @else if (message.isAssistant()) {
               <div
                 class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
-                <span [innerHTML]="message.content"></span>
+                <span appSecureUrl [innerHTML]="message.content"></span>
               </div>
             } @else {
               <div class="system-message chat-message">
