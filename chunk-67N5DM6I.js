@@ -1,0 +1,1 @@
+import{c as t}from"./chunk-JN2FAFAE.js";var r=class{context;conversation_id;content;role;id;constructor(){this.id=t()}isUser(){return this.role==="user"}isAssistant(){return this.role==="assistant"}isError(){return this.role==="error"}};export{r as a};

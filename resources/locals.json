@@ -1,762 +1,766 @@
 {
- "local_key": {
-  "ar": "رمز التعريب",
-  "en": "Local key"
- },
- "arabic_local": {
-  "ar": "الترجمة العربية",
-  "en": "Arabic translation"
- },
- "english_local": {
-  "ar": "الترجمة الانجليزية",
-  "en": "English Translation"
- },
- "localization": {
-  "ar": "التعريب",
-  "en": "Localization"
- },
- "save": {
-  "ar": "حفظ",
-  "en": "Save"
- },
- "cancel_recording": {
-  "ar": "الغاء التسجيل",
-  "en": "Cancel Recording"
- },
- "clear_chat_history": {
-  "ar": "مسح سجل المحادثة",
-  "en": "Clear chat History"
- },
- "stop_talking": {
-  "ar": "توقف عن الحديث",
-  "en": "Stop Talking"
- },
- "settings": {
-  "ar": "الاعدادات",
-  "en": "Settings"
- },
- "click_to_speak": {
-  "ar": "اضغط للتحدث",
-  "en": "Click to Speak"
- },
- "loading": {
-  "ar": "جاري التحميل",
-  "en": "Loading"
- },
- "listening_ongoing": {
-  "ar": "جاري الاستماع",
-  "en": "listening outgoing"
- },
- "click_to_send": {
-  "ar": "اضغط للارسال",
-  "en": "Click to Send"
- },
- "connected": {
-  "ar": "متصل",
-  "en": "Connected"
- },
- "not_connected": {
-  "ar": "غير متصل",
-  "en": "Not Connected"
- },
- "connecting": {
-  "ar": "جاري الاتصال",
-  "en": "Connecting"
- },
- "disconnecting": {
-  "ar": "جاري قطع الاتصال",
-  "en": "disconnecting"
- },
- "home": {
-  "ar": "الرئيسية",
-  "en": "Home"
- },
- "search": {
-  "ar": "البحث الذكي",
-  "en": "AI Search"
- },
- "chat": {
-  "ar": "المساعد الآلي",
-  "en": "Chatbot"
- },
- "avatar_chat": {
-  "ar": "الشخصية الرقمية",
-  "en": "Avatar Chat"
- },
- "welcome_message": {
-  "ar": "مرحباّ بكم فى حلول الذكاء الاصطناعي",
-  "en": "Welcome to AI Solutions"
- },
- "chat_description": {
-  "ar": "روبوت يقدم المساعدة ويجيب على الأسئلة ويوفر المعلومات بشكل فوري وفعال. يعتمد الروبوت الذكي على تقنيات المعلومات الطبيعية لفهم استفسارات المستخدمين والتفاعل معها.",
-  "en": "A bot that provides assistance, answers questions and provides information in an immediate and efficient manner. The intelligent bot relies on natural information technologies to understand and queries users."
- },
- "document_search_description": {
-  "ar": "البحث الذكي هو تقنية متطورة تستخدم الذكاء الاصطناعي لتحسين تجربة البحث عبر الإنترنت. بدلاً من تقديم قائمة طويلة من الروابط، تقوم هذه الخدمة بتحليل الهدف والسياق وراء السؤال لتقديم إجابات دقيقة ومفصلة للمستخدم.",
-  "en": "Smart Search is a cutting-edge technology that uses artificial intelligence to improve the online search experience. Instead of providing a long list of links, this service analyzes the intent and context behind the question to provide the user with accurate and detailed answers."
- },
- "try_it_out": {
-  "ar": "جربها",
-  "en": "try it out"
- },
- "generic": {
-  "ar": "عام",
-  "en": "Generic"
- },
- "video_indexer": {
-  "ar": "فهرس الفيديو",
-  "en": "Video Indexer"
- },
- "custom": {
-  "ar": "مُخصص",
-  "en": "Custom"
- },
- "show_more": {
-  "ar": "عرض المزيد",
-  "en": "Show more"
- },
- "show_less": {
-  "ar": "عرض أقل",
-  "en": "Show less"
- },
- "result_count": {
-  "ar": "عدد النتائج",
-  "en": "Result count"
- },
- "search_in_website": {
-  "ar": "البحث في الموقع",
-  "en": "Search in website"
- },
- "search_about": {
-  "ar": "البحث عن",
-  "en": "Search about"
- },
- "items_per_page_label": {
-  "ar": "عدد العناصر في الصفحة",
-  "en": "Item per page"
- },
- "next_page_label": {
-  "ar": "الصفحة التالية",
-  "en": "Next page"
- },
- "previous_page_label": {
-  "ar": "الصفحة السابقة",
-  "en": "Previous page"
- },
- "first_page_label": {
-  "ar": "الصفحة الأولى",
-  "en": "First page"
- },
- "last_page_label": {
-  "ar": "الصفحة الأخيرة",
-  "en": "Last page"
- },
- "page": {
-  "ar": "صفحة",
-  "en": "Page"
- },
- "of": {
-  "ar": "من",
-  "en": "of"
- },
- "logo_url": {
-  "ar": "رابط صورة الشعار",
-  "en": "logo url"
- },
- "background_url": {
-  "ar": "رابط صورة الخلفية",
-  "en": "background URL"
- },
- "background_color": {
-  "ar": "لون الخلفية",
-  "en": "background color"
- },
- "is_background_video": {
-  "ar": "الخلفية فيديو ؟",
-  "en": "is background Video ?"
- },
- "preview": {
-  "ar": "معاينة",
-  "en": "Preview"
- },
- "video_token": {
-  "ar": "رابط الفيديو",
-  "en": "Video token"
- },
- "search_message": {
-  "ar": "تمكين الأفكار وإطلاق العنان للذكاء!",
-  "en": "Empowering Insights, Unleashing Intelligence!"
- },
- "send": {
-  "ar": "أرسال",
-  "en": "send"
- },
- "open_avatar": {
-  "ar": "افتح الشخصية الرقمية",
-  "en": "Open avatar"
- },
- "chat_history": {
-  "ar": "سجل المحادثات",
-  "en": "Chat history"
- },
- "select_filter": {
-  "ar": "اختر الفلتر ",
-  "en": "Select filter"
- },
- "bot_name": {
-  "ar": "اسم البوت",
-  "en": "Bot name"
- },
- "feedback": {
-  "ar": "التقييم",
-  "en": "Feedback"
- },
- "sentiment": {
-  "ar": "المشاعر",
-  "en": "Sentiment"
- },
- "dislike": {
-  "ar": "عدم إعجاب",
-  "en": "Dislike"
- },
- "like": {
-  "ar": "إعجاب",
-  "en": "Like"
- },
- "negative": {
-  "ar": "سلبي",
-  "en": "Negative"
- },
- "mixed": {
-  "ar": "مختلط",
-  "en": "Mixed"
- },
- "positive": {
-  "ar": "إيجابي",
-  "en": "Positive"
- },
- "neutral": {
-  "ar": "محايد",
-  "en": "Neutral"
- },
- "feedback_chart": {
-  "ar": "آراء المستخدمين",
-  "en": "User Feedback"
- },
- "sentiment_chart": {
-  "ar": "تحليل المشاعر",
-  "en": "Sentiment Analysis"
- },
- "performance_chart": {
-  "ar": "أداء البوت",
-  "en": "Bot Performance"
- },
- "no_data_to_preview": {
-  "ar": "لا يوجد نتائج لعرضها",
-  "en": "No data to preview"
- },
- "rate_conversation": {
-  "ar": "قيّم المحادثة",
-  "en": "Rate the conversation"
- },
- "i_like": {
-  "ar": "أعجبني",
-  "en": "Like"
- },
- "i_dislike": {
-  "ar": "لم يعجبني",
-  "en": "Dislike"
- },
- "conversations_and_chats": {
-  "ar": "المحادثات والرسائل",
-  "en": "Conversations and Chats"
- },
- "choose_conversation": {
-  "ar": "اختر من المحادثات لعرض الرسائل",
-  "en": "Choose from conversation to view messages"
- },
- "conversation_description": {
-  "ar": "يمكنك الاطلاع على المحادثات والرسائل والتقييم الخاص بها",
-  "en": "You can review the conversations and its messages and rate"
- },
- "unspecified": {
-  "ar": "غير محدد",
-  "en": "Unspecified"
- },
- "all_bots": {
-  "ar": "جميع البوتات",
-  "en": "All bots"
- },
- "choose_bot": {
-  "ar": "اختر البوت الذي تريد عرض إحصائياته",
-  "en": "Choose the bot you want to show its statistics"
- },
- "conversation_title": {
-  "ar": "عنوان المحادثة",
-  "en": "Conversation Title"
- },
- "sentiment_analysis_description": {
-  "ar": "عند الضغط على الزر يتم تحليل مشاعر المحادثات و إعادة طلب المحادثات ",
-  "en": "When press on the button the sentiment analysis process procced and the conversation reload"
- },
- "reload_conversation": {
-  "ar": "إعادة تحميل المحادثات",
-  "en": "Reload Conversations"
- },
- "sort_conversation": {
-  "ar": "فرز المحادثات حسب التاريخ",
-  "en": "Sort conversation by date"
- },
- "total": {
-  "ar": "الإجمالي",
-  "en": "Total"
- },
- "doc_analyzer": {
-  "ar": "محلل المستندات",
-  "en": "Document Analyzer"
- },
- "not_supported_filetype": {
-  "ar": "صيغة الملف غير مدعومة",
-  "en": "File type not supported"
- },
- "exceed_file_size": {
-  "ar": "حجم الملف كبير جدا",
-  "en": "File size is too big"
- },
- "upload": {
-  "ar": "رفع",
-  "en": "Upload"
- },
- "remove": {
-  "ar": "حذف",
-  "en": "Remove"
- },
- "click_to_upload_or_dnd": {
-  "ar": "اضغط لرفع ملف أو قم بسحبه و إفلاته",
-  "en": "Click to upload file or drag and drop"
- },
- "file_upload": {
-  "ar": "رفع الملفات",
-  "en": "File upload"
- },
- "next": {
-  "ar": "التالي",
-  "en": "Next"
- },
- "previous": {
-  "ar": "السابق",
-  "en": "Previous"
- },
- "extracted_data": {
-  "ar": "العناصر المستخرجة",
-  "en": "Extracted data"
- },
- "extracted_words": {
-  "ar": "الكلمات المستخرجة",
-  "en": "Extracted words"
- },
- "document_analyze_progress": {
-  "ar": "جاري تحليل الملف",
-  "en": "Analyze Document"
- },
- "vacation_request": {
-  "ar": "طلب إجازة",
-  "en": "Vacation request"
- },
- "interactive_chatbot": {
-  "ar": "البوت التفاعلي",
-  "en": "Interactive Chatbot"
- },
- "vacations_list": {
-  "ar": "طلبات الإجازة",
-  "en": "Vacations list"
- },
- "employee_name": {
-  "ar": "اسم الموظف",
-  "en": "Employee Name"
- },
- "manager_name": {
-  "ar": "اسم المدير",
-  "en": "Manager Name"
- },
- "department": {
-  "ar": "القسم",
-  "en": "Department"
- },
- "start_date": {
-  "ar": "تاريخ البداية",
-  "en": "Start Date"
- },
- "end_date": {
-  "ar": "تاريخ النهاية",
-  "en": "End Date"
- },
- "total_days": {
-  "ar": "عدد الأيام",
-  "en": "Total Days"
- },
- "status": {
-  "ar": "حالة الإجازة",
-  "en": "Status"
- },
- "comments": {
-  "ar": "التعليقات",
-  "en": "Comments"
- },
- "actions": {
-  "ar": "الأوامر",
-  "en": "Actions"
- },
- "approved": {
-  "ar": "مؤكدة",
-  "en": "Approved"
- },
- "rejected": {
-  "ar": "مرفوضة",
-  "en": "Rejected"
- },
- "pending": {
-  "ar": "قيد الانتظار",
-  "en": "Pending"
- },
- "vacation_type": {
-  "ar": "نوع الإجازة",
-  "en": "Vacation Type"
- },
- "web_crawler_and_report_generator": {
-  "ar": "جمع وتوليد بيانات الويب",
-  "en": "Web Crawler And Report Generator"
- },
- "generate_report": {
-  "ar": "توليد التقرير",
-  "en": "Generate Report"
- },
- "search_text_for_report": {
-  "ar": "البحث عن نص للتقرير",
-  "en": "Search text for report"
- },
- "topics": {
-  "ar": "المواضيع",
-  "en": "Topics"
- },
- "web_page_urls": {
-  "ar": "صفحات الويب",
-  "en": "Web Pages URLs"
- },
- "crawl_web_pages": {
-  "ar": " استكشاف صفحات الويب",
-  "en": "Crawl Web Pages"
- },
- "invalid_url": {
-  "ar": "عنوان الويب غير صالح",
-  "en": "Invalid URL"
- },
- "required": {
-  "ar": "الحقل مطلوب",
-  "en": "Field is required"
- },
- "web_crawler": {
-  "ar": "تتبع الويب",
-  "en": "Web Crawler"
- },
- "change_bot": {
-  "ar": "تغيير البوت",
-  "en": "Change bot"
- },
- "change_bot_note": {
-  "ar": "ملاحظة: عند تغيير البوت سيتم مسح جميع المحادثة",
-  "en": " Note: Changing the bot's name will result in the chat history being cleared."
- },
- "indexers": {
-  "ar": "الفهارس",
-  "en": "Indexers"
- },
- "storage": {
-  "ar": "التخزين",
-  "en": "Storage"
- },
- "admin_services": {
-  "ar": "خدمات المسؤول",
-  "en": "Admin Services"
- },
- "urls": {
-  "ar": "العناوين الالكترونية",
-  "en": "URLs"
- },
- "general_settings": {
-  "ar": "الإعدادات العامة",
-  "en": "General Settings"
- },
- "deep_crawling": {
-  "ar": "تتبع عميق",
-  "en": "Deep Crawling"
- },
- "media_crawling": {
-  "ar": "تتبع الوسائط",
-  "en": "Media Crawling"
- },
- "selectors": {
-  "ar": "المحددات",
-  "en": "Selectors"
- },
- "container_name": {
-  "ar": "اسم الحاوية",
-  "en": "Container Name"
- },
- "add_url": {
-  "ar": "إضافة عنوان",
-  "en": "Add URL"
- },
- "link": {
-  "ar": "الرابط",
-  "en": "Link"
- },
- "headers": {
-  "ar": "الترويسات",
-  "en": "Headers"
- },
- "cookies": {
-  "ar": "ملفات الارتباط",
-  "en": "Cookies"
- },
- "payload": {
-  "ar": "بيانات الإرسال",
-  "en": "Payload"
- },
- "key": {
-  "ar": "المفتاح",
-  "en": "Key"
- },
- "value": {
-  "ar": "القيمة",
-  "en": "Value"
- },
- "add_header": {
-  "ar": "إضافة ترويسة",
-  "en": "Add Header"
- },
- "add_cookie": {
-  "ar": "إضافة ملف ارتباط",
-  "en": "Add Cookie"
- },
- "add_payload": {
-  "ar": "إضافة بيانات إرسال",
-  "en": "Add Payload"
- },
- "add_selector": {
-  "ar": "إضافة محدد",
-  "en": "Add Selector"
- },
- "add_topic": {
-  "ar": "إضافة موضوع",
-  "en": "Add Topic"
- },
- "json_preview": {
-  "ar": "معاينة JSON",
-  "en": "JSON Preview"
- },
- "copy": {
-  "ar": "نسخ",
-  "en": "Copy"
- },
- "url": {
-  "ar": "العنوان",
-  "en": "URL"
- },
- "select_container_message": {
-  "ar": "يرجى تحديد حاوية لعرض محتوياتها",
-  "en": "Please select container to view its content"
- },
- "no_files_message": {
-  "ar": "لا يوجد ملفات متاحة لعرضها",
-  "en": "There are no files available for preview."
- },
- "delete_message": {
-  "ar": "هل أنت متأكد أنك تريد حذف ؟",
-  "en": "Are you sure you want to delete ?"
- },
- "open_folder_tip": {
-  "ar": "يمكنك الضغط مرتين لفتح المجلد",
-  "en": "You can double click on folder to open it"
- },
- "selection_tip": {
-  "ar": "يمكنك تحديد جميع العناصر عن طريق الضغط على Ctrl + A.  \nكما يمكنك تحديد العناصر برسم مربع حولها عن طريق الضغط مع السحب باستخدام الماوس.  \nوأيضًا، يمكنك تحديد العناصر بشكل فردي أو الضغط على Ctrl لإضافة عنصر جديد إلى العناصر المحددة.",
-  "en": "You can select all items by pressing Ctrl + A.  \nYou can also select items by drawing a box around them by clicking and dragging with the mouse.  \nAdditionally, you can select items individually or press Ctrl to add a new item to the selected items."
- },
- "choose_files": {
-  "ar": "اختر ملفات",
-  "en": "Choose Files"
- },
- "errors": {
-  "ar": "الأخطاء",
-  "en": "Errors"
- },
- "file_not_supported": {
-  "ar": "صيغة الملف غير مدعومة",
-  "en": "File not supported"
- },
- "json_warning": {
-  "ar": "الملف لا يحوي على المفاتيح المطلوبة",
-  "en": "The file does not contain the required keys."
- },
- "file_storage": {
-  "ar": "ملفات التخرين",
-  "en": "File Storage"
- },
- "indexer_name": {
-  "ar": "اسم المفهرس",
-  "en": "Indexer Name"
- },
- "run_indexer": {
-  "ar": "تشغيل الفهرس",
-  "en": "Run Indexer"
- },
- "indexer_warning": {
-  "ar": "لا يمكن جلب تفاصيل الفهرس",
-  "en": "Filed to fetch details for indexer"
- },
- "loading_content": {
-  "ar": "جلب التفاصيل",
-  "en": "Loading  Contents"
- },
- "index_name": {
-  "ar": "اسم الفهرس",
-  "en": "Index Name"
- },
- "data_source": {
-  "ar": "مصدر البيانات",
-  "en": "Data Source"
- },
- "data_storage_type": {
-  "ar": "نوع تخزين البيانات",
-  "en": "Data Storage Type"
- },
- "data_storage_name": {
-  "ar": "اسم تخزين البيانات",
-  "en": "Data Storage Name"
- },
- "skillset_name": {
-  "ar": "اسم مجموعة المهارات",
-  "en": "Skillset Name"
- },
- "selector": {
-  "ar": "المحدد",
-  "en": "Selector"
- },
- "topic": {
-  "ar": "الموضوع",
-  "en": "Topic"
- },
- "delete": {
-  "ar": "حذف",
-  "en": "Delete"
- },
- "cancel": {
-  "ar": "إلغاء",
-  "en": "Cancel"
- },
- "confirm": {
-  "ar": "تأكيد",
-  "en": "Confirm"
- },
- "uploading": {
-  "ar": "جاري الرفع",
-  "en": "Uploading"
- },
- "not_valid_json": {
-  "ar": "ملف ال JSON غير صالح",
-  "en": "Is not valid JSON file"
- },
- "file_already_added": {
-  "ar": "الملف موجود مسبقاً",
-  "en": "File is already added"
- },
- "search_indexer": {
-  "ar": "ابحث عن فهرس...",
-  "en": "Search for an indexer..."
- },
- "delete_confirmation": {
-  "ar": "تأكيد الحذف",
-  "en": "Delete Confirmation"
- },
- "confirm_action": {
-  "ar": "تأكيد الإجراء",
-  "en": "Confirm Action"
- },
- "web_crawling_btn": {
-  "ar": "بدأ عملية تتبع البيانات",
-  "en": "Start web crawling"
- },
- "url_details": {
-  "ar": "تفاصيل الرابط",
-  "en": "URL Details"
- },
- "url_settings": {
-  "ar": "إعدادات الرابط",
-  "en": "URL Settings"
- },
- "url_details_desc": {
-  "ar": "قم بإضافة الرابط مع بيانات الكوكيز والحزمة لتكوين سلوكه",
-  "en": "Provide the URL along with its cookies and payload data to configure its behavior."
- },
- "url_settings_desc": {
-  "ar": "خصص إعدادات الرابط، بما في ذلك التفضيلات والتكوينات",
-  "en": "Customize the settings for the URL, including preferences and configurations."
- },
- "edit": {
-  "ar": "تعديل",
-  "en": "Edit"
- },
- "chips_tip": {
-  "ar": "بعد الكتابة قم بضغط Enter للإدخال",
-  "en": "After typing press Enter to add the word"
- },
- "tag_exist": {
-  "ar": "الوسم موجود مسبقاً",
-  "en": "Tag already exists"
- },
- "tag_empty": {
-  "ar": "لا يمكن إضافة وسم فارغ",
-  "en": "Tag cannot be empty"
- },
- "storage_desc": {
-  "ar": "أضف، احذف، ونظّم الملفات والمجلدات.",
-  "en": "Manage files and folders: add, delete, or organize."
- },
- "indexers_desc": {
-  "ar": "إدارة وعرض الفهرسة على Azure.\n",
-  "en": "View and manage Azure indexers."
- },
- "web_crawling_desc": {
-  "ar": "إدارة تتبع الويب بإضافة الروابط والإعدادات.",
-  "en": "Configure and manage web crawling with URLs, cookies, and settings."
- },
- "edit_url": {
-  "ar": "تعديل العنوان",
-  "en": "Edit URL"
- },
- "video_analyzer": {
-  "ar": "محلل الفيديو",
-  "en": "Video Analyzer"
- },
- "upload_video": {
-  "ar": "ارفع فيديو",
-  "en": "Upload Video"
- },
- "choose_video_from_list": {
-  "ar": "اختر فيديو من القائمة",
-  "en": "Choose video from list"
- },
- "videos_list": {
-  "ar": "قائمة الفيديوهات",
-  "en": "Videos List"
- },
- "uploading_file_msg": {
-  "ar": "جاري رفع وتحليل الملف ,يرجى الانتظار..",
-  "en": "Uploading and analysis file, please wait..."
- },
- "file_info_msg": {
-  "ar": "جاري جلب الملف, يرجى الانتظار...",
-  "en": "Get file data, please wait..."
- }
+  "local_key": {
+    "ar": "رمز التعريب",
+    "en": "Local key"
+  },
+  "arabic_local": {
+    "ar": "الترجمة العربية",
+    "en": "Arabic translation"
+  },
+  "english_local": {
+    "ar": "الترجمة الانجليزية",
+    "en": "English Translation"
+  },
+  "localization": {
+    "ar": "التعريب",
+    "en": "Localization"
+  },
+  "save": {
+    "ar": "حفظ",
+    "en": "Save"
+  },
+  "cancel_recording": {
+    "ar": "الغاء التسجيل",
+    "en": "Cancel Recording"
+  },
+  "clear_chat_history": {
+    "ar": "مسح سجل المحادثة",
+    "en": "Clear chat History"
+  },
+  "stop_talking": {
+    "ar": "توقف عن الحديث",
+    "en": "Stop Talking"
+  },
+  "settings": {
+    "ar": "الاعدادات",
+    "en": "Settings"
+  },
+  "click_to_speak": {
+    "ar": "اضغط للتحدث",
+    "en": "Click to Speak"
+  },
+  "loading": {
+    "ar": "جاري التحميل",
+    "en": "Loading"
+  },
+  "listening_ongoing": {
+    "ar": "جاري الاستماع",
+    "en": "listening outgoing"
+  },
+  "click_to_send": {
+    "ar": "اضغط للارسال",
+    "en": "Click to Send"
+  },
+  "connected": {
+    "ar": "متصل",
+    "en": "Connected"
+  },
+  "not_connected": {
+    "ar": "غير متصل",
+    "en": "Not Connected"
+  },
+  "connecting": {
+    "ar": "جاري الاتصال",
+    "en": "Connecting"
+  },
+  "disconnecting": {
+    "ar": "جاري قطع الاتصال",
+    "en": "disconnecting"
+  },
+  "home": {
+    "ar": "الرئيسية",
+    "en": "Home"
+  },
+  "search": {
+    "ar": "البحث الذكي",
+    "en": "AI Search"
+  },
+  "chat": {
+    "ar": "المساعد الآلي",
+    "en": "Chatbot"
+  },
+  "avatar_chat": {
+    "ar": "الشخصية الرقمية",
+    "en": "Avatar Chat"
+  },
+  "welcome_message": {
+    "ar": "مرحباّ بكم فى حلول الذكاء الاصطناعي",
+    "en": "Welcome to AI Solutions"
+  },
+  "chat_description": {
+    "ar": "روبوت يقدم المساعدة ويجيب على الأسئلة ويوفر المعلومات بشكل فوري وفعال. يعتمد الروبوت الذكي على تقنيات المعلومات الطبيعية لفهم استفسارات المستخدمين والتفاعل معها.",
+    "en": "A bot that provides assistance, answers questions and provides information in an immediate and efficient manner. The intelligent bot relies on natural information technologies to understand and queries users."
+  },
+  "document_search_description": {
+    "ar": "البحث الذكي هو تقنية متطورة تستخدم الذكاء الاصطناعي لتحسين تجربة البحث عبر الإنترنت. بدلاً من تقديم قائمة طويلة من الروابط، تقوم هذه الخدمة بتحليل الهدف والسياق وراء السؤال لتقديم إجابات دقيقة ومفصلة للمستخدم.",
+    "en": "Smart Search is a cutting-edge technology that uses artificial intelligence to improve the online search experience. Instead of providing a long list of links, this service analyzes the intent and context behind the question to provide the user with accurate and detailed answers."
+  },
+  "try_it_out": {
+    "ar": "جربها",
+    "en": "try it out"
+  },
+  "generic": {
+    "ar": "عام",
+    "en": "Generic"
+  },
+  "video_indexer": {
+    "ar": "فهرس الفيديو",
+    "en": "Video Indexer"
+  },
+  "custom": {
+    "ar": "مُخصص",
+    "en": "Custom"
+  },
+  "show_more": {
+    "ar": "عرض المزيد",
+    "en": "Show more"
+  },
+  "show_less": {
+    "ar": "عرض أقل",
+    "en": "Show less"
+  },
+  "result_count": {
+    "ar": "عدد النتائج",
+    "en": "Result count"
+  },
+  "search_in_website": {
+    "ar": "البحث في الموقع",
+    "en": "Search in website"
+  },
+  "search_about": {
+    "ar": "البحث عن",
+    "en": "Search about"
+  },
+  "items_per_page_label": {
+    "ar": "عدد العناصر في الصفحة",
+    "en": "Item per page"
+  },
+  "next_page_label": {
+    "ar": "الصفحة التالية",
+    "en": "Next page"
+  },
+  "previous_page_label": {
+    "ar": "الصفحة السابقة",
+    "en": "Previous page"
+  },
+  "first_page_label": {
+    "ar": "الصفحة الأولى",
+    "en": "First page"
+  },
+  "last_page_label": {
+    "ar": "الصفحة الأخيرة",
+    "en": "Last page"
+  },
+  "page": {
+    "ar": "صفحة",
+    "en": "Page"
+  },
+  "of": {
+    "ar": "من",
+    "en": "of"
+  },
+  "logo_url": {
+    "ar": "رابط صورة الشعار",
+    "en": "logo url"
+  },
+  "background_url": {
+    "ar": "رابط صورة الخلفية",
+    "en": "background URL"
+  },
+  "background_color": {
+    "ar": "لون الخلفية",
+    "en": "background color"
+  },
+  "is_background_video": {
+    "ar": "الخلفية فيديو ؟",
+    "en": "is background Video ?"
+  },
+  "preview": {
+    "ar": "معاينة",
+    "en": "Preview"
+  },
+  "video_token": {
+    "ar": "رابط الفيديو",
+    "en": "Video token"
+  },
+  "search_message": {
+    "ar": "تمكين الأفكار وإطلاق العنان للذكاء!",
+    "en": "Empowering Insights, Unleashing Intelligence!"
+  },
+  "send": {
+    "ar": "أرسال",
+    "en": "send"
+  },
+  "open_avatar": {
+    "ar": "افتح الشخصية الرقمية",
+    "en": "Open avatar"
+  },
+  "chat_history": {
+    "ar": "سجل المحادثات",
+    "en": "Chat history"
+  },
+  "select_filter": {
+    "ar": "اختر الفلتر ",
+    "en": "Select filter"
+  },
+  "bot_name": {
+    "ar": "اسم البوت",
+    "en": "Bot name"
+  },
+  "feedback": {
+    "ar": "التقييم",
+    "en": "Feedback"
+  },
+  "sentiment": {
+    "ar": "المشاعر",
+    "en": "Sentiment"
+  },
+  "dislike": {
+    "ar": "عدم إعجاب",
+    "en": "Dislike"
+  },
+  "like": {
+    "ar": "إعجاب",
+    "en": "Like"
+  },
+  "negative": {
+    "ar": "سلبي",
+    "en": "Negative"
+  },
+  "mixed": {
+    "ar": "مختلط",
+    "en": "Mixed"
+  },
+  "positive": {
+    "ar": "إيجابي",
+    "en": "Positive"
+  },
+  "neutral": {
+    "ar": "محايد",
+    "en": "Neutral"
+  },
+  "feedback_chart": {
+    "ar": "آراء المستخدمين",
+    "en": "User Feedback"
+  },
+  "sentiment_chart": {
+    "ar": "تحليل المشاعر",
+    "en": "Sentiment Analysis"
+  },
+  "performance_chart": {
+    "ar": "أداء البوت",
+    "en": "Bot Performance"
+  },
+  "no_data_to_preview": {
+    "ar": "لا يوجد نتائج لعرضها",
+    "en": "No data to preview"
+  },
+  "rate_conversation": {
+    "ar": "قيّم المحادثة",
+    "en": "Rate the conversation"
+  },
+  "i_like": {
+    "ar": "أعجبني",
+    "en": "Like"
+  },
+  "i_dislike": {
+    "ar": "لم يعجبني",
+    "en": "Dislike"
+  },
+  "conversations_and_chats": {
+    "ar": "المحادثات والرسائل",
+    "en": "Conversations and Chats"
+  },
+  "choose_conversation": {
+    "ar": "اختر من المحادثات لعرض الرسائل",
+    "en": "Choose from conversation to view messages"
+  },
+  "conversation_description": {
+    "ar": "يمكنك الاطلاع على المحادثات والرسائل والتقييم الخاص بها",
+    "en": "You can review the conversations and its messages and rate"
+  },
+  "unspecified": {
+    "ar": "غير محدد",
+    "en": "Unspecified"
+  },
+  "all_bots": {
+    "ar": "جميع البوتات",
+    "en": "All bots"
+  },
+  "choose_bot": {
+    "ar": "اختر البوت الذي تريد عرض إحصائياته",
+    "en": "Choose the bot you want to show its statistics"
+  },
+  "conversation_title": {
+    "ar": "عنوان المحادثة",
+    "en": "Conversation Title"
+  },
+  "sentiment_analysis_description": {
+    "ar": "عند الضغط على الزر يتم تحليل مشاعر المحادثات و إعادة طلب المحادثات ",
+    "en": "When press on the button the sentiment analysis process procced and the conversation reload"
+  },
+  "reload_conversation": {
+    "ar": "إعادة تحميل المحادثات",
+    "en": "Reload Conversations"
+  },
+  "sort_conversation": {
+    "ar": "فرز المحادثات حسب التاريخ",
+    "en": "Sort conversation by date"
+  },
+  "total": {
+    "ar": "الإجمالي",
+    "en": "Total"
+  },
+  "doc_analyzer": {
+    "ar": "محلل المستندات",
+    "en": "Document Analyzer"
+  },
+  "not_supported_filetype": {
+    "ar": "صيغة الملف غير مدعومة",
+    "en": "File type not supported"
+  },
+  "exceed_file_size": {
+    "ar": "حجم الملف كبير جدا",
+    "en": "File size is too big"
+  },
+  "upload": {
+    "ar": "رفع",
+    "en": "Upload"
+  },
+  "remove": {
+    "ar": "حذف",
+    "en": "Remove"
+  },
+  "click_to_upload_or_dnd": {
+    "ar": "اضغط لرفع ملف أو قم بسحبه و إفلاته",
+    "en": "Click to upload file or drag and drop"
+  },
+  "file_upload": {
+    "ar": "رفع الملفات",
+    "en": "File upload"
+  },
+  "next": {
+    "ar": "التالي",
+    "en": "Next"
+  },
+  "previous": {
+    "ar": "السابق",
+    "en": "Previous"
+  },
+  "extracted_data": {
+    "ar": "العناصر المستخرجة",
+    "en": "Extracted data"
+  },
+  "extracted_words": {
+    "ar": "الكلمات المستخرجة",
+    "en": "Extracted words"
+  },
+  "document_analyze_progress": {
+    "ar": "جاري تحليل الملف",
+    "en": "Analyze Document"
+  },
+  "vacation_request": {
+    "ar": "طلب إجازة",
+    "en": "Vacation request"
+  },
+  "interactive_chatbot": {
+    "ar": "البوت التفاعلي",
+    "en": "Interactive Chatbot"
+  },
+  "vacations_list": {
+    "ar": "طلبات الإجازة",
+    "en": "Vacations list"
+  },
+  "employee_name": {
+    "ar": "اسم الموظف",
+    "en": "Employee Name"
+  },
+  "manager_name": {
+    "ar": "اسم المدير",
+    "en": "Manager Name"
+  },
+  "department": {
+    "ar": "القسم",
+    "en": "Department"
+  },
+  "start_date": {
+    "ar": "تاريخ البداية",
+    "en": "Start Date"
+  },
+  "end_date": {
+    "ar": "تاريخ النهاية",
+    "en": "End Date"
+  },
+  "total_days": {
+    "ar": "عدد الأيام",
+    "en": "Total Days"
+  },
+  "status": {
+    "ar": "حالة الإجازة",
+    "en": "Status"
+  },
+  "comments": {
+    "ar": "التعليقات",
+    "en": "Comments"
+  },
+  "actions": {
+    "ar": "الأوامر",
+    "en": "Actions"
+  },
+  "approved": {
+    "ar": "مؤكدة",
+    "en": "Approved"
+  },
+  "rejected": {
+    "ar": "مرفوضة",
+    "en": "Rejected"
+  },
+  "pending": {
+    "ar": "قيد الانتظار",
+    "en": "Pending"
+  },
+  "vacation_type": {
+    "ar": "نوع الإجازة",
+    "en": "Vacation Type"
+  },
+  "web_crawler_and_report_generator": {
+    "ar": "جمع وتوليد بيانات الويب",
+    "en": "Web Crawler And Report Generator"
+  },
+  "generate_report": {
+    "ar": "توليد التقرير",
+    "en": "Generate Report"
+  },
+  "search_text_for_report": {
+    "ar": "البحث عن نص للتقرير",
+    "en": "Search text for report"
+  },
+  "topics": {
+    "ar": "المواضيع",
+    "en": "Topics"
+  },
+  "web_page_urls": {
+    "ar": "صفحات الويب",
+    "en": "Web Pages URLs"
+  },
+  "crawl_web_pages": {
+    "ar": " استكشاف صفحات الويب",
+    "en": "Crawl Web Pages"
+  },
+  "invalid_url": {
+    "ar": "عنوان الويب غير صالح",
+    "en": "Invalid URL"
+  },
+  "required": {
+    "ar": "الحقل مطلوب",
+    "en": "Field is required"
+  },
+  "web_crawler": {
+    "ar": "تتبع الويب",
+    "en": "Web Crawler"
+  },
+  "change_bot": {
+    "ar": "تغيير البوت",
+    "en": "Change bot"
+  },
+  "change_bot_note": {
+    "ar": "ملاحظة: عند تغيير البوت سيتم مسح جميع المحادثة",
+    "en": " Note: Changing the bot's name will result in the chat history being cleared."
+  },
+  "indexers": {
+    "ar": "الفهارس",
+    "en": "Indexers"
+  },
+  "storage": {
+    "ar": "التخزين",
+    "en": "Storage"
+  },
+  "admin_services": {
+    "ar": "خدمات المسؤول",
+    "en": "Admin Services"
+  },
+  "urls": {
+    "ar": "العناوين الالكترونية",
+    "en": "URLs"
+  },
+  "general_settings": {
+    "ar": "الإعدادات العامة",
+    "en": "General Settings"
+  },
+  "deep_crawling": {
+    "ar": "تتبع عميق",
+    "en": "Deep Crawling"
+  },
+  "media_crawling": {
+    "ar": "تتبع الوسائط",
+    "en": "Media Crawling"
+  },
+  "selectors": {
+    "ar": "المحددات",
+    "en": "Selectors"
+  },
+  "container_name": {
+    "ar": "اسم الحاوية",
+    "en": "Container Name"
+  },
+  "add_url": {
+    "ar": "إضافة عنوان",
+    "en": "Add URL"
+  },
+  "link": {
+    "ar": "الرابط",
+    "en": "Link"
+  },
+  "headers": {
+    "ar": "الترويسات",
+    "en": "Headers"
+  },
+  "cookies": {
+    "ar": "ملفات الارتباط",
+    "en": "Cookies"
+  },
+  "payload": {
+    "ar": "بيانات الإرسال",
+    "en": "Payload"
+  },
+  "key": {
+    "ar": "المفتاح",
+    "en": "Key"
+  },
+  "value": {
+    "ar": "القيمة",
+    "en": "Value"
+  },
+  "add_header": {
+    "ar": "إضافة ترويسة",
+    "en": "Add Header"
+  },
+  "add_cookie": {
+    "ar": "إضافة ملف ارتباط",
+    "en": "Add Cookie"
+  },
+  "add_payload": {
+    "ar": "إضافة بيانات إرسال",
+    "en": "Add Payload"
+  },
+  "add_selector": {
+    "ar": "إضافة محدد",
+    "en": "Add Selector"
+  },
+  "add_topic": {
+    "ar": "إضافة موضوع",
+    "en": "Add Topic"
+  },
+  "json_preview": {
+    "ar": "معاينة JSON",
+    "en": "JSON Preview"
+  },
+  "copy": {
+    "ar": "نسخ",
+    "en": "Copy"
+  },
+  "url": {
+    "ar": "العنوان",
+    "en": "URL"
+  },
+  "select_container_message": {
+    "ar": "يرجى تحديد حاوية لعرض محتوياتها",
+    "en": "Please select container to view its content"
+  },
+  "no_files_message": {
+    "ar": "لا يوجد ملفات متاحة لعرضها",
+    "en": "There are no files available for preview."
+  },
+  "delete_message": {
+    "ar": "هل أنت متأكد أنك تريد حذف ؟",
+    "en": "Are you sure you want to delete ?"
+  },
+  "open_folder_tip": {
+    "ar": "يمكنك الضغط مرتين لفتح المجلد",
+    "en": "You can double click on folder to open it"
+  },
+  "selection_tip": {
+    "ar": "يمكنك تحديد جميع العناصر عن طريق الضغط على Ctrl + A.  \nكما يمكنك تحديد العناصر برسم مربع حولها عن طريق الضغط مع السحب باستخدام الماوس.  \nوأيضًا، يمكنك تحديد العناصر بشكل فردي أو الضغط على Ctrl لإضافة عنصر جديد إلى العناصر المحددة.",
+    "en": "You can select all items by pressing Ctrl + A.  \nYou can also select items by drawing a box around them by clicking and dragging with the mouse.  \nAdditionally, you can select items individually or press Ctrl to add a new item to the selected items."
+  },
+  "choose_files": {
+    "ar": "اختر ملفات",
+    "en": "Choose Files"
+  },
+  "errors": {
+    "ar": "الأخطاء",
+    "en": "Errors"
+  },
+  "file_not_supported": {
+    "ar": "صيغة الملف غير مدعومة",
+    "en": "File not supported"
+  },
+  "json_warning": {
+    "ar": "الملف لا يحوي على المفاتيح المطلوبة",
+    "en": "The file does not contain the required keys."
+  },
+  "file_storage": {
+    "ar": "ملفات التخرين",
+    "en": "File Storage"
+  },
+  "indexer_name": {
+    "ar": "اسم المفهرس",
+    "en": "Indexer Name"
+  },
+  "run_indexer": {
+    "ar": "تشغيل الفهرس",
+    "en": "Run Indexer"
+  },
+  "indexer_warning": {
+    "ar": "لا يمكن جلب تفاصيل الفهرس",
+    "en": "Filed to fetch details for indexer"
+  },
+  "loading_content": {
+    "ar": "جلب التفاصيل",
+    "en": "Loading  Contents"
+  },
+  "index_name": {
+    "ar": "اسم الفهرس",
+    "en": "Index Name"
+  },
+  "data_source": {
+    "ar": "مصدر البيانات",
+    "en": "Data Source"
+  },
+  "data_storage_type": {
+    "ar": "نوع تخزين البيانات",
+    "en": "Data Storage Type"
+  },
+  "data_storage_name": {
+    "ar": "اسم تخزين البيانات",
+    "en": "Data Storage Name"
+  },
+  "skillset_name": {
+    "ar": "اسم مجموعة المهارات",
+    "en": "Skillset Name"
+  },
+  "selector": {
+    "ar": "المحدد",
+    "en": "Selector"
+  },
+  "topic": {
+    "ar": "الموضوع",
+    "en": "Topic"
+  },
+  "delete": {
+    "ar": "حذف",
+    "en": "Delete"
+  },
+  "cancel": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "confirm": {
+    "ar": "تأكيد",
+    "en": "Confirm"
+  },
+  "uploading": {
+    "ar": "جاري الرفع",
+    "en": "Uploading"
+  },
+  "not_valid_json": {
+    "ar": "ملف ال JSON غير صالح",
+    "en": "Is not valid JSON file"
+  },
+  "file_already_added": {
+    "ar": "الملف موجود مسبقاً",
+    "en": "File is already added"
+  },
+  "search_indexer": {
+    "ar": "ابحث عن فهرس...",
+    "en": "Search for an indexer..."
+  },
+  "delete_confirmation": {
+    "ar": "تأكيد الحذف",
+    "en": "Delete Confirmation"
+  },
+  "confirm_action": {
+    "ar": "تأكيد الإجراء",
+    "en": "Confirm Action"
+  },
+  "web_crawling_btn": {
+    "ar": "بدأ عملية تتبع البيانات",
+    "en": "Start web crawling"
+  },
+  "url_details": {
+    "ar": "تفاصيل الرابط",
+    "en": "URL Details"
+  },
+  "url_settings": {
+    "ar": "إعدادات الرابط",
+    "en": "URL Settings"
+  },
+  "url_details_desc": {
+    "ar": "قم بإضافة الرابط مع بيانات الكوكيز والحزمة لتكوين سلوكه",
+    "en": "Provide the URL along with its cookies and payload data to configure its behavior."
+  },
+  "url_settings_desc": {
+    "ar": "خصص إعدادات الرابط، بما في ذلك التفضيلات والتكوينات",
+    "en": "Customize the settings for the URL, including preferences and configurations."
+  },
+  "edit": {
+    "ar": "تعديل",
+    "en": "Edit"
+  },
+  "chips_tip": {
+    "ar": "بعد الكتابة قم بضغط Enter للإدخال",
+    "en": "After typing press Enter to add the word"
+  },
+  "tag_exist": {
+    "ar": "الوسم موجود مسبقاً",
+    "en": "Tag already exists"
+  },
+  "tag_empty": {
+    "ar": "لا يمكن إضافة وسم فارغ",
+    "en": "Tag cannot be empty"
+  },
+  "storage_desc": {
+    "ar": "أضف، احذف، ونظّم الملفات والمجلدات.",
+    "en": "Manage files and folders: add, delete, or organize."
+  },
+  "indexers_desc": {
+    "ar": "إدارة وعرض الفهرسة على Azure.\n",
+    "en": "View and manage Azure indexers."
+  },
+  "web_crawling_desc": {
+    "ar": "إدارة تتبع الويب بإضافة الروابط والإعدادات.",
+    "en": "Configure and manage web crawling with URLs, cookies, and settings."
+  },
+  "edit_url": {
+    "ar": "تعديل العنوان",
+    "en": "Edit URL"
+  },
+  "stop_chat": {
+    "ar": "إيقاف المحادثة",
+    "en": "Stop Chat"
+  },
+  "video_analyzer": {
+    "ar": "محلل الفيديو",
+    "en": "Video Analyzer"
+  },
+  "upload_video": {
+    "ar": "ارفع فيديو",
+    "en": "Upload Video"
+  },
+  "choose_video_from_list": {
+    "ar": "اختر فيديو من القائمة",
+    "en": "Choose video from list"
+  },
+  "videos_list": {
+    "ar": "قائمة الفيديوهات",
+    "en": "Videos List"
+  },
+  "uploading_file_msg": {
+    "ar": "جاري رفع وتحليل الملف ,يرجى الانتظار..",
+    "en": "Uploading and analysis file, please wait..."
+  },
+  "file_info_msg": {
+    "ar": "جاري جلب الملف, يرجى الانتظار...",
+    "en": "Get file data, please wait..."
+  }
 }
