@@ -21,6 +21,11 @@ export class PermissionsService {
     const params = new HttpParams().append('user_id', userId)
     return this.http.post(url, permission, { params: params })
   }
+  updatePermission(userId: string, permission: string[]) {
+    const url = `${this.urlService.URLS.ADMIN}/permission/update`
+    const params = new HttpParams().append('user_id', userId)
+    return this.http.put(url, permission, { params: params })
+  }
   withdrawPermissions(userId: string, permissions: string[]) {
     const url = `${this.urlService.URLS.ADMIN}/permission/remove`
     const params = new HttpParams().append('user_id', userId)

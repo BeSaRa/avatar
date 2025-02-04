@@ -9,6 +9,7 @@
     "test": "ng test",
     "serve:ssr:avatar": "node dist/avatar/server/server.mjs",
     "lint": "ng lint",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,tsx,js,jsx}\"",
     "prepare": "husky install",
     "version": "node bin/version.js",
     "deploy": "ng deploy"

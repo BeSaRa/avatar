@@ -13,6 +13,7 @@ export const EndPoints = {
   DOC_INTELLIGENCE: 'document-intelligence',
   MEDIA: 'media',
   ADMIN: 'admin',
+  USER: 'user',
 }
 
 export type EndpointsType = typeof EndPoints

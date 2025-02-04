@@ -6,11 +6,12 @@ import PerfectScrollbar from 'perfect-scrollbar'
 import { RouterOutlet } from '@angular/router'
 import { ChatComponent } from '@/components/chat/chat.component'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
+import { LogoutButtonComponent } from '@/components/logout-button/logout-button.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, RouterOutlet, ChatComponent, AvatarVideoComponent],
+  imports: [HeaderComponent, RouterOutlet, ChatComponent, AvatarVideoComponent, LogoutButtonComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   host: {
