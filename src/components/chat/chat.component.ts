@@ -57,7 +57,9 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   animating = signal(false)
   stopAnimate = signal(false)
   ratingDone = signal(false)
-  botNames$ = this.chatHistoryService.getAllBotNames()
+  botNames$ = this.chatHistoryService
+    .getAllBotNames()
+    .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
   declare scrollbarRef: PerfectScrollbar
   feedbackOptions = FeedbackChat
   // noinspection JSUnusedGlobalSymbols

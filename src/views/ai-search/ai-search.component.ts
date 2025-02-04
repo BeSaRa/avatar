@@ -57,7 +57,9 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   store = inject(AppStore)
   lang = inject(LocalService)
   chatHistoryService = inject(ChatHistoryService)
-  botNames$ = this.chatHistoryService.getAllBotNames()
+  botNameCtrl = new FormControl('', { nonNullable: true })
+  botNames$ = this.chatHistoryService.getAllBotNames().pipe(tap(bots => this.botNameCtrl.patchValue(bots.at(0)!)))
+
   searchForm = new FormControl('', { nonNullable: true })
   loadingSubject$ = new Subject<boolean>()
   search$ = new BehaviorSubject<string>('')
@@ -67,7 +69,6 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   })
   total = signal<number>(0)
   searchToken = signal<string>('')
-  botNameCtrl = new FormControl('website', { nonNullable: true })
   searchResults$ = this.load()
   isTruncatedContent = signal<boolean[]>([])
   readonly pageSizeOptions = [5, 10, 20, 30, 40, 50, 100]

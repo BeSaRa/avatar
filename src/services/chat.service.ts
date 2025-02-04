@@ -11,7 +11,7 @@ export class ChatService extends BaseChatService {
   messages = signal<Message[]>([])
   status = signal<boolean>(false)
   conversationId = signal<string>('')
-  botNameCtrl = new FormControl('website', { nonNullable: true })
+  botNameCtrl = new FormControl('', { nonNullable: true })
 
   onBotNameChange() {
     return this.botNameCtrl.valueChanges.pipe(

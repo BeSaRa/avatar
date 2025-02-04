@@ -98,7 +98,9 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   recognized$ = new Subject<void>()
   accept$ = new Subject<void>()
   recognizingStatus = signal<boolean>(false)
-  botNames$ = this.chatHistoryService.getAllBotNames()
+  botNames$ = this.chatHistoryService
+    .getAllBotNames()
+    .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
 
   settingsOpened = false
   lang = inject(LocalService)
