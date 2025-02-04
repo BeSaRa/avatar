@@ -228,19 +228,30 @@ export const formatString = (text: string) => {
 export function formatText<T extends { context: { citations: ICitations[] } }>(text: string, message: T): string {
   let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
 
+  // Remove duplicate citations by URL and title
+  const uniqueCitations = Array.from(
+    new Map(message.context.citations.map(item => [item.url + item.title, item])).values()
+  )
+
+  // Keep track of already replaced citations to prevent duplicate replacements
+  const replacedCitations = new Set<string>()
+
   // Replace text between [ and ] with <a> tags
   formattedText = formattedText.replace(/\[(.*?)\]/g, (match, p1) => {
-    const item = message.context.citations[Number(p1.replace(/[^0-9]/g, '')) - 1]
-    if (!item) {
-      return match
+    const index = Number(p1.replace(/[^0-9]/g, '')) - 1
+    const item = uniqueCitations[index]
+
+    if (!item || replacedCitations.has(item.url + item.title)) {
+      return '' // Ignore and remove duplicate references
     }
+
+    replacedCitations.add(item.url + item.title) // Mark citation as replaced
     const title = item.title
     const url = item.url
 
     // eslint-disable-next-line max-len
     return `<br /><small class="px-1 text-primary"><a target="_blank" href="${url}">${title}</a><i class="link-icon"></i></small>`
   })
-  // text = text.replace(/\./g, '.<br>')
 
   // Return the formatted text
   return formattedText.trim()
