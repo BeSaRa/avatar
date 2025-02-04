@@ -201,4 +201,9 @@ export interface LangKeysContract {
   operationSuccess: string
   users_desc: string
   stop_chat: string
+  log_out: string
+  user_name: string
+  password: string
+  login: string
+  login_failed: string
 }

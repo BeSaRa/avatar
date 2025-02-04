@@ -80,7 +80,7 @@ export class PermissionsPopupComponent implements OnInit {
       .getRawValue()
       .flatMap((checked, i) => (checked ? [this.permissions()[i]._id] : []))
     this.permissionsService
-      .assignPermission(userId, checkedPermssionsIds)
+      .updatePermission(userId, checkedPermssionsIds)
       .pipe(finalize(() => this.ref.close()))
       .subscribe()
   }

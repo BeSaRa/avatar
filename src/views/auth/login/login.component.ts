@@ -1,0 +1,28 @@
+import { LocalService } from '@/services/local.service'
+import { Component, inject } from '@angular/core'
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import { MatTooltipModule } from '@angular/material/tooltip'
+import { take } from 'rxjs'
+import { ApplicationUserService } from '../services/application-user.service'
+import { Router } from '@angular/router'
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  templateUrl: 'login.component.html',
+  styleUrls: ['login.component.scss'],
+  imports: [ReactiveFormsModule, MatTooltipModule],
+})
+export class LoginComponent {
+  lang = inject(LocalService)
+  fb = inject(NonNullableFormBuilder)
+  form = this.fb.group({
+    userName: this.fb.control('', [Validators.required]),
+    password: this.fb.control('', [Validators.required]),
+  })
+  userService = inject(ApplicationUserService)
+  router = inject(Router)
+  onSubmit() {
+    this.userService.login(this.form.value.userName!, this.form.value.password!).pipe(take(1)).subscribe()
+  }
+}

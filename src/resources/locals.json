@@ -806,5 +806,21 @@
   "stop_chat": {
     "ar": "إيقاف المحادثة",
     "en": "Stop Chat"
-   }
+   },
+  "log_out": {
+    "ar":"خروج",
+    "en": "Log Out"
+  },
+  "login": {
+    "ar": "تسجيل الدخول",
+    "en": "Login"
+  },
+  "password": {
+    "ar": "كلمة المرور",
+    "en": "Password"
+  },
+  "user_name": {
+    "ar": "اسم المستخدم",
+    "en": "User Name"
+  }
 }

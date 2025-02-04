@@ -1,16 +1,17 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core'
-import { provideRouter, withComponentInputBinding, withHashLocation, withViewTransitions } from '@angular/router'
-import { routes } from '@/routes/app.routes'
-import { provideInterceptors } from 'cast-response'
-import { GeneralInterceptor } from '@/model-interceptors/general-interceptor'
-import configInit from '../inits/config.init'
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { apiKeyInterceptor } from '@/http-interceptors/api-key.interceptor'
-import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip'
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
-import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule } from '@angular/material/snack-bar'
 import { errorCatchingInterceptor } from '@/http-interceptors/error-catching.interceptor'
+import { TokenInterceptor } from '@/http-interceptors/token.interceptor'
+import { GeneralInterceptor } from '@/model-interceptors/general-interceptor'
+import { routes } from '@/routes/app.routes'
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core'
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule } from '@angular/material/snack-bar'
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip'
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
+import { provideRouter, withComponentInputBinding, withHashLocation, withViewTransitions } from '@angular/router'
+import { provideInterceptors } from 'cast-response'
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
+import configInit from '../inits/config.init'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,8 +30,9 @@ export const appConfig: ApplicationConfig = {
         panelClass: ['rounded-md', 'bg-primary', 'text-white', 'font-semibold'],
       },
     },
+
     configInit,
-    provideHttpClient(withFetch(), withInterceptors([errorCatchingInterceptor, apiKeyInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([errorCatchingInterceptor, apiKeyInterceptor, TokenInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation(), withComponentInputBinding(), withViewTransitions()),
     provideAnimationsAsync(),
