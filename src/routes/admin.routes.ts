@@ -30,6 +30,7 @@ const routes: Routes = [
     canActivate: [PermissionGuard.canActivate],
     data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
   },
+
   {
     path: 'users',
     component: UsersComponent,
