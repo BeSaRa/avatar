@@ -40,7 +40,7 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 6,
     label: 'chat_history',
     route: '/home/chat-history',
-    svg: 'CHAT',
+    svg: 'HISTORY',
     permissions: ['CHATBOT'],
   },
   {

@@ -206,4 +206,5 @@ export interface LangKeysContract {
   password: string
   login: string
   login_failed: string
+  permission_managment: string
 }

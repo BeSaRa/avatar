@@ -7,11 +7,12 @@ import { RouterOutlet } from '@angular/router'
 import { ChatComponent } from '@/components/chat/chat.component'
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
 import { LogoutButtonComponent } from '@/components/logout-button/logout-button.component'
+import { MatTooltip } from '@angular/material/tooltip'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, RouterOutlet, ChatComponent, AvatarVideoComponent, LogoutButtonComponent],
+  imports: [HeaderComponent, RouterOutlet, ChatComponent, AvatarVideoComponent, LogoutButtonComponent, MatTooltip],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   host: {
