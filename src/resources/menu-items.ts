@@ -64,4 +64,11 @@ export const MENU_ITEMS: MenuItem[] = [
     svg: 'WEB_CRAWLER',
     permissions: ['SEARCH'],
   },
+  {
+    id: 10,
+    label: 'statistics',
+    route: '/home/statistics',
+    svg: 'POLL',
+    permissions: ['ADMIN'],
+  },
 ]

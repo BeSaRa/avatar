@@ -207,4 +207,9 @@ export interface LangKeysContract {
   login: string
   login_failed: string
   permission_managment: string
+  statistics: string
+  total_reports: string
+  total_urls: string
+  web_crawling_stats: string
+  reports_number: string
 }
