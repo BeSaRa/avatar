@@ -102,4 +102,16 @@ export class AdminService {
       containerName: this.fb.control('rera-storage'),
     })
   }
+  getReportsCount(): Observable<number> {
+    const url = `${this.urlService.URLS.ADMIN}/get-blobs/rera-media-reports`
+    return this.http.post<{ blobs: string[] }>(url, null).pipe(map(res => res.blobs.length))
+  }
+  getUrlsCount(): Observable<number> {
+    const url = `${this.urlService.URLS.ADMIN}/get-blobs/rera-media`
+    return this.http.post<{ blobs: string[] }>(url, null).pipe(map(res => res.blobs.length))
+  }
+  getCrawlingStatistics(): Observable<Record<string, string[]>> {
+    const url = `${this.urlService.URLS.ADMIN}/get-subfolders-blobs/rera-media`
+    return this.http.get<Record<string, string[]>>(url)
+  }
 }

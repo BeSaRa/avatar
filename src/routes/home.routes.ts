@@ -48,6 +48,12 @@ const routes: Routes = [
     data: { permissions: ['SEARCH'], hasAnyPermission: false } as PermissionRouteData,
   },
   {
+    path: 'statistics',
+    loadComponent: () => import('@/views/statistics/statistics.component').then(c => c.StatisticsComponent),
+    canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
+  },
+  {
     path: 'admin',
     loadChildren: () => import('@/routes/admin.routes'),
     canActivate: [PermissionGuard.canActivate],

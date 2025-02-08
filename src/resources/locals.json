@@ -826,5 +826,25 @@
  "permission_managment": {
   "ar": "إدارة الصلاحيات",
   "en": "Permission Management"
+ },
+ "statistics": {
+  "ar": "الإحصائيات",
+  "en": "Statistics"
+ },
+ "total_reports": {
+  "ar": "إجمالي التقارير",
+  "en": "Total Reports"
+ },
+ "total_urls": {
+  "ar": "إجمالي الروابط",
+  "en": "Total URLs"
+ },
+ "web_crawling_stats": {
+  "ar": "إحصائيات تتبع البيانات",
+  "en": "Web Crawling Statistics"
+ },
+ "reports_number": {
+  "ar": "عدد التقارير",
+  "en": "Number of reports"
  }
 }
