@@ -19,14 +19,8 @@ export class ApplicationUserService {
 
   login(username: string, password: string): Observable<ApplicationUser> {
     const url = `${this._urlService.URLS.USER}/login`
-    const body = new URLSearchParams({
-      username,
-      password,
-    }).toString()
 
-    const options = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-
-    return this._http.post<ApplicationUser>(url, body, options).pipe(
+    return this._http.post<ApplicationUser>(url, { username, password }).pipe(
       tap(res =>
         this.$applicationUser.update(state => {
           state.access_token = res.access_token
