@@ -14,7 +14,7 @@
             class="flex justify-center items-center size-10 rounded-full cursor-pointer">
             <div
               [style.backgroundImage]="'url(' + person.thumbnail_url + ')'"
-              class="relative size-10 rounded-full"></div>
+              class="relative size-10 rounded-full bg-cover bg-center"></div>
           </picture>
         </div>
       }
@@ -26,7 +26,7 @@
         <picture class="flex justify-center items-center size-20 rounded-full">
           <div
             [style.backgroundImage]="'url(' + selectedPerson()?.thumbnail_url + ')'"
-            class="relative size-20 rounded-full"></div>
+            class="relative size-20 rounded-full bg-cover bg-center"></div>
         </picture>
       </div>
       <div class="flex flex-col">
