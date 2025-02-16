@@ -1,0 +1,77 @@
+<!-- horizontal-timeline.component.html -->
+<div class="relative w-full h-12">
+  <!-- Timeline background bar -->
+  <svg
+    #timelineSvg
+    width="100%"
+    height="50"
+    xmlns="http://www.w3.org/2000/svg"
+    class="w-full h-full group"
+    (mouseleave)="hideTooltip()"
+    (click)="onTimelineClick($event)">
+    <rect
+      width="100%"
+      height="12"
+      y="30"
+      class="fill-gray-300 cursor-pointer"
+      (mousemove)="onRectMouseMoveOptimized($event)"
+      (mouseleave)="hideTooltip()"></rect>
+
+    <!-- Progress bar (updated dynamically) -->
+    <rect
+      [attr.width]="progressWidth + '%'"
+      height="5"
+      y="42"
+      class="fill-gray-700 transition-all duration-300 opacity-0 group-hover:opacity-100"></rect>
+
+    <!-- Dynamic instances rectangles -->
+    @for (instance of instances(); track $index; let i = $index) {
+      <rect
+        [attr.width]="calculateWidth(instance)"
+        height="12"
+        [attr.x]="calculatePosition(instance)"
+        y="30"
+        (mousemove)="onRectMouseMoveOptimized($event, true)"
+        (mouseleave)="hideTooltip()"
+        class="fill-primary/70 hover:fill-primary cursor-pointer transition-colors"
+        (click)="onInstanceClick(i, instance, $event)"></rect>
+    }
+  </svg>
+
+  <!-- Tooltip with arrow -->
+  @if (tooltipVisible) {
+    <div
+      [style.left]="tooltipPosition + 'px'"
+      [ngClass]="tooltipBackgroundClass"
+      class="absolute bottom-0 transform -translate-y-full bg-gray-800 text-white text-xs p-2 rounded shadow z-10">
+      <div class="relative">
+        {{ tooltipTime }}
+        <div
+          class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-2 h-2 bg-gray-800 rotate-45"
+          [ngClass]="tooltipBackgroundClass"></div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Navigation Buttons -->
+<div class="flex justify-between mt-2">
+  <button
+    (click)="navigateToPreviousInstance()"
+    class="inline-flex py-[1cap] justify-center items-center gap-[.5cap] px-4 w-1/5 bg-gray-300 shadow-sm text-gray-800 text-sm rounded hover:bg-primary hover:underline hover:text-white transition-all">
+    <svg class="size-[3cap]" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path
+        d="M5.59,7.41L7,6L13,12L7,18L5.59,16.59L10.17,12L5.59,7.41M11.59,7.41L13,6L19,12L13,18L11.59,16.59L16.17,12L11.59,7.41Z" />
+    </svg>
+    {{ lang.locals.previous }}
+  </button>
+  <button
+    (click)="navigateToNextInstance()"
+    class="inline-flex py-[1cap] justify-center items-center gap-[.5cap] px-4 w-1/5 bg-gray-300 shadow-sm text-gray-800 text-sm rounded hover:bg-primary hover:underline hover:text-white transition-all">
+    {{ lang.locals.next }}
+    <svg class="size-[3cap]" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path
+        d="M18.41,7.41L17,6L11,12L17,18L18.41,16.59L13.83,12L18.41,7.41M12.41,7.41L11,6L5,12L11,18L12.41,16.59L7.83,12L12.41,7.41Z" />
+    </svg>
+  </button>
+</div>

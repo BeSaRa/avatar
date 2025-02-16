@@ -25,6 +25,7 @@ import { ignoreErrors } from '@/utils/utils'
 import { RecorderComponent } from '../recorder/recorder.component'
 import { AvatarVideoComponent } from '../avatar-video/avatar-video.component'
 import { AvatarInterrupterBtnComponent } from '../avatar-interrupter-btn/avatar-interrupter-btn.component'
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 
 @Component({
   selector: 'app-chat-container',
@@ -37,6 +38,8 @@ import { AvatarInterrupterBtnComponent } from '../avatar-interrupter-btn/avatar-
     RecorderComponent,
     AvatarVideoComponent,
     AvatarInterrupterBtnComponent,
+    CdkDrag,
+    CdkDragHandle,
     AsyncPipe,
   ],
   templateUrl: './chat-container.component.html',

@@ -1,0 +1,34 @@
+<div class="p-4 w-full">
+  <h2 class="text-xl font-semibold text-gray-700 p-4">{{ topics().length }} {{ lang.locals.topics }}</h2>
+  <div class="flex flex-col p-4 space-y-2">
+    @for (group of groupedTopics(); track $index) {
+      <div class="flex flex-col">
+        <div class="flex justify-start items-center gap-1 flex-wrap">
+          @if (group.groupName) {
+            <button
+              type="button"
+              (click)="group.groupId ? selectedTopicId.set(group.groupId) : $event.stopPropagation()"
+              [ngClass]="{
+                'rounded-xl border border-gray-700 cursor-pointer px-4': group.isParentClickable,
+                '!bg-primary !text-white': this.selectedTopicId() === group.groupId,
+              }"
+              class="bg-transparent cursor-default outline-none rounded-xl text-sm text-700 text-gray-700">
+              {{ group.groupName }}
+            </button>
+            <span class="text-gray-700">/</span>
+          }
+          @for (child of group.children; track $index) {
+            <button
+              type="button"
+              (click)="selectedTopicId.set(child.id)"
+              [ngClass]="{ '!bg-primary !text-white': this.selectedTopicId() === child.id }"
+              class="bg-transparent outline-none rounded-xl text-sm border border-gray-700 text-700 px-4 text-gray-700">
+              {{ child.name }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  <app-insights-timeline [instances]="instances()" />
+</div>

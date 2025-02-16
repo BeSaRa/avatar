@@ -1,15 +1,41 @@
 <div class="flex justify-between items-center">
   @if (video() || videoData()) {
-    <div class="w-1/2" [@slideIn]>
-      <app-chat-container
-        #chatBox
-        containerClass="!static !w-full !h-[400px] m-4 text-gray-700"
-        [botNameOptions]="{ showBotSelection: false, botName: botName() }"
-        [title]="lang.locals.video_analyzer"
-        [showAvatarBtn]="false"
-        [showFullScreenBtn]="false"
-        [showHideBtn]="false"
-        [clearMessageOnly]="true" />
+    <div class="flex flex-col space-y-2 w-1/2 h-full" [@slideIn]>
+      <div class="flex gap-4 justify-between items-center w-full">
+        <button
+          (click)="selectedTab.set('CHAT')"
+          [ngClass]="{ 'bg-primary border-2 text-white shadow-lg scale-105': selectedTab() === 'CHAT' }"
+          class="inline-flex flex-col gap-2 justify-center transition-all ease-in-out items-center h-full p-3 mt-4 bg-gray-300 text-gray-700 border-gray-300 border active:bg-primary active:text-white outline-none text-lg hover:bg-primary hover:text-white w-3/4 focus:w-full rounded-2xl w-1/2"
+          type="button">
+          {{ lang.locals.chat_about_video }}
+        </button>
+        <button
+          (click)="selectedTab.set('INSIGHTS')"
+          [ngClass]="{ 'bg-primary border-2 text-white shadow-lg scale-105': selectedTab() === 'INSIGHTS' }"
+          class="inline-flex flex-col gap-2 justify-center transition-all ease-in-out items-center h-full p-3 mt-4 bg-gray-300 text-gray-700 border-gray-300 border active:bg-primary active:text-white outline-none text-lg hover:bg-primary hover:text-white w-3/4 focus:w-full rounded-2xl w-1/2"
+          type="button">
+          {{ lang.locals.insights }}
+        </button>
+      </div>
+      <div class="flex-grow flex justify-center items-center border border-gray-200 p-2 rounded-md w-full">
+        @if (selectedTab() === 'CHAT') {
+          <app-chat-container
+            #chatBox
+            class="w-full"
+            containerClass="!static !w-full !h-[350px] text-gray-700"
+            [botNameOptions]="{ showBotSelection: false, botName: botName() }"
+            [title]="lang.locals.video_analyzer"
+            [showAvatarBtn]="true"
+            [showFullScreenBtn]="false"
+            [showHideBtn]="false"
+            [clearMessageOnly]="true" />
+        }
+        @if (selectedTab() === 'INSIGHTS') {
+          @if (insights() && insights()!.videos[0]) {
+            <app-video-insights class="w-full" [videoInsights]="insights()!.videos[0].insights" />
+          }
+        }
+      </div>
     </div>
   }
   <div
@@ -117,7 +143,7 @@
         </g>
       </svg>
       <!-- Loading Message -->
-      <p class="mt-4 text-lg animate-pulse opacity-100">{{ lang.locals.file_info_msg }}</p>
+      <p class="mt-4 text-lg animate-pulse opacity-100">{{ lang.locals.file_info_msg }} {{ indexingProgress() }}</p>
     }
   </div>
 }

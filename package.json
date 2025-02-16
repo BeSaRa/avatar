@@ -29,6 +29,7 @@
     "@angular/platform-server": "^18.2.0",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.6",
+    "@azure/video-indexer-widgets": "^1.0.5",
     "@ngrx/signals": "^18.0.2",
     "assert": "^2.1.0",
     "cast-response": "^2.0.0",
