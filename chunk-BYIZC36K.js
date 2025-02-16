@@ -1,1 +1,0 @@
-import{b as s}from"./chunk-XSWG55KW.js";import{Ab as t,Ia as o,la as a}from"./chunk-QDEZZFGD.js";var i=class e extends s{messages=t([]);status=t(!1);conversationId=t("");static \u0275fac=(()=>{let r;return function(n){return(r||(r=o(e)))(n||e)}})();static \u0275prov=a({token:e,factory:e.\u0275fac,providedIn:"root"})};export{i as a};
