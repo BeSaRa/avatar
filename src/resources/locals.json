@@ -1103,18 +1103,6 @@
     "ar": "محلل الفيديو",
     "en": "Video Analyzer"
   },
-  "upload_video": {
-    "ar": "ارفع فيديو",
-    "en": "Upload Video"
-  },
-  "choose_video_from_list": {
-    "ar": "اختر فيديو من القائمة",
-    "en": "Choose video from list"
-  },
-  "videos_list": {
-    "ar": "قائمة الفيديوهات",
-    "en": "Videos List"
-  },
   "people": {
     "ar": "الأشخاص",
     "en": "People"
@@ -1140,6 +1128,7 @@
     "en": "Get file data, please wait..."
   },
   "insights": {
+    "ar": "المشاهد",
     "en": "Insights"
   },
   "locations": {

@@ -1,0 +1,22 @@
+<div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="bg-gray-100 h-[350px]">
+  @if (videoInsights().faces?.length) {
+    <app-video-insights-people [people]="videoInsights().faces!" />
+  }
+  @if (videoInsights().observedPeople?.length) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-observed-people [observedPeople]="videoInsights().observedPeople!" />
+  }
+  @if (videoInsights().topics?.length) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-topics [topics]="videoInsights().topics!" />
+  }
+  @if (videoInsights().audioEffects?.length) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-audio-effects [audioEffects]="videoInsights().audioEffects!" />
+  }
+  @if (videoInsights().labels?.length) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-labels [labels]="videoInsights().labels!" />
+  }
+  <hr class="h-0.5 bg-gray-200" />
+</div>

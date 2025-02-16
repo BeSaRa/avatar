@@ -60,7 +60,7 @@ export class ChatHistoryService {
     return this.http.post<string>(url, null)
   }
   addFeedback(conversationId: string, feedback: FeedbackChat): Observable<string> {
-    const url = `${this.urlService.URLS.CHAT_HISTORY}/add-xonversation-feedback`
+    const url = `${this.urlService.URLS.CHAT_HISTORY}/add-conversation-feedback`
     const params = new HttpParams().set('conv_id', conversationId).set('feedback', feedback)
     return this.http.post<string>(url, null, { params: params })
   }
