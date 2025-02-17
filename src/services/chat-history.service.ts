@@ -43,7 +43,7 @@ export class ChatHistoryService {
           return res.map(item => {
             // Construct and populate a HistoryMessage object
             const historyMessage = new HistoryMessage()
-            historyMessage.context = JSON.parse(item.context)
+            historyMessage.context = item.context && JSON.parse(item.context)
             historyMessage.content = formatString(formatText(item.content, historyMessage))
             historyMessage.partitionKey = item.partitionKey
             historyMessage.rowKey = item.rowKey
