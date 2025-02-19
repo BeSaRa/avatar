@@ -228,6 +228,9 @@ export const formatString = (text: string) => {
 export function formatText<T extends { context: { citations: ICitations[] } }>(text: string, message: T): string {
   let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
 
+  if (!message?.context) {
+    return formattedText.trim()
+  }
   // Remove duplicate citations by URL and title
   const uniqueCitations = Array.from(
     new Map(message.context.citations.map(item => [item.url + item.title, item])).values()
