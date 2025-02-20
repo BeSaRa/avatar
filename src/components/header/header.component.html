@@ -14,25 +14,35 @@
       class="fixed z-10 md:!h-auto overflow-hidden top-[112px] bg-gray-200 right-0 left-0 flex flex-col md:top-auto md:relative md:flex md:flex-row">
       <ul
         class="xs:flex xs:flex-col md:flex gap-1 [&_a:hover]:bg-primary [&_a:hover]:text-white md:[&_a]:border [&_a]:p-2 [&_a]:border-gray-300 [&_li_a_span]:max-sm:!inline [&_li_a_span]:max-sm:!opacity-100 [&_a]:rounded-full [&_li.active_a]:bg-primary [&_li.active_a]:text-white [&_li.active_a]:border-transparent [&_li]:duration-200 [&_li]:transition-all [&_li]:w-[42px] [&_li:hover]:w-[calc(42px_+_6rem)] [&_li.active]:w-[calc(42px_+_6rem)] [&_li]:max-sm:!w-full [&_li_a]:justify-evenly [&_li_a]:items-center">
-        @for (menuItem of menuItems; track menuItem.id) {
-          @if (!menuItem.permissions.length || hasPermission(menuItem.permissions)) {
-            <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-              <a class="flex gap-1" [routerLink]="menuItem.route">
-                <div [innerHTML]="SvgIcons[menuItem.svg] | sanitizer: 'html'"></div>
-                <span class="text-sm">{{ lang.locals[menuItem.label] }}</span>
-              </a>
-            </li>
+        @for (item of headerItems(); track $index) {
+          @let menuItem = menuItems[item];
+          @if (item === 2) {
+            <ng-container [ngTemplateOutlet]="chatAgent"></ng-container>
+          }
+          @if (item < menuItems.length) {
+            @if (!menuItem.permissions.length || hasPermission(menuItem.permissions)) {
+              <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="flex gap-1" [routerLink]="menuItem.route">
+                  <div [innerHTML]="SvgIcons[menuItem.svg] | sanitizer: 'html'"></div>
+                  <span class="text-sm" [ngClass]="{ '!text-xs': menuItem.label === 'hr_agent' }">{{
+                    lang.locals[menuItem.label]
+                  }}</span>
+                </a>
+              </li>
+            }
           }
         }
-        <li [ngClass]="{ active: chatService.status() }">
-          <a (click)="openChatbot($event)" class="flex gap-1" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
-              <path
-                d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16Zm-52-56H92a28,28,0,0,0,0,56h72a28,28,0,0,0,0-56Zm-24,16v24H116V152ZM80,164a12,12,0,0,1,12-12h8v24H92A12,12,0,0,1,80,164Zm84,12h-8V152h8a12,12,0,0,1,0,24ZM72,108a12,12,0,1,1,12,12A12,12,0,0,1,72,108Zm88,0a12,12,0,1,1,12,12A12,12,0,0,1,160,108Z"></path>
-            </svg>
-            <span class="text-sm">{{ lang.locals.chat }}</span>
-          </a>
-        </li>
+        <ng-template #chatAgent>
+          <li [ngClass]="{ active: chatService.status() }">
+            <a (click)="openChatbot($event)" class="flex gap-1" href="#">
+              <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16Zm-52-56H92a28,28,0,0,0,0,56h72a28,28,0,0,0,0-56Zm-24,16v24H116V152ZM80,164a12,12,0,0,1,12-12h8v24H92A12,12,0,0,1,80,164Zm84,12h-8V152h8a12,12,0,0,1,0,24ZM72,108a12,12,0,1,1,12,12A12,12,0,0,1,72,108Zm88,0a12,12,0,1,1,12,12A12,12,0,0,1,160,108Z"></path>
+              </svg>
+              <span class="text-sm">{{ lang.locals.chat }}</span>
+            </a>
+          </li>
+        </ng-template>
         <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a (click)="openSettings($event)" href="#" class="flex gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">

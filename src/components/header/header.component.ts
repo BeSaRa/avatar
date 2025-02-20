@@ -4,8 +4,8 @@ import { ChatService } from '@/services/chat.service'
 import { LocalService } from '@/services/local.service'
 import { AppStore } from '@/stores/app.store'
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { JsonPipe, NgClass, NgOptimizedImage } from '@angular/common'
-import { Component, inject } from '@angular/core'
+import { NgClass, NgTemplateOutlet } from '@angular/common'
+import { Component, inject, signal } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { RouterLink, RouterLinkActive } from '@angular/router'
 import { getState } from '@ngrx/signals'
@@ -17,7 +17,7 @@ import { ALL_PERMISSIONS } from '../../resources/all-permissions'
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, NgOptimizedImage, RouterLinkActive, NgClass, JsonPipe, SanitizerPipe],
+  imports: [RouterLink, RouterLinkActive, NgClass, SanitizerPipe, NgTemplateOutlet],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   host: {
@@ -50,6 +50,7 @@ export class HeaderComponent {
   clonedSettings = structuredClone(this.settings)
   menuStatus: 'opened' | 'closed' = 'closed'
   menuItems = MENU_ITEMS
+  headerItems = signal(Array.from({ length: this.menuItems.length + 2 }, (_, k) => k))
   SvgIcons = SVG_ICONS
   applicationUserService = inject(ApplicationUserService)
   applicationUser = this.applicationUserService.$applicationUser()
