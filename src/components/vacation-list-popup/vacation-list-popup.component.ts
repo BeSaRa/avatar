@@ -5,7 +5,7 @@ import { InteractiveChatService } from '@/services/interactive-chat.service'
 import { LocalService } from '@/services/local.service'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { DatePipe, NgClass } from '@angular/common'
-import { Component, effect, ElementRef, inject, viewChild } from '@angular/core'
+import { Component, effect, ElementRef, inject, signal, viewChild } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import PerfectScrollbar from 'perfect-scrollbar'
@@ -21,11 +21,25 @@ import { takeUntil } from 'rxjs'
 export class VacationListPopupComponent extends OnDestroyMixin(class {}) {
   vacationWrapper = viewChild<ElementRef<HTMLDivElement>>('vacationWrapper')
   lang = inject(LocalService)
-  data = inject<VacationResultContract[]>(MAT_DIALOG_DATA)
+  data = inject<VacationResultContract[] | { vacations: VacationResultContract[]; forEmployee: true }>(MAT_DIALOG_DATA)
+  forEmployee = signal(false)
+  vacations = signal<VacationResultContract[]>([])
   ref = inject(MatDialogRef)
   interactiveChatService = inject(InteractiveChatService)
   declare scrollbarRef: PerfectScrollbar
 
+  /**
+   *
+   */
+  constructor() {
+    super()
+    if (!Array.isArray(this.data)) {
+      this.forEmployee.set(this.data.forEmployee)
+      this.vacations.set(this.data.vacations)
+    } else {
+      this.vacations.set(this.data)
+    }
+  }
   chatBodyContainerEffect = effect(() => {
     if (this.vacationWrapper()) {
       this.scrollbarRef = new PerfectScrollbar(this.vacationWrapper()!.nativeElement, {

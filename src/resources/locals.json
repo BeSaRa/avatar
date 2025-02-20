@@ -846,5 +846,9 @@
  "reports_number": {
   "ar": "عدد التقارير",
   "en": "Number of reports"
+ },
+ "hr_agent": {
+  "ar": "مساعد الموارد البشرية",
+  "en": "HR Agent"
  }
 }
