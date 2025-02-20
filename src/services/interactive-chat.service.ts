@@ -1,3 +1,4 @@
+import { VacationResultContract } from './../contracts/vacation-result-contract'
 import { ChatActionResultContract } from '@/contracts/chat-action-result-contract'
 import { inject, Injectable, signal, ViewContainerRef } from '@angular/core'
 import { BaseChatService } from './base-chat.service'
@@ -8,7 +9,6 @@ import { Observable, catchError, finalize, forkJoin, isObservable, map, of, swit
 import { FunctionArguments, FunctionName } from '@/contracts/tool-call-contract'
 import { RequestVacationPopupComponent } from '@/components/request-vacation-popup/request-vacation-popup.component'
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog'
-import { VacationResultContract } from '@/contracts/vacation-result-contract'
 import { VacationListPopupComponent } from '@/components/vacation-list-popup/vacation-list-popup.component'
 import { VacationStatus } from '@/enums/vacation-status'
 
@@ -63,6 +63,10 @@ export class InteractiveChatService extends BaseChatService {
       'submit-form': () => this.submitVactionRequest(),
       'get-all-vacation-forms': () => this.getAllVacations(),
       'filter-vacation-forms-by': () => this.filterForm(args as FunctionArguments<'filter-vacation-forms-by'>),
+      'get-employee-vacation-forms': () =>
+        this.getEmployeeVacations(args as FunctionArguments<'get-employee-vacation-forms'>),
+      'get-employee-vacations-count': () =>
+        this.getVacationsCount(args as FunctionArguments<'get-employee-vacations-count'>),
     }
     return actionMap[actionName](args)
   }
@@ -86,12 +90,12 @@ export class InteractiveChatService extends BaseChatService {
     this.bindDialogState(this.ref)
   }
 
-  openVacationListDialog(vacations: VacationResultContract[]) {
+  openVacationListDialog(vacations: VacationResultContract[], forEmployee = false) {
     this.dialog.closeAll()
     if (!vacations || !vacations.length || typeof vacations === 'string') return
     this.listRef = this.dialog.open(VacationListPopupComponent, {
       ...this.defaultConfigActionDialog(),
-      data: vacations,
+      data: forEmployee ? { vacations, forEmployee } : vacations,
       minWidth: '45vw',
     })
 
@@ -124,6 +128,24 @@ export class InteractiveChatService extends BaseChatService {
     return this.http
       .post<ChatActionResultContract<VacationResultContract[]>>(url, this.getChatPayload())
       .pipe(tap(res => this.openVacationListDialog(res.data.action_results)))
+  }
+
+  getVacationsCount(employeeId: FunctionArguments<'get-employee-vacations-count'>) {
+    const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/get-employee-vacations-count`
+    return this.http.post<ChatActionResultContract<number>>(url, {
+      arguments: employeeId,
+      chat_payload: this.getChatPayload(),
+    })
+  }
+
+  getEmployeeVacations(employeeId: FunctionArguments<'get-employee-vacation-forms'>) {
+    const url = `${this.urlService.URLS.INTERACTIVE_ACTION}/get-employee-vacation-forms`
+    return this.http
+      .post<ChatActionResultContract<VacationResultContract[]>>(url, {
+        arguments: employeeId,
+        chat_payload: this.getChatPayload(),
+      })
+      .pipe(tap(res => this.openVacationListDialog(res.data.action_results, true)))
   }
 
   approveVacation(employeeId: FunctionArguments<'approve'>): Observable<ChatActionResultContract<string>> {
@@ -220,7 +242,9 @@ export class InteractiveChatService extends BaseChatService {
     status: VacationStatus
   ): Observable<ChatActionResultContract<string>> {
     if (this.listRef && this.listRef.componentInstance) {
-      const vacation = this.listRef.componentInstance?.data?.find(el => el.Employee_ID === employeeId.employee_ID)
+      const vacation = (this.listRef.componentInstance?.data as VacationResultContract[])?.find(
+        el => el.Employee_ID === employeeId.employee_ID
+      )
 
       if (vacation) {
         vacation.changeState = true

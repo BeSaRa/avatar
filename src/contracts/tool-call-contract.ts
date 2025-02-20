@@ -28,6 +28,12 @@ interface FunctionCallMap {
     coulomn_name: string
     value: string
   }
+  'get-employee-vacation-forms': {
+    employee_ID: number
+  }
+  'get-employee-vacations-count': {
+    employee_ID: number
+  }
 }
 
 export type FunctionName = keyof FunctionCallMap

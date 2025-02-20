@@ -212,4 +212,5 @@ export interface LangKeysContract {
   total_urls: string
   web_crawling_stats: string
   reports_number: string
+  hr_agent: string
 }
