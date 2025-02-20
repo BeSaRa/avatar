@@ -871,30 +871,6 @@
     "ar": "جاري جلب الملف, يرجى الانتظار...",
     "en": "Get file data, please wait..."
   },
-  "video_analyzer": {
-    "ar": "محلل الفيديو",
-    "en": "Video Analyzer"
-  },
-  "upload_video": {
-    "ar": "ارفع فيديو",
-    "en": "Upload Video"
-  },
-  "choose_video_from_list": {
-    "ar": "اختر فيديو من القائمة",
-    "en": "Choose video from list"
-  },
-  "videos_list": {
-    "ar": "قائمة الفيديوهات",
-    "en": "Videos List"
-  },
-  "uploading_file_msg": {
-    "ar": "جاري رفع وتحليل الملف ,يرجى الانتظار..",
-    "en": "Uploading and analysis file, please wait..."
-  },
-  "file_info_msg": {
-    "ar": "جاري جلب الملف, يرجى الانتظار...",
-    "en": "Get file data, please wait..."
-  },
   "people": {
     "ar": "الأشخاص",
     "en": "People"
@@ -914,5 +890,9 @@
   "insights": {
     "ar": "المشاهد",
     "en": "Insights"
+  },
+  "hr_agent": {
+    "ar": "مساعد الموارد البشرية",
+    "en": "HR Agent"
   }
 }
