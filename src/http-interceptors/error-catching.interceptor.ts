@@ -1,20 +1,20 @@
-import { ApplicationUserService } from '@/views/auth/services/application-user.service'
 import { MessageService } from '@/services/message.service'
 import { DOCUMENT } from '@angular/common'
 import { HttpErrorResponse, HttpInterceptorFn, HttpStatusCode } from '@angular/common/http'
 import { inject } from '@angular/core'
-import { catchError, take, throwError } from 'rxjs'
+import { catchError, throwError } from 'rxjs'
+import { Router } from '@angular/router'
 
 export const errorCatchingInterceptor: HttpInterceptorFn = (req, next) => {
   const messageService = inject(MessageService)
   const doc = inject(DOCUMENT)
-  const applicationUserService = inject(ApplicationUserService)
+  const router = inject(Router)
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       console.error(error)
       if (error.status === HttpStatusCode.Unauthorized) {
-        applicationUserService.generateAccessToken().pipe(take(1)).subscribe()
+        router.navigate(['/auth/login'])
       }
       if (error.status === 0) {
         const isOnline = doc.defaultView?.navigator.onLine

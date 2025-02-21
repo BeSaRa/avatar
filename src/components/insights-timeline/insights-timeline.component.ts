@@ -1,6 +1,7 @@
-import { Instance } from '@/contracts/insights'
+import { Instance, InstanceGroup } from '@/contracts/insights'
 import { LocalService } from '@/services/local.service'
 import { VideoAnalyzerService } from '@/services/video-analyzer.service'
+import { TailwindColorWithShade } from '@/types/tailwind-colors-type'
 import { timeToSeconds } from '@/utils/insights.utils'
 import { NgClass } from '@angular/common'
 import { Component, ElementRef, inject, input, NgZone, output, ViewChild } from '@angular/core'
@@ -13,7 +14,7 @@ import { Component, ElementRef, inject, input, NgZone, output, ViewChild } from 
   styleUrl: './insights-timeline.component.scss',
 })
 export class InsightsTimelineComponent {
-  instances = input.required<Instance[]>()
+  instanceGroup = input.required<InstanceGroup[]>()
   instanceClicked = output<number>()
 
   @ViewChild('timelineSvg', { static: true }) timelineSvg!: ElementRef
@@ -32,7 +33,11 @@ export class InsightsTimelineComponent {
   videoAnalyzer = inject(VideoAnalyzerService)
   lang = inject(LocalService)
 
-  onRectMouseMoveOptimized(event: MouseEvent, isInstance = false): void {
+  onRectMouseMoveOptimized(
+    event: MouseEvent,
+    isInstance = false,
+    instanceColor?: `bg-${TailwindColorWithShade}`
+  ): void {
     const currentTime = performance.now()
 
     // Throttle mousemove events to prevent excessive change detection cycles
@@ -48,9 +53,9 @@ export class InsightsTimelineComponent {
       const percentage = (offsetX / timelineWidth) * 100
       this.tooltipPosition = offsetX - 22
       this.tooltipTime = this.percentageToTime(percentage)
-      this.tooltipBackgroundClass = 'bg-gray-800'
+      this.tooltipBackgroundClass = instanceColor ?? 'bg-gray-300'
       if (isInstance) {
-        this.tooltipBackgroundClass = 'bg-blue-600'
+        this.tooltipBackgroundClass = instanceColor ?? 'bg-primary'
       }
       // Run inside Angular's zone to trigger view update only when necessary
       this.ngZone.run(() => {
@@ -109,25 +114,44 @@ export class InsightsTimelineComponent {
   }
 
   navigateToNextInstance(): void {
-    const nextIndex = this.instances().findIndex(
-      instance => this.timeToPercentage(instance.adjustedStart) > this.currentPercentage
-    )
-    if (nextIndex !== -1) {
-      this.currentInstanceIndex = nextIndex
-      this.navigateToInstance(this.instances()[nextIndex])
+    let nextInstance: Instance | null = null
+
+    for (const group of this.instanceGroup()) {
+      for (const instance of group.instances) {
+        if (this.timeToPercentage(instance.adjustedStart) > this.currentPercentage) {
+          if (
+            !nextInstance ||
+            this.timeToPercentage(instance.adjustedStart) < this.timeToPercentage(nextInstance.adjustedStart)
+          ) {
+            nextInstance = instance
+          }
+        }
+      }
+    }
+
+    if (nextInstance) {
+      this.navigateToInstance(nextInstance)
     }
   }
 
   navigateToPreviousInstance(): void {
-    const previousIndex = this.instances()
-      .slice()
-      .reverse()
-      .findIndex(instance => this.timeToPercentage(instance.adjustedStart) < this.currentPercentage)
+    let previousInstance: Instance | null = null
 
-    if (previousIndex !== -1) {
-      const realIndex = this.instances.length - 1 - previousIndex
-      this.currentInstanceIndex = realIndex
-      this.navigateToInstance(this.instances()[realIndex])
+    for (const group of this.instanceGroup()) {
+      for (const instance of group.instances) {
+        if (this.timeToPercentage(instance.adjustedStart) < this.currentPercentage) {
+          if (
+            !previousInstance ||
+            this.timeToPercentage(instance.adjustedStart) > this.timeToPercentage(previousInstance.adjustedStart)
+          ) {
+            previousInstance = instance
+          }
+        }
+      }
+    }
+
+    if (previousInstance) {
+      this.navigateToInstance(previousInstance)
     }
   }
 

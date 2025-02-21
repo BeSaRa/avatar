@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core'
 import { InsightsTimelineComponent } from '../../insights-timeline/insights-timeline.component'
-import { Label } from '@/contracts/insights'
+import { InstanceGroup, Label } from '@/contracts/insights'
 import { NgClass } from '@angular/common'
 import { LocalService } from '@/services/local.service'
 
@@ -14,6 +14,14 @@ import { LocalService } from '@/services/local.service'
 export class VideoInsightsLabelsComponent {
   labels = input.required<Label[]>()
   selectedLabelId = signal<number | undefined>(undefined)
-  instances = computed(() => this.labels().find(el => el.id === this.selectedLabelId())?.instances ?? [])
   lang = inject(LocalService)
+  instances = computed(() => this.labels().find(el => el.id === this.selectedLabelId())?.instances ?? [])
+  instanceGroup = computed(() =>
+    this.instances().length > 0 ? ([{ instances: this.instances() }] as InstanceGroup[]) : []
+  )
+  maxItems = 10
+  showAll = signal(false)
+
+  visibleLabels = computed(() => (this.showAll() ? this.labels() : this.labels().slice(0, this.maxItems)))
+  remainingCount = computed(() => Math.max(this.labels().length - this.maxItems, 0))
 }

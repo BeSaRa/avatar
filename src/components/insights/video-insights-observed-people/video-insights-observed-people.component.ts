@@ -1,6 +1,6 @@
-import { Component, inject, input, signal } from '@angular/core'
+import { Component, computed, inject, input, Signal, signal } from '@angular/core'
 import { InsightsTimelineComponent } from '../../insights-timeline/insights-timeline.component'
-import { ObservedPeople } from '@/contracts/insights'
+import { InstanceGroup, ObservedPeople } from '@/contracts/insights'
 import { DecimalPipe, NgClass, TitleCasePipe } from '@angular/common'
 import { populateObservedPeopleData } from '@/utils/insights.utils'
 import { AppearancePercentagePipe } from '@/pipes/appearance-percentage.pipe'
@@ -16,5 +16,8 @@ import { VideoAnalyzerService } from '@/services/video-analyzer.service'
 export class VideoInsightsObservedPeopleComponent {
   observedPeople = input.required({ transform: populateObservedPeopleData })
   selectedObservedPerson = signal<ObservedPeople | undefined>(undefined)
+  instanceGroup: Signal<InstanceGroup[]> = computed(() =>
+    this.selectedObservedPerson() ? ([{ instances: this.selectedObservedPerson()?.instances }] as InstanceGroup[]) : []
+  )
   videoAnalyzer = inject(VideoAnalyzerService)
 }

@@ -1,8 +1,24 @@
 <div class="p-4 w-full">
-  <h2 class="text-xl font-semibold text-gray-700">2 emotions</h2>
-  <div class="inline-flex items-center gap-2">
-    <div class="bg-red-600 size-2 rounded-full"></div>
-    <span class="text-red-600">2.5% Angar</span>
+  <h2 class="text-xl font-semibold text-gray-700 p-4">{{ emotions().length }} {{ lang.locals.emotions }}</h2>
+
+  <div class="flex items-center gap-2">
+    @for (emotion of emotions(); track $index) {
+      <div class="inline-flex items-center gap-2">
+        <!-- Circle with background color -->
+        <div [ngClass]="colorMap[emotion.type].bg" class="size-2 rounded-full"></div>
+
+        <!-- Percentage with dynamic text color -->
+        <span [ngClass]="colorMap[emotion.type].text">
+          {{ emotion.instances | appearancePercentage: videoAnalyzer.videoLengthInSeconds() | number: '1.2-2' }}%
+        </span>
+
+        <!-- Emotion type text with dynamic color -->
+        <span [ngClass]="colorMap[emotion.type].text">
+          {{ translateMap[emotion.type] }}
+        </span>
+      </div>
+    }
   </div>
-  <app-insights-timeline [instances]="[]" />
+
+  <app-insights-timeline [instanceGroup]="instanceGroup()" />
 </div>

@@ -30,21 +30,67 @@
         </picture>
       </div>
       <div class="flex flex-col">
-        <p class="font-light text-lg text-gray-700">{{ selectedPerson()?.name }}</p>
+        <p class="font-light text-lg text-gray-700">
+          {{ selectedPerson()?.name }}
+          <svg
+            [matTooltip]="
+              (selectedPerson()?.confidence | percent: '3.2-2') +
+              'certinty' +
+              'This celebrity identification is an esitmate and might be incorrect.'
+            "
+            class="absolute size-3 -left-3 -mx-1 top-0"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path
+              d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
+          </svg>
+        </p>
         <p class="font-light text-sm text-gray-500">{{ selectedPerson()?.title }}</p>
-        <div class="flex justify-between gap-4">
+        <div class="flex justify-between gap-4 text-sm">
           <p class="text-gray-500 font-light">
-            Appeared
+            {{ lang.locals.appear_in }}
             {{
               selectedPerson()!.instances | appearancePercentage: videoAnalyzer.videoLengthInSeconds() | number: '1.2-2'
             }}
             %
+            {{ lang.locals.of_video }}
           </p>
-          <button type="button" class="bg-transparent outline-none">Show Bio</button>
-          <a [href]="selectedPerson()?.imageUrl" class="no-underline">Find in Bing</a>
+          @if (selectedPerson()?.referenceId) {
+            <button
+              type="button"
+              class="inline-flex items-center gap-2 bg-transparent outline-none text-primary"
+              (click)="toggleDescription()">
+              <span class="hover:underline"> {{ lang.locals.show_description }} </span>
+              @if (showBiography()) {
+                <svg class="size-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+                </svg>
+              } @else {
+                <svg class="size-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+                </svg>
+              }
+            </button>
+            <a
+              [href]="'https://www.bing.com/search?q=' + selectedPerson()?.name"
+              class="text-gray-500 hover:text-primary hover:underline"
+              >{{ lang.locals.find_on_bing }}</a
+            >
+          }
         </div>
+        @if (showBiography()) {
+          <div
+            class="text-gray-500 text-sm"
+            [attr.aria-hidden]="!showBiography()"
+            [attr.aria-expanded]="showBiography()">
+            <p>
+              {{ selectedPerson()?.description }}...
+              <a [href]="'https://www.bing.com/search?q=' + selectedPerson()?.name">{{ lang.locals.read_more }}</a>
+            </p>
+          </div>
+        }
       </div>
     </div>
   }
-  <app-insights-timeline [instances]="selectedPerson()?.instances ?? []" />
+  <app-insights-timeline [instanceGroup]="instanceGroup()" />
 </div>

@@ -24,17 +24,20 @@
       y="42"
       class="fill-gray-700 transition-all duration-300 opacity-0 group-hover:opacity-100"></rect>
 
-    <!-- Dynamic instances rectangles -->
-    @for (instance of instances(); track $index; let i = $index) {
-      <rect
-        [attr.width]="calculateWidth(instance)"
-        height="12"
-        [attr.x]="calculatePosition(instance)"
-        y="30"
-        (mousemove)="onRectMouseMoveOptimized($event, true)"
-        (mouseleave)="hideTooltip()"
-        class="fill-primary/70 hover:fill-primary cursor-pointer transition-colors"
-        (click)="onInstanceClick(i, instance, $event)"></rect>
+    @for (group of instanceGroup(); track $index) {
+      <!-- Dynamic instances rectangles -->
+      @for (instance of group.instances; track $index; let i = $index) {
+        <rect
+          [attr.width]="calculateWidth(instance)"
+          height="12"
+          [attr.x]="calculatePosition(instance)"
+          y="30"
+          (mousemove)="onRectMouseMoveOptimized($event, true, group?.instanceTooltipColor)"
+          (mouseleave)="hideTooltip()"
+          [ngClass]="group?.instanceColor ?? 'fill-primary'"
+          class="cursor-pointer transition-colors"
+          (click)="onInstanceClick(i, instance, $event)"></rect>
+      }
     }
   </svg>
 
@@ -43,11 +46,11 @@
     <div
       [style.left]="tooltipPosition + 'px'"
       [ngClass]="tooltipBackgroundClass"
-      class="absolute bottom-0 transform -translate-y-full bg-gray-800 text-white text-xs p-2 rounded shadow z-10">
+      class="absolute bottom-0 transform -translate-y-full text-white text-xs p-2 rounded shadow z-10">
       <div class="relative">
         {{ tooltipTime }}
         <div
-          class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-2 h-2 bg-gray-800 rotate-45"
+          class="absolute left-1/2 transform -translate-x-1/2 mt-1 w-2 h-2 rotate-45"
           [ngClass]="tooltipBackgroundClass"></div>
       </div>
     </div>

@@ -56,8 +56,9 @@
         <div class="absolute w-full flex justify-center items-center top-0 bg-black/40 p-2">
           <span [title]="video()?.file?.name" class="truncate">{{ video()?.file?.name }}</span>
         </div>
-        <video #selectedVideo class="h-full bg-transparent bg-cover" [poster]="poster()" controls>
+        <video #selectedVideo class="selected-video h-full bg-transparent bg-cover" [poster]="poster()" controls>
           <source [src]="video()?.base64" />
+          <track [src]="videoCaption()" kind="captions" default />
         </video>
       </div>
     }
@@ -77,7 +78,15 @@
         <div class="absolute w-full flex justify-center items-center top-0 bg-black/40 p-2">
           <span [title]="videoData()?.name" class="truncate">{{ videoData()?.name }}</span>
         </div>
-        <img [src]="videoData()?.thumbnail_url" loading="lazy" alt="thumbnails_{{ videoData()?.name }}" />
+
+        <video
+          #selectedVideo
+          class="selected-video h-full bg-transparent bg-cover"
+          [poster]="videoData()?.thumbnail_url"
+          controls>
+          <source [src]="videoUrl()" />
+          <track [src]="videoCaption()" kind="captions" default />
+        </video>
       </div>
     }
   </div>

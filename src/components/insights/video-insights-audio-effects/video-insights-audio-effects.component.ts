@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core'
 import { InsightsTimelineComponent } from '../../insights-timeline/insights-timeline.component'
-import { AudioEffect } from '@/contracts/insights'
+import { AudioEffect, InstanceGroup } from '@/contracts/insights'
 import { NgClass } from '@angular/common'
 import { LocalService } from '@/services/local.service'
 
@@ -14,6 +14,9 @@ import { LocalService } from '@/services/local.service'
 export class VideoInsightsAudioEffectsComponent {
   audioEffects = input.required<AudioEffect[]>()
   selectedAudioId = signal<number | undefined>(undefined)
-  instances = computed(() => this.audioEffects().find(el => el.id === this.selectedAudioId())?.instances ?? [])
   lang = inject(LocalService)
+  instances = computed(() => this.audioEffects().find(el => el.id === this.selectedAudioId())?.instances ?? [])
+  instanceGroup = computed(() =>
+    this.instances().length > 0 ? ([{ instances: this.instances() }] as InstanceGroup[]) : []
+  )
 }

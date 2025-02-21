@@ -44,3 +44,9 @@
 .arrow {
   animation: arrowMove 1.5s infinite ease-in-out;
 }
+
+.selected-video {
+  &::cue {
+    @apply text-base;
+  }
+}

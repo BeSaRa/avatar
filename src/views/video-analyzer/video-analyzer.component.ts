@@ -38,6 +38,7 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
   videoIndexerChatService = inject(VideoIndexerChatService)
   video = signal<DocumentFileType | undefined>(undefined)
   videoData = signal<VideoData | undefined>(undefined)
+  videoUrl = signal<string | undefined>(undefined)
   insights = signal<InsightsContract | undefined>(undefined)
   dialog = inject(MatDialog)
   store = inject(AppStore)
@@ -48,6 +49,7 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
   botName = signal('')
   indexingProgress = signal('')
   selectedTab = signal<'CHAT' | 'INSIGHTS'>('INSIGHTS')
+  videoCaption = signal('')
 
   ngOnInit(): void {
     this.videoAnalyzerService.timelineSeek
@@ -63,7 +65,6 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
 
   async uploadVideo(event: Event): Promise<void> {
     const target = event.target as HTMLInputElement
-
     if (!target?.files || target.files.length === 0) {
       console.warn('No files selected for upload.')
       return
@@ -75,70 +76,82 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
 
       // Upload files and handle the response
       const uploadedFiles = await this.fileUploaderService.uploadFiles(files)
-
       if (!uploadedFiles?.length) {
         throw new Error('File upload failed. No files returned from the server.')
       }
 
-      const uploadedFile = uploadedFiles[0]
-      this.videoAnalyzerService
-        .uploadVideo(uploadedFile.file)
-        .pipe(
-          takeUntil(this.destroy$),
-          tap(() => {
-            this.chatContainer()?.clearChatHistory()
-            this.video.set(uploadedFile)
-            this.videoData.set(undefined)
-            this.isLoading.set('GET_INFO')
-          }),
-          switchMap(({ data }) =>
-            this.videoAnalyzerService.indexVideo(data.video_id).pipe(
-              expand(res => {
-                if (res.status_code !== 200) {
-                  this.indexingProgress.set(
-                    ('videos' in res.data && Array.isArray(res.data.videos)
-                      ? res.data?.videos?.[0]?.processingProgress
-                      : '') || ''
-                  ) // Update UI with progress
-                  return this.videoAnalyzerService.indexVideo(data.video_id).pipe(delay(2000))
-                }
-                return EMPTY
-              }),
-              filter(res => res.status_code === 200), // Only process when status is 200
-              tap(({ data }) => {
-                this.videoAnalyzerService.videoDuration.set(data.res_data.duration)
-                this.insights.set(data.res_data)
-              }),
-              switchMap(() =>
-                this.videoAnalyzerService.startVideoChat(data.video_id).pipe(
-                  tap(chatData => {
-                    this.videoIndexerChatService.conversationId.set(chatData.data)
-                  })
-                )
-              ),
-              catchError(error => {
-                console.error('Error during video indexing:', error)
-                return EMPTY
-              }),
-              finalize(() => {
-                this.isLoading.set(undefined)
-                this.indexingProgress.set('')
-              })
-            )
-          ),
-          catchError(error => {
-            console.error('Error during video processing:', error)
-            return EMPTY
-          }),
-          finalize(() => {
-            this.generateVideoThumbnail()
-          })
-        )
-        .subscribe()
+      // Process the uploaded video
+      this.handleVideoUpload(uploadedFiles[0])
     } catch (error) {
       console.error('Error during file upload:', error)
       this.isLoading.set(undefined)
     }
+  }
+
+  /**
+   * Handles the uploaded video by clearing old data and starting processing.
+   */
+  private handleVideoUpload(uploadedFile: DocumentFileType) {
+    this.videoAnalyzerService
+      .uploadVideo(uploadedFile.file)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => {
+          this.chatContainer()?.clearChatHistory()
+          this.video.set(uploadedFile)
+          this.videoData.set(undefined)
+          this.videoUrl.set(undefined)
+          this.isLoading.set('GET_INFO')
+        }),
+        switchMap(({ data }) => this.processUploadedVideo(data.video_id)),
+        catchError(error => {
+          console.error('Error during video processing:', error)
+          return EMPTY
+        }),
+        finalize(() => this.generateVideoThumbnail())
+      )
+      .subscribe()
+  }
+
+  /**
+   * Processes the uploaded video by indexing and updating UI state.
+   */
+  private processUploadedVideo(videoId: string) {
+    return this.videoAnalyzerService.indexVideo(videoId).pipe(
+      expand(res => {
+        if (res.status_code !== 200) {
+          this.indexingProgress.set(
+            ('videos' in res.data && Array.isArray(res.data.videos) ? res.data?.videos?.[0]?.processingProgress : '') ||
+              ''
+          ) // Update UI with progress
+          return this.videoAnalyzerService.indexVideo(videoId).pipe(delay(2000))
+        }
+        return EMPTY
+      }),
+      filter(res => res.status_code === 200), // Proceed only when status is 200
+      tap(({ data }) => {
+        this.videoAnalyzerService.videoDuration.set(data.res_data.duration)
+        this.insights.set(data.res_data)
+      }),
+      switchMap(({ data }) =>
+        this.videoAnalyzerService.getVttFile(data.video_caption).pipe(tap(vtt => this.videoCaption.set(vtt)))
+      ),
+      switchMap(() =>
+        this.videoAnalyzerService.startVideoChat(videoId).pipe(
+          tap(chatData => {
+            this.videoIndexerChatService.conversationId.set(chatData.data)
+          })
+        )
+      ),
+      catchError(error => {
+        console.error('Error during video indexing:', error)
+        return EMPTY
+      }),
+      finalize(() => {
+        this.isLoading.set(undefined)
+        this.indexingProgress.set('')
+      })
+    )
   }
 
   private async generateVideoThumbnail(): Promise<void> {
@@ -171,34 +184,43 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
       .pipe(
         tap(() => this.isLoading.set('GET_INFO')),
         filter((video): video is VideoData => !!video),
-        switchMap(video => {
-          return this.videoAnalyzerService.indexVideo(video.id).pipe(
-            takeUntil(this.destroy$),
-            tap(({ data }) => {
-              this.videoAnalyzerService.videoDuration.set(data.res_data.duration)
-              this.insights.set(data.res_data)
-              // Clear chat history and update video-related data
-              this.chatContainer()?.clearChatHistory()
-              this.video.set(undefined)
-              this.videoData.set(video)
-            }),
-            switchMap(() =>
-              this.videoAnalyzerService.startVideoChat(video.id).pipe(
-                tap(chatData => {
-                  this.videoIndexerChatService.conversationId.set(chatData.data)
-                })
-              )
-            ),
-            finalize(() => this.isLoading.set(undefined)),
-
-            // Error handling: log the error or notify the user
-            catchError(error => {
-              console.error('Error fetching video data:', error)
-              return EMPTY // Prevents further operations on error
-            })
-          )
+        switchMap(video => this.handleSelectedVideo(video)),
+        finalize(() => this.isLoading.set(undefined)),
+        catchError(error => {
+          console.error('Error fetching video data:', error)
+          return EMPTY
         })
       )
       .subscribe()
+  }
+
+  /**
+   * Handles operations after a video is selected.
+   */
+  private handleSelectedVideo(video: VideoData) {
+    return this.videoAnalyzerService.indexVideo(video.id).pipe(
+      takeUntil(this.destroy$),
+      tap(({ data }) => {
+        this.videoAnalyzerService.videoDuration.set(data.res_data.duration)
+        this.insights.set(data.res_data)
+
+        // Clear chat history and update video-related data
+        this.chatContainer()?.clearChatHistory()
+        this.video.set(undefined)
+        this.videoData.set(video)
+        this.videoUrl.set(data.video_stream_url)
+
+        // Reload the video source
+        this.selectedVideo()?.nativeElement.load()
+      }),
+      switchMap(({ data }) =>
+        this.videoAnalyzerService.getVttFile(data.video_caption).pipe(tap(vtt => this.videoCaption.set(vtt)))
+      ),
+      switchMap(() =>
+        this.videoAnalyzerService
+          .startVideoChat(video.id)
+          .pipe(tap(chatData => this.videoIndexerChatService.conversationId.set(chatData.data)))
+      )
+    )
   }
 }
