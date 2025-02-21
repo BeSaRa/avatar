@@ -1,17 +1,123 @@
 <div class="p-4 w-full">
-  <h2 class="text-xl font-semibold text-gray-700">27 Named Entity</h2>
-  <div class="flex flex-col">
-    <div>
-      <span class="text-xs text-gray-400">13 Location</span>
-    </div>
-    <div>
-      <span class="rounded-xl text-xs border border-gray-700 text-700 px-4 text-gray-700">Science</span>
-    </div>
+  <h2 class="text-xl font-semibold text-gray-700 p-4">{{ entitiesCount() }} {{ lang.locals.named_entity }}</h2>
+  <div class="flex flex-col space-y-2">
+    @if (namedLocations().length) {
+      <ng-container
+        *ngTemplateOutlet="
+          namedEntity;
+          context: { $implicit: namedLocations, type: 'LOCATION', label: lang.locals.locations }
+        "></ng-container>
+    }
+    @if (namedPeople().length) {
+      <ng-container
+        *ngTemplateOutlet="
+          namedEntity;
+          context: { $implicit: namedPeople, type: 'PEOPLE', label: lang.locals.people }
+        "></ng-container>
+    }
+    @if (brands().length) {
+      <ng-container
+        *ngTemplateOutlet="
+          namedEntity;
+          context: { $implicit: brands, type: 'BRAND', label: lang.locals.brands }
+        "></ng-container>
+    }
   </div>
-  <div class="felx flex-row justify-between items-center text-gray-500">
-    <span class="font-light">COCO</span>
-    <button type="button" class="bg-transparent outline-none">fff</button>
-    <a class="no-underline"> BING PONG </a>
-  </div>
-  <app-insights-timeline [instances]="[]" />
+  @if (selectedEntity() && selectedEntity()?.referenceId) {
+    <div class="flex flex-col space-y-2 p-4">
+      <div class="flex flex-row gap-8 items-center text-gray-700 text-sm">
+        <span class="relative text-base"
+          >{{ selectedEntity()?.name }}
+          <svg
+            [matTooltip]="
+              lang.locals.appear_in +
+              (selectedEntity()!.instances
+                | appearancePercentage: videoAnalyzer.videoLengthInSeconds()
+                | number: '1.2-2') +
+              '%. ' +
+              lang.locals.of_video +
+              (selectedEntity()?.confidence | percent: '3.2-2') +
+              lang.locals.certainty +
+              '. ' +
+              lang.locals.this_is_an_estimated_identification_and_might_be_incorrect
+            "
+            class="absolute size-3 -left-3 -mx-1 top-0"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path
+              d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
+          </svg>
+        </span>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 bg-transparent outline-none text-primary"
+          (click)="toggleDescription()">
+          <span class="hover:underline"> {{ lang.locals.show_description }} </span>
+          @if (showDescription()) {
+            <svg class="size-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+            </svg>
+          } @else {
+            <svg class="size-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          }
+        </button>
+        <a
+          [href]="'https://www.bing.com/search?q=' + selectedEntity()?.referenceId"
+          class="hover:text-primary hover:underline"
+          >{{ lang.locals.find_on_bing }}</a
+        >
+      </div>
+
+      @if (showDescription()) {
+        <div
+          class="text-gray-500 text-sm"
+          [attr.aria-hidden]="!showDescription()"
+          [attr.aria-expanded]="showDescription()">
+          <p>{{ selectedEntity()?.description }}... <a [href]="selectedEntity()?.referenceUrl">read more</a></p>
+        </div>
+      }
+    </div>
+  }
+  <app-insights-timeline [instanceGroup]="instanceGroup()" />
 </div>
+
+<ng-template #namedEntity let-entities let-type="type" let-label="label">
+  <div>
+    <span class="text-xs text-gray-400 p-4">{{ entities().length }} {{ label }}</span>
+  </div>
+  <div class="flex flex-wrap gap-2 p-4 !pt-0">
+    @if (entities().length > maxItems && !showAll()[type]) {
+      @for (entity of visibleEntities[type](); track $index) {
+        <button
+          type="button"
+          (click)="selectedEntity.set(entity); selectedEntityType.set(type)"
+          [ngClass]="{
+            '!bg-primary !text-white': this.selectedEntity()?.id === entity.id && this.selectedEntityType() === type,
+          }"
+          class="bg-transparent outline-none rounded-xl text-sm border border-gray-700 text-700 px-4 text-gray-700">
+          {{ entity.name }}
+        </button>
+      }
+      <button
+        [title]="lang.locals.show_more"
+        class="bg-gray-300 text-gray-700 rounded-xl text-sm border border-gray-700 px-4"
+        (click)="toggleShowAll(type)">
+        +{{ remainingCount[type]() }}
+      </button>
+    } @else {
+      @for (entity of entities(); track $index) {
+        <button
+          type="button"
+          (click)="selectedEntity.set(entity); selectedEntityType.set(type)"
+          [ngClass]="{
+            '!bg-primary !text-white': this.selectedEntity()?.id === entity.id && this.selectedEntityType() === type,
+          }"
+          class="bg-transparent outline-none rounded-xl text-sm border border-gray-700 text-700 px-4 text-gray-700">
+          {{ entity.name }}
+        </button>
+      }
+    }
+  </div>
+</ng-template>

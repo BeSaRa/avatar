@@ -1,3 +1,4 @@
+import { TailwindColorWithShade } from '@/types/tailwind-colors-type'
 export interface InsightsContract {
   partition?: unknown
   description?: string
@@ -41,6 +42,12 @@ export interface Instance {
   adjustedEnd: string
   start: string
   end: string
+}
+
+export interface InstanceGroup {
+  instanceColor?: `fill-${TailwindColorWithShade}`
+  instanceTooltipColor?: `bg-${TailwindColorWithShade}`
+  instances: Instance[]
 }
 
 export interface Clothing {
@@ -96,14 +103,26 @@ export interface Label extends Appearance<Instance & { confidence: number }> {
   language: string
 }
 
-interface NamedPerson extends Appearance<TimeRange> {
-  referenceId?: string | null
-  referenceUrl?: string | null
-  confidence: number
-  description?: string | null
-  seenDuration: number
+export interface NamedPeople extends Appearance<Instance & { instanceSource: string }> {
   id: number
   name: string
+  referenceId: string | null
+  referenceUrl: string | null
+  description: string | null
+  tags: string[]
+  confidence: number
+  isCustom: boolean
+}
+
+export interface NamedLocation extends Appearance<Instance & { instanceSource: string }> {
+  id: number
+  name: string
+  referenceId: string | null
+  referenceUrl: string | null
+  description: string | null
+  tags: string[]
+  confidence: number
+  isCustom: boolean
 }
 
 export interface TopicGroupList {
@@ -134,18 +153,44 @@ interface TranscriptEntry extends Appearance<Instance> {
   language: string
 }
 
-interface Scene extends Appearance<Instance> {
+export interface ProcessedKeyFrame {
+  id: number
+  image: string | null
+  instance: Unpacked<KeyFrame['instances']>
+  tooltipMessage: string
+}
+
+type Unpacked<T> = T extends (infer U)[] ? U : never
+
+export interface ProcessedShot {
+  id: number
+  image: string | null
+  instance: Unpacked<Shot['instances']>
+  tooltipMessage: string
+  keyframes: ProcessedKeyFrame[]
+}
+
+export interface ProcessedScene {
+  scene_id: number
+  scene_instance: Unpacked<Scene['instances']>
+  scene_image: string | null
+  shots: ProcessedShot[]
+  tooltipMessage: string
+}
+
+export interface Scene extends Appearance<Instance> {
   id: number
 }
 
-interface Shot extends Appearance<Instance> {
+export interface Shot extends Appearance<Instance> {
   id: number
-  tags: string[]
+  tags?: string[]
   keyFrames: KeyFrame[]
 }
 
-interface KeyFrame extends Appearance<Instance & { thumbnailId: string }> {
+export interface KeyFrame extends Appearance<Instance & { thumbnail_url: string }> {
   id: number
+  thumbnail_url: string
 }
 
 interface Speaker extends Appearance<Instance> {
@@ -185,8 +230,11 @@ export interface VideoInsights {
   labels?: Label[]
   scenes: Scene[]
   shots: Shot[]
+  emotions?: Emotion[]
   audioEffects?: AudioEffect[]
-  namedPeople: NamedPerson[]
+  brands?: Brand[]
+  namedPeople?: NamedPeople[]
+  namedLocations?: NamedLocation[]
   sentiments: Sentiment[]
   blocks: TextBlock[]
   speakers: Speaker[]
@@ -211,17 +259,28 @@ export interface VideoInsights {
   viewToken?: string | null
 }
 
-type EmotionType = 'Anger' | 'Fear' | 'Joy' | 'Neutral' | 'Sad'
+export type EmotionType = 'Anger' | 'Fear' | 'Joy' | 'Neutral' | 'Sad'
 
-interface Emotion extends Appearance<Instance> {
+export interface Emotion extends Appearance<Instance & { confidence: number }> {
   id: number
   type: EmotionType
-  confidence: number
 }
 
 export interface AudioEffect extends Appearance<Instance & { confidence: number }> {
   id: number
   type: string
+}
+
+export interface Brand extends Appearance<Instance & { brandType: string; instanceSource: string }> {
+  id: number
+  referenceType: string
+  name: string
+  referenceId: string | null
+  referenceUrl: string | null
+  description: string | null
+  tags: string[]
+  confidence: number
+  isCustom: boolean
 }
 
 interface Video {
@@ -255,7 +314,7 @@ interface SummarizedInsights {
   framePatterns: string[]
   brands: string[]
   namedLocations: string[]
-  namedPeople: NamedPerson[]
+  namedPeople: NamedPeople[]
   statistics: VideoStatistics
   topics: Topic[]
 }

@@ -18,5 +18,21 @@
     <hr class="h-0.5 bg-gray-200" />
     <app-video-insights-labels [labels]="videoInsights().labels!" />
   }
-  <hr class="h-0.5 bg-gray-200" />
+  @if (
+    videoInsights().brands?.length || videoInsights().namedLocations?.length || videoInsights().namedPeople?.length
+  ) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-named-entities
+      [brands]="videoInsights().brands ?? []"
+      [namedLocations]="videoInsights().namedLocations ?? []"
+      [namedPeople]="videoInsights().namedPeople ?? []" />
+  }
+  @if (videoInsights().emotions?.length) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-emotions [emotions]="videoInsights().emotions!" />
+  }
+  @if (videoInsights().scenes.length) {
+    <hr class="h-0.5 bg-gray-200" />
+    <app-video-insights-scenes [scenes]="videoInsights().scenes" [shots]="videoInsights().shots" />
+  }
 </div>

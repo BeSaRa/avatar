@@ -1,1 +1,83 @@
-<p>video-insights-scenes works!</p>
+<div class="p-4 w-full">
+  <h2 class="text-xl font-semibold text-gray-700 p-4">{{ scenes().length }} {{ lang.locals.scenes }}</h2>
+  <div class="flex flex-col space-y-2">
+    <div class="flex flex-wrap gap-2">
+      @for (scene of processedScenes(); track $index) {
+        <div
+          role="option"
+          [matTooltip]="scene.tooltipMessage"
+          [attr.aria-selected]="this.selectedScene()?.scene_id === scene.scene_id"
+          class="relative w-24 h-14 bg-transparent transition-all hover:scale-110 ease-in-out duration-300"
+          tabindex="-1"
+          (keydown)="this.selectedScene.set(scene)"
+          (click)="this.selectedScene.set(scene)">
+          <picture
+            [ngClass]="{
+              'outline outline-2 outline-offset-2 outline-primary': selectedScene()?.scene_id === scene.scene_id,
+            }"
+            class="flex justify-center items-center w-24 h-14 cursor-pointer">
+            <div
+              [style.backgroundImage]="'url(' + scene.scene_image + ')'"
+              class="relative w-24 h-14 bg-cover bg-center"></div>
+          </picture>
+        </div>
+      }
+    </div>
+    @if (selectedShots().length) {
+      <div class="flex flex-col space-y-2">
+        <span class="text-sm text-gray-400">{{ selectedShots().length }} {{ lang.locals.shots_in_this_scene }}</span>
+        <div class="flex flex-wrap gap-2">
+          @for (shot of selectedShots(); track $index) {
+            <div
+              role="option"
+              [matTooltip]="shot.tooltipMessage"
+              [attr.aria-selected]="this.selectedShot()?.id === shot.id"
+              class="relative w-24 h-14 bg-transparent transition-all hover:scale-110 ease-in-out duration-300"
+              tabindex="-1"
+              (keydown)="this.selectedShot.set(shot)"
+              (click)="this.selectedShot.set(shot)">
+              <picture
+                [ngClass]="{
+                  'outline outline-2 outline-offset-2 outline-primary': selectedShot()?.id === shot.id,
+                }"
+                class="flex justify-center items-center w-24 h-14 cursor-pointer">
+                <div
+                  [style.backgroundImage]="'url(' + shot.image + ')'"
+                  class="relative w-24 h-14 bg-cover bg-center"></div>
+              </picture>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (selectedKeyFrames().length) {
+      <div class="flex flex-col space-y-2">
+        <span class="text-sm text-gray-400"
+          >{{ selectedKeyFrames().length }} {{ lang.locals.keyframes_in_this_shot }}</span
+        >
+        <div class="flex flex-wrap gap-2">
+          @for (keyFrame of selectedKeyFrames(); track $index) {
+            <div
+              role="option"
+              [matTooltip]="keyFrame.tooltipMessage"
+              [attr.aria-selected]="this.selectedKeyFrame()?.id === keyFrame.id"
+              class="relative w-24 h-14 bg-transparent transition-all hover:scale-110 ease-in-out duration-300"
+              tabindex="-1"
+              (keydown)="this.selectedKeyFrame.set(keyFrame)"
+              (click)="this.selectedKeyFrame.set(keyFrame)">
+              <picture
+                [ngClass]="{
+                  'outline outline-2 outline-offset-2 outline-primary': selectedKeyFrame()?.id === keyFrame.id,
+                }"
+                class="flex justify-center items-center w-24 h-14 cursor-pointer">
+                <div
+                  [style.backgroundImage]="'url(' + keyFrame.image + ')'"
+                  class="relative w-24 h-14 bg-cover bg-center"></div>
+              </picture>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

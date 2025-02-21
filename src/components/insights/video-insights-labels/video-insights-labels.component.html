@@ -2,16 +2,34 @@
   <h2 class="text-xl font-semibold text-gray-700 p-4">{{ labels().length }} {{ lang.locals.labels }}</h2>
   <div class="flex p-4">
     <div class="flex flex-wrap gap-2">
-      @for (label of labels(); track $index) {
+      @if (labels().length > maxItems && !showAll()) {
+        @for (label of visibleLabels(); track $index) {
+          <button
+            type="button"
+            (click)="selectedLabelId.set(label.id)"
+            [ngClass]="{ '!bg-primary !text-white': this.selectedLabelId() === label.id }"
+            class="bg-transparent outline-none rounded-xl text-sm border border-gray-700 text-700 px-4 text-gray-700">
+            {{ label.name }}
+          </button>
+        }
         <button
-          type="button"
-          (click)="selectedLabelId.set(label.id)"
-          [ngClass]="{ '!bg-primary !text-white': this.selectedLabelId() === label.id }"
-          class="bg-transparent outline-none rounded-xl text-sm border border-gray-700 text-700 px-4 text-gray-700">
-          {{ label.name }}
+          [title]="lang.locals.show_more"
+          class="bg-gray-300 text-gray-700 rounded-xl text-sm border border-gray-700 px-4"
+          (click)="showAll.set(true)">
+          +{{ remainingCount() }}
         </button>
+      } @else {
+        @for (label of labels(); track $index) {
+          <button
+            type="button"
+            (click)="selectedLabelId.set(label.id)"
+            [ngClass]="{ '!bg-primary !text-white': this.selectedLabelId() === label.id }"
+            class="bg-transparent outline-none rounded-xl text-sm border border-gray-700 text-700 px-4 text-gray-700">
+            {{ label.name }}
+          </button>
+        }
       }
     </div>
   </div>
-  <app-insights-timeline [instances]="instances()" />
+  <app-insights-timeline [instanceGroup]="instanceGroup()" />
 </div>
