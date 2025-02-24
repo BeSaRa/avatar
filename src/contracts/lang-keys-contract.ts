@@ -320,4 +320,5 @@ export interface LangKeysContract {
   welcome_back: string
   login_failed: string
   welcome_user: string
+  bot_welcom_message: string
 }
