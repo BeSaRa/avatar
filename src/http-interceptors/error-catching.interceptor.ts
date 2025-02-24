@@ -1,6 +1,6 @@
 import { MessageService } from '@/services/message.service'
 import { DOCUMENT } from '@angular/common'
-import { HttpErrorResponse, HttpInterceptorFn, HttpStatusCode } from '@angular/common/http'
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http'
 import { inject } from '@angular/core'
 import { catchError, throwError } from 'rxjs'
 import { Router } from '@angular/router'
@@ -8,14 +8,10 @@ import { Router } from '@angular/router'
 export const errorCatchingInterceptor: HttpInterceptorFn = (req, next) => {
   const messageService = inject(MessageService)
   const doc = inject(DOCUMENT)
-  const router = inject(Router)
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       console.error(error)
-      if (error.status === HttpStatusCode.Unauthorized) {
-        router.navigate(['/auth/login'])
-      }
       if (error.status === 0) {
         const isOnline = doc.defaultView?.navigator.onLine
         switch (isOnline) {
@@ -36,6 +32,7 @@ export const errorCatchingInterceptor: HttpInterceptorFn = (req, next) => {
 
 const handelServerError = (error: HttpErrorResponse) => {
   const messageService = inject(MessageService)
+  const router = inject(Router)
   switch (error.status) {
     case 400:
     case 409:
@@ -43,7 +40,7 @@ const handelServerError = (error: HttpErrorResponse) => {
       messageService.showError(error.error['message'])
       break
     case 401:
-      messageService.showError('Not Auth')
+      router.navigate(['auth/login'])
       break
 
     case 403:
