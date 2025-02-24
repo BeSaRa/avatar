@@ -32,7 +32,11 @@
         }
         @if (selectedTab() === 'INSIGHTS') {
           @if (insights() && insights()!.videos[0]) {
-            <app-video-insights class="w-full" [videoInsights]="insights()!.videos[0].insights" />
+            <app-video-insights
+              class="w-full"
+              [videoSummary]="videoSummary()"
+              [videoInsights]="insights()!.videos[0].insights"
+              (onInsightsLangChange)="handelTranslateInsights($event)" />
           }
         }
       </div>
@@ -41,15 +45,22 @@
   <div
     [ngClass]="{ '!w-full': !video() && !videoData() }"
     class="flex flex-col justify-center items-center space-y-6 w-1/2 transition-all ease-out duration-200">
-    <input type="file" accept="video/*" class="hidden" id="video_uploader" (change)="uploadVideo($event)" />
-    <label
-      for="video_uploader"
-      class="inline-flex gap-2 justify-center items-center text-xl shadow-lg border-none w-2/5 text-center focus:outline-none hover:scale-110 hover:border-gray-500 cursor-pointer bg-gray-300 text-gray-700 rounded-md p-4 transition-all ease-in-out duration-200"
-      >{{ lang.locals.upload_video }}
+    @if (showSupportedLanguage()) {
+      <div @slideFromBottom class="flex flex-col">
+        <span class="text-sm text-gray-300">{{ lang.locals.choose_language }}</span>
+        <app-supported-language (onLanguageChange)="onLanguageSelected($event)" />
+      </div>
+    }
+    <input type="file" accept="video/*" class="hidden" id="video_uploader" (change)="uploadVideo($event)" #fileInput />
+    <button
+      (click)="toggleLanguageDropdown($event)"
+      class="inline-flex gap-2 justify-center items-center text-xl shadow-lg border-none w-2/5 text-center focus:outline-none hover:scale-110 hover:border-gray-500 cursor-pointer bg-gray-300 text-gray-700 rounded-md p-4 transition-all ease-in-out duration-200">
+      {{ lang.locals.upload_video }}
       <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path
-          d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" /></svg
-    ></label>
+          d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 2L6.46 7.46L7.88 8.88L11 5.75V15H13V5.75L16.13 8.88L17.55 7.45L12 2Z" />
+      </svg>
+    </button>
     @if (video()) {
       <div
         class="relative flex justify-center items-center w-2/3 h-60 rounded-md border border-gray-300 shadow-sm bg-black overflow-hidden">
@@ -83,8 +94,10 @@
           #selectedVideo
           class="selected-video h-full bg-transparent bg-cover"
           [poster]="videoData()?.thumbnail_url"
+          appSyncVideoAudio
+          [videoUrl]="videoUrl()!"
+          [audioUrl]="audioUrl()!"
           controls>
-          <source [src]="videoUrl()" />
           <track [src]="videoCaption()" kind="captions" default />
         </video>
       </div>

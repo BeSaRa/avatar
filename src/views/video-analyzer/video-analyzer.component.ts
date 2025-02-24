@@ -15,20 +15,29 @@ import { ChatContainerComponent } from '../../components/chat-container/chat-con
 import { BaseChatService } from '@/services/base-chat.service'
 import { VideoData } from '@/contracts/media-video-result-contract'
 import { NgClass } from '@angular/common'
-import { slideIn } from '@/animations/fade-in-slide'
+import { slideFromBottom, slideIn } from '@/animations/fade-in-slide'
 import { InsightsContract } from '@/contracts/insights'
 import { VideoInsightsComponent } from '../../components/video-insights/video-insights.component'
 import { secondsToTime } from '@/utils/insights.utils'
+import { SyncVideoAudioDirective } from '@/directives/sync-video-audio.directive'
+import { SupportedLanguageComponent } from '../../components/insights/supported-language/supported-language.component'
 
 @Component({
   selector: 'app-video-analyzer',
   standalone: true,
-  imports: [ReactiveFormsModule, ChatContainerComponent, NgClass, VideoInsightsComponent],
+  imports: [
+    ReactiveFormsModule,
+    ChatContainerComponent,
+    NgClass,
+    VideoInsightsComponent,
+    SyncVideoAudioDirective,
+    SupportedLanguageComponent,
+  ],
   templateUrl: './video-analyzer.component.html',
   providers: [
     { provide: BaseChatService, useExisting: VideoIndexerChatService }, // Providing the actual implementation
   ],
-  animations: [slideIn],
+  animations: [slideIn, slideFromBottom],
   styleUrl: './video-analyzer.component.scss',
 })
 export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements OnInit {
@@ -39,6 +48,7 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
   video = signal<DocumentFileType | undefined>(undefined)
   videoData = signal<VideoData | undefined>(undefined)
   videoUrl = signal<string | undefined>(undefined)
+  audioUrl = signal<string | undefined>(undefined)
   insights = signal<InsightsContract | undefined>(undefined)
   dialog = inject(MatDialog)
   store = inject(AppStore)
@@ -50,6 +60,11 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
   indexingProgress = signal('')
   selectedTab = signal<'CHAT' | 'INSIGHTS'>('INSIGHTS')
   videoCaption = signal('')
+  videoId = signal('')
+  videoSummary = signal('')
+  videoLang = signal('en-US')
+  showSupportedLanguage = signal(false)
+  fileInput = viewChild.required<ElementRef<HTMLInputElement>>('fileInput')
 
   ngOnInit(): void {
     this.videoAnalyzerService.timelineSeek
@@ -93,7 +108,7 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
    */
   private handleVideoUpload(uploadedFile: DocumentFileType) {
     this.videoAnalyzerService
-      .uploadVideo(uploadedFile.file)
+      .uploadVideo(uploadedFile.file, this.videoLang())
       .pipe(
         takeUntil(this.destroy$),
         tap(() => {
@@ -131,13 +146,15 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
       filter(res => res.status_code === 200), // Proceed only when status is 200
       tap(({ data }) => {
         this.videoAnalyzerService.videoDuration.set(data.res_data.duration)
+        this.videoId.set(videoId)
         this.insights.set(data.res_data)
+        this.videoSummary.set(data.summary)
       }),
       switchMap(({ data }) =>
         this.videoAnalyzerService.getVttFile(data.video_caption).pipe(tap(vtt => this.videoCaption.set(vtt)))
       ),
       switchMap(() =>
-        this.videoAnalyzerService.startVideoChat(videoId).pipe(
+        this.videoAnalyzerService.startVideoChat(videoId, this.videoLang()).pipe(
           tap(chatData => {
             this.videoIndexerChatService.conversationId.set(chatData.data)
           })
@@ -202,25 +219,59 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
       takeUntil(this.destroy$),
       tap(({ data }) => {
         this.videoAnalyzerService.videoDuration.set(data.res_data.duration)
+        this.videoId.set(video.id)
         this.insights.set(data.res_data)
 
         // Clear chat history and update video-related data
         this.chatContainer()?.clearChatHistory()
         this.video.set(undefined)
         this.videoData.set(video)
-        this.videoUrl.set(data.video_stream_url)
-
-        // Reload the video source
-        this.selectedVideo()?.nativeElement.load()
       }),
       switchMap(({ data }) =>
-        this.videoAnalyzerService.getVttFile(data.video_caption).pipe(tap(vtt => this.videoCaption.set(vtt)))
+        this.videoAnalyzerService.getVttFile(data.video_caption).pipe(
+          tap(vtt => {
+            this.videoCaption.set(vtt)
+            this.videoUrl.set(data.video_stream_url)
+            this.audioUrl.set(data.audio_stream_url)
+            this.videoSummary.set(data.summary)
+
+            // Reload the video source
+            this.selectedVideo()?.nativeElement.load()
+          })
+        )
       ),
       switchMap(() =>
         this.videoAnalyzerService
-          .startVideoChat(video.id)
+          .startVideoChat(video.id, this.videoLang())
           .pipe(tap(chatData => this.videoIndexerChatService.conversationId.set(chatData.data)))
       )
     )
+  }
+  handelTranslateInsights(lang: string) {
+    this.videoAnalyzerService
+      .indexVideo(this.videoId(), lang)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(({ data }) => {
+          this.videoSummary.set(data.summary)
+          this.insights.set(data.res_data)
+        })
+      )
+      .subscribe()
+  }
+
+  toggleLanguageDropdown(event: Event) {
+    event.preventDefault() // Prevent default click action
+    this.showSupportedLanguage.set(true) // Show the dropdown
+  }
+
+  onLanguageSelected(event: string) {
+    if (event) {
+      this.videoLang.set(event)
+      this.showSupportedLanguage.set(false) // Hide dropdown
+      setTimeout(() => {
+        this.fileInput().nativeElement.click() // Trigger file selection
+      }, 100)
+    }
   }
 }

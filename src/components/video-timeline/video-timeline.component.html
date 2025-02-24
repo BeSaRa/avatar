@@ -1,0 +1,14 @@
+<div class="w-full flex flex-col">
+  @for (script of transcript(); track $index) {
+    <div class="flex justify-center items-center gap-2 p-2 hover:bg-gray-300 hover:text-gray-500">
+      <div class="w-3/12">
+        <div class="bg-primary rounded-sm text-xs w-16 text-center p-1 text-white">
+          <span>{{ script.instances[0].adjustedStart | timeFormat }}</span>
+        </div>
+      </div>
+      <div class="w-9/12">
+        <p class="text-gray-500">{{ script.text }}</p>
+      </div>
+    </div>
+  }
+</div>
