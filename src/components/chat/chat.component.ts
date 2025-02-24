@@ -129,6 +129,7 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   toggleChat() {
     this.status.update(value => !value)
+    this.chatService.checkInteractivity()
   }
 
   fullScreenToggle() {

@@ -1290,5 +1290,9 @@
   "welcome_user": {
     "ar": "مرحبًا بعودتك، ",
     "en": "Welcome back,"
+  },
+  "bot_welcom_message": {
+    "ar": "مرحبا بك في المساعد القانوني الذكي",
+    "en": "Welcome to the AI Legal Assistant"
   }
 }
