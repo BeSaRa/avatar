@@ -1,0 +1,49 @@
+<div class="relative w-48">
+  <!-- Button to trigger dropdown -->
+  <button
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    (click)="toggleDropdown()"
+    class="w-full flex justify-between items-center px-4 py-2 text-gray-700 focus:bg-gray-300 bg-gray-200 rounded-md text-xs">
+    <span class="flex items-center space-x-2 gap-2">
+      <svg class="fill-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 text-gray-500">
+        <path
+          d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+      </svg>
+      <span class="mx-1">{{ selectedLanguage() || 'Choose a language' }}</span>
+    </span>
+
+    <!-- Chevron Up/Down -->
+    @if (!isDropdownOpen) {
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" viewBox="0 0 24 24">
+        <path d="M7 10l5 5 5-5H7z" />
+      </svg>
+    } @else {
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" viewBox="0 0 24 24">
+        <path d="M7 14l5-5 5 5H7z" />
+      </svg>
+    }
+  </button>
+
+  <!-- Dropdown -->
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isDropdownOpen()"
+    [cdkConnectedOverlayPositions]="dropdownPositions"
+    (overlayOutsideClick)="isDropdownOpen.set(false)"
+    [cdkConnectedOverlayWidth]="trigger.elementRef.nativeElement.offsetWidth"
+    (detach)="isDropdownOpen.set(false)">
+    <div appPerfectScroll class="bg-white border border-gray-300 max-h-48 shadow-lg rounded-md w-full">
+      @for (language of languages; track language.languageCode) {
+        <button
+          type="button"
+          (click)="selectLanguage(language.name, language.languageCode)"
+          [ngClass]="{ '!bg-gray-100': language.name === selectedLanguage() }"
+          class="w-full px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
+          <span>{{ language.name }}</span>
+        </button>
+      }
+    </div>
+  </ng-template>
+</div>

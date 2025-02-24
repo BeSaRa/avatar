@@ -1,38 +1,88 @@
-<div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="bg-gray-100 h-[350px]">
-  @if (videoInsights().faces?.length) {
-    <app-video-insights-people [people]="videoInsights().faces!" />
-  }
-  @if (videoInsights().observedPeople?.length) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-observed-people [observedPeople]="videoInsights().observedPeople!" />
-  }
-  @if (videoInsights().topics?.length) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-topics [topics]="videoInsights().topics!" />
-  }
-  @if (videoInsights().audioEffects?.length) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-audio-effects [audioEffects]="videoInsights().audioEffects!" />
-  }
-  @if (videoInsights().labels?.length) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-labels [labels]="videoInsights().labels!" />
-  }
-  @if (
-    videoInsights().brands?.length || videoInsights().namedLocations?.length || videoInsights().namedPeople?.length
-  ) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-named-entities
-      [brands]="videoInsights().brands ?? []"
-      [namedLocations]="videoInsights().namedLocations ?? []"
-      [namedPeople]="videoInsights().namedPeople ?? []" />
-  }
-  @if (videoInsights().emotions?.length) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-emotions [emotions]="videoInsights().emotions!" />
-  }
-  @if (videoInsights().scenes.length) {
-    <hr class="h-0.5 bg-gray-200" />
-    <app-video-insights-scenes [scenes]="videoInsights().scenes" [shots]="videoInsights().shots" />
-  }
+<div class="flex flex-col">
+  <div class="flex items-center sticky top-0 bg-gray-100 shadow-sm z-10 p-2">
+    <div class="w-1/2">
+      <app-supported-language (onLanguageChange)="onInsightsLangChange.emit($event)" />
+    </div>
+    <div class="w-1/2">
+      <!-- Tabs -->
+      <div class="relative flex justify-between items-center m-2 bg-gray-200 rounded-md">
+        <button
+          #tab
+          type="button"
+          (click)="setActiveTab('INSIGHTS')"
+          [class.text-white]="activeTab() === 'INSIGHTS'"
+          class="relative w-full text-xs p-2 focus:outline-none rounded-md text-primary font-semibold hover:underline hover:cursor-pointer z-10">
+          {{ lang.locals.insights }}
+        </button>
+        <button
+          #tab
+          type="button"
+          (click)="setActiveTab('TIMELINE')"
+          [class.text-white]="activeTab() === 'TIMELINE'"
+          class="relative w-full text-xs p-2 focus:outline-none rounded-md text-primary font-semibold hover:underline hover:cursor-pointer z-10">
+          {{ lang.locals.transcript }}
+        </button>
+        <button
+          #tab
+          type="button"
+          (click)="setActiveTab('SUMMARY')"
+          [class.text-white]="activeTab() === 'SUMMARY'"
+          class="relative w-full text-xs p-2 focus:outline-none rounded-md text-primary font-semibold hover:underline hover:cursor-pointer z-10">
+          {{ lang.locals.video_summary }}
+        </button>
+        <div
+          class="absolute top-0 left-0 h-full bg-primary transition-all duration-300 rounded-md z-0"
+          [style.width]="indicatorWidth()"
+          [style.transform]="indicatorTransform()"></div>
+      </div>
+    </div>
+  </div>
+  <div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="bg-gray-100 h-[300px]">
+    @if (activeTab() === 'INSIGHTS') {
+      @if (videoInsights().faces?.length) {
+        <app-video-insights-people [people]="videoInsights().faces!" />
+      }
+      @if (videoInsights().observedPeople?.length) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-observed-people [observedPeople]="videoInsights().observedPeople!" />
+      }
+      @if (videoInsights().topics?.length) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-topics [topics]="videoInsights().topics!" />
+      }
+      @if (videoInsights().audioEffects?.length) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-audio-effects [audioEffects]="videoInsights().audioEffects!" />
+      }
+      @if (videoInsights().labels?.length) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-labels [labels]="videoInsights().labels!" />
+      }
+      @if (
+        videoInsights().brands?.length || videoInsights().namedLocations?.length || videoInsights().namedPeople?.length
+      ) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-named-entities
+          [brands]="videoInsights().brands ?? []"
+          [namedLocations]="videoInsights().namedLocations ?? []"
+          [namedPeople]="videoInsights().namedPeople ?? []" />
+      }
+      @if (videoInsights().emotions?.length) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-emotions [emotions]="videoInsights().emotions!" />
+      }
+      @if (videoInsights().scenes.length) {
+        <hr class="h-0.5 bg-gray-200" />
+        <app-video-insights-scenes [scenes]="videoInsights().scenes" [shots]="videoInsights().shots" />
+      }
+    }
+    @if (activeTab() === 'TIMELINE') {
+      <app-video-timeline [transcript]="videoInsights().transcript" />
+    }
+    @if (activeTab() === 'SUMMARY') {
+      <p class="text-gray-500 text-sm leading-8 text-justify p-4">
+        {{ videoSummary() }}
+      </p>
+    }
+  </div>
 </div>

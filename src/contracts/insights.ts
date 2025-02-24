@@ -145,7 +145,7 @@ export interface Topic extends Appearance<Instance> {
   topicList?: TopicGroupList[]
 }
 
-interface TranscriptEntry extends Appearance<Instance> {
+export interface Transcript extends Appearance<Instance> {
   id: number
   text: string
   confidence: number
@@ -223,7 +223,7 @@ export interface VideoInsights {
   sourceLanguages: string[]
   language: string
   languages: string[]
-  transcript: TranscriptEntry[]
+  transcript: Transcript[]
   topics?: Topic[]
   faces?: Face[]
   observedPeople?: ObservedPeople[]

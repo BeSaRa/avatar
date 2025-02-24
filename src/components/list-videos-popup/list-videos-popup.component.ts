@@ -7,11 +7,12 @@ import { NgClass } from '@angular/common'
 import { Component, inject, OnInit, signal } from '@angular/core'
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 import { takeUntil, tap } from 'rxjs'
+import { SupportedLanguageComponent } from '../insights/supported-language/supported-language.component'
 
 @Component({
   selector: 'app-list-videos-popup',
   standalone: true,
-  imports: [MatDialogModule, PerfectScrollDirective, NgClass],
+  imports: [MatDialogModule, PerfectScrollDirective, NgClass, SupportedLanguageComponent],
   templateUrl: './list-videos-popup.component.html',
   styleUrl: './list-videos-popup.component.scss',
 })
@@ -22,6 +23,7 @@ export class ListVideosPopupComponent extends OnDestroyMixin(class {}) implement
   videos = signal<VideoData[]>([])
   selectedVideo = signal<VideoData | undefined>(undefined)
   isLoading = signal(true)
+  language = signal('')
 
   ngOnInit(): void {
     this.getAllVideos()
