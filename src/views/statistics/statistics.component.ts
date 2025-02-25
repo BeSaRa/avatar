@@ -47,7 +47,7 @@ export class StatisticsComponent {
       labels: labels,
       datasets: [
         {
-          label: this.lang.locals.reports_number,
+          label: this.lang.locals.links_count,
           data: values,
           backgroundColor: 'rgba(138, 21, 56, 0.5)', // Body color with 50% opacity
           borderColor: 'rgba(138, 21, 56)',
