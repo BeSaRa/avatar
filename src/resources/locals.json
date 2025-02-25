@@ -1294,5 +1294,9 @@
   "bot_welcom_message": {
     "ar": "مرحبا بك في المساعد القانوني الذكي",
     "en": "Welcome to the AI Legal Assistant"
+  },
+  "links_count": {
+    "ar": "عدد الروابط",
+    "en": "Links count"
   }
 }
