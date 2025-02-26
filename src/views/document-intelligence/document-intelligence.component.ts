@@ -7,7 +7,7 @@ import { DocIntelligenceViewerComponent } from '@/components/doc-intelligence-vi
 // eslint-disable-next-line max-len
 import { DocIntelligenceExtractedDataComponent } from '@/components/doc-intelligence-extracted-data/doc-intelligence-extracted-data.component'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
-import { takeUntil, tap } from 'rxjs'
+import { catchError, EMPTY, retry, takeUntil, tap } from 'rxjs'
 import { AsyncPipe } from '@angular/common'
 import { LocalService } from '@/services/local.service'
 
@@ -29,14 +29,23 @@ export class DocumentIntelligenceComponent extends OnDestroyMixin(class {}) {
 
   analyzeFile() {
     if (!this.files().length) return
+
     this.isLoading.set(true)
     this.isDataReady.set(false)
     const { file } = this.files().at(0)!
+
     this.documentIntelligenceService
       .documentAnalyze(file)
       .pipe(
+        retry(5), // Retries the API call up to 3 times in case of an error
         takeUntil(this.destroy$),
-        tap(() => this.isLoading.set(false))
+        tap(() => this.isLoading.set(false)),
+        catchError(error => {
+          console.error('Error analyzing document:', error)
+          this.isLoading.set(false)
+          this.isDataReady.set(false)
+          return EMPTY // Prevent further execution
+        })
       )
       .subscribe(res => {
         this.result = res
@@ -56,6 +65,8 @@ export class DocumentIntelligenceComponent extends OnDestroyMixin(class {}) {
   }
 
   onFileLoad($event: DocumentFileType[]) {
+    this.files.set([])
+    this.isDataReady.set(false)
     this.files.set($event)
   }
   onFileRemoved() {

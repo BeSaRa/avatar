@@ -2,56 +2,6 @@
   <!-- Chips and PDF Viewer -->
   <div class="flex flex-col w-full space-y-4">
     <!-- Chips Section -->
-    <div class="flex flex-col items-center justify-start bg-white border border-gray-300 rounded-lg shadow-sm p-4">
-      <h4 class="font-medium text-xl self-start pb-4 text-gray-700">{{ lang.locals.extracted_words }}:</h4>
-      <mat-form-field class="chip-list w-full" appearance="fill">
-        <mat-chip-grid #chipList [formControl]="searchContorl">
-          <div class="flex flex-wrap max-h-24 overflow-y-auto">
-            @for (word of words(); track $index) {
-              <mat-chip-row class="truncate" [removable]="true" (removed)="remove(word)">
-                <span class="truncate max-w-xs block" matTooltip="{{ word }}" matTooltipPosition="above">
-                  {{ word }}
-                </span>
-                <button matChipRemove aria-label="'Remove ' + word">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
-                    <path
-                      d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" />
-                  </svg>
-                </button>
-              </mat-chip-row>
-            }
-            <input
-              placeholder="Add more words"
-              [matChipInputFor]="chipList"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              [matChipInputAddOnBlur]="true"
-              (matChipInputTokenEnd)="add($event)" />
-          </div>
-        </mat-chip-grid>
-      </mat-form-field>
-      <!-- Navigation Buttons -->
-      <div class="flex justify-between items-center mb-4 w-full">
-        <button
-          type="button"
-          (click)="findNext()"
-          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary/90 rounded-md shadow-md hover:bg-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
-            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
-          </svg>
-          {{ lang.locals.next }}
-        </button>
-        <button
-          type="button"
-          (click)="findPrevious()"
-          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary/90 rounded-md shadow-md hover:bg-primary">
-          {{ lang.locals.previous }}
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="size-4" viewBox="0 0 24 24">
-            <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
-          </svg>
-        </button>
-      </div>
-    </div>
-
     <!-- PDF Viewer -->
     <div class="rounded-md overflow-hidden bg-white border border-gray-300">
       <ngx-extended-pdf-viewer
