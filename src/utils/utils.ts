@@ -323,3 +323,7 @@ export function transformData<TData extends TransformedGrouped>(input: TData): T
     } as unknown as TransformedData<TData> // Explicit type assertion due to TypeScript's structural type system
   }
 }
+
+export const handleNull = (value: string | null | undefined): string | null => {
+  return value && value.trim() !== '' ? value : null
+}

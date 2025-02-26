@@ -1,108 +1,62 @@
 <mat-accordion class="w-full mt-4">
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        {{ lang.locals.extracted_data }}
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <!-- Extracted Elements Table -->
-    <div class="bg-white border border-gray-300 rounded-lg shadow-sm w-full p-4 my-4">
-      <table class="min-w-full border-collapse">
-        <thead class="bg-primary text-white text-left">
-          <tr>
-            <th class="px-4 py-2">Company Name</th>
-            <th class="px-4 py-2">Address</th>
-            <th class="px-4 py-2">Product Name</th>
-            <th class="px-4 py-2">Physical State</th>
-            <th class="px-4 py-2">Precautions</th>
-            <th class="px-4 py-2">Storage</th>
-          </tr>
-        </thead>
-        <tbody class="text-left">
-          <tr>
-            <td
-              class="px-4 py-2 border-b truncate break-words max-w-40"
-              matTooltip="{{ extractedData()['extracted-elements']['company-name'] }}"
-              matTooltipPosition="above">
-              {{ extractedData()['extracted-elements']['company-name'] }}
-            </td>
-            <td
-              class="px-4 py-2 border-b truncate break-words max-w-40"
-              matTooltip="{{ extractedData()['extracted-elements'].address }}"
-              matTooltipPosition="above">
-              {{ extractedData()['extracted-elements'].address }}
-            </td>
-            <td
-              class="px-4 py-2 border-b truncate break-words max-w-40"
-              matTooltip="{{ extractedData()['extracted-elements']['product-name'] }}"
-              matTooltipPosition="above">
-              {{ extractedData()['extracted-elements']['product-name'] }}
-            </td>
-            <td
-              class="px-4 py-2 border-b truncate break-words max-w-40"
-              matTooltip="{{ extractedData()['extracted-elements']['physical-state'] }}"
-              matTooltipPosition="above">
-              {{ extractedData()['extracted-elements']['physical-state'] }}
-            </td>
-            <td
-              class="px-4 py-2 border-b truncate break-words max-w-40"
-              matTooltip="{{ extractedData()['extracted-elements'].precautions }}"
-              matTooltipPosition="above">
-              {{ extractedData()['extracted-elements'].precautions }}
-            </td>
-            <td
-              class="px-4 py-2 border-b truncate break-words max-w-40"
-              matTooltip="{{ extractedData()['extracted-elements'].storage }}"
-              matTooltipPosition="above">
-              {{ extractedData()['extracted-elements'].storage }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Loop through each section dynamically -->
+  @for (section of mappedData() | keyvalue; track section.key) {
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-lg text-gray-800">
+          {{ getLocalizedKey(section.key) }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-    <!-- Extracted Table -->
-    <div class="bg-white border border-gray-300 rounded-lg shadow-sm w-full p-4">
-      <table class="min-w-full border-collapse">
-        <thead class="bg-primary text-white text-left">
-          <tr>
-            <th class="px-4 py-2">Chemical Name</th>
-            <th class="px-4 py-2">CAS No</th>
-            <th class="px-4 py-2">EC No</th>
-            <th class="px-4 py-2">CLP Classification</th>
-          </tr>
-        </thead>
-        <tbody class="text-left">
-          @for (element of extractedData()['extracted-table']; track $index) {
+      <!-- ✅ Table Wrapper for Overflow Fix -->
+      <div class="overflow-x-auto w-full">
+        <table class="w-full border border-gray-300 rounded-lg shadow-md">
+          <thead class="bg-primary text-white text-left">
             <tr>
-              <td
-                class="px-4 py-2 border-b truncate break-words max-w-40"
-                matTooltipPosition="above"
-                matTooltip="{{ element['chemical-name'] }}">
-                {{ element['chemical-name'] }}
-              </td>
-              <td
-                class="px-4 py-2 border-b truncate break-words max-w-40"
-                matTooltipPosition="above"
-                matTooltip="{{ element['cas-no'] }}">
-                {{ element['cas-no'] }}
-              </td>
-              <td
-                class="px-4 py-2 border-b truncate break-words max-w-40"
-                matTooltipPosition="above"
-                matTooltip="{{ element['ec-no'] }}">
-                {{ element['ec-no'] }}
-              </td>
-              <td
-                class="px-4 py-2 border-b truncate break-words max-w-40"
-                matTooltipPosition="above"
-                matTooltip="{{ element['clp-classification'] }}">
-                {{ element['clp-classification'] }}
-              </td>
+              @for (column of asRecord(section.value) | keyvalue; track column.key) {
+                <th class="px-4 py-2 border text-center">
+                  {{ getLocalizedKey(column.key) }}
+                </th>
+              }
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </mat-expansion-panel>
+          </thead>
+          <tbody>
+            <tr>
+              @for (column of asRecord(section.value) | keyvalue; track column.key) {
+                <td class="px-4 py-2 border-b text-center">
+                  <!-- ✅ If the value is a nested object, display it as a sub-table inside the cell -->
+                  @if (isObject(column.value)) {
+                    <div class="border p-2 bg-gray-100 rounded-md shadow-sm">
+                      <table class="w-full border border-gray-200 rounded-lg">
+                        <thead>
+                          <tr class="bg-gray-300">
+                            @for (subColumn of asRecord(column.value) | keyvalue; track subColumn.key) {
+                              <th class="px-2 py-1 border text-center">
+                                {{ getLocalizedKey(subColumn.key) }}
+                              </th>
+                            }
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            @for (subColumn of asRecord(column.value) | keyvalue; track subColumn.key) {
+                              <td class="px-2 py-1 border text-center">
+                                {{ subColumn.value || 'N/A' }}
+                              </td>
+                            }
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  } @else {
+                    <span class="text-gray-700">{{ column.value || 'N/A' }}</span>
+                  }
+                </td>
+              }
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-expansion-panel>
+  }
 </mat-accordion>

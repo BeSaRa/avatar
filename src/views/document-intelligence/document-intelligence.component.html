@@ -16,8 +16,8 @@
     </div>
   </div>
 } @else if (isDataReady() && files().length) {
-  <div class="flex flex-col justify-center p-2 gap-4">
-    <app-doc-intelligence-viewer [file]="files()[0]" [words]="words()" />
-    <app-doc-intelligence-extracted-data [extractedData]="result" />
+  <div class="flex flex-wrap md:flex-nowrap justify-center p-2 gap-4">
+    <app-doc-intelligence-viewer class="w-full md:w-1/2" [file]="files()[0]" [words]="words()" />
+    <app-doc-intelligence-extracted-data class="w-full md:w-1/2" [extractedData]="result" />
   </div>
 }
