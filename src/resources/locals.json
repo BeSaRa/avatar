@@ -856,7 +856,7 @@
     "en": "Construction Stage"
   },
   "construction-waste": {
-    "ar": "نفايات البناء",
+    "ar": "المخلفات الناتجة عن الإنشاء",
     "en": "Construction Waste"
   },
   "extracted-detials": {
@@ -864,7 +864,7 @@
     "en": "Extracted Details"
   },
   "operation-waste": {
-    "ar": "نفايات التشغيل",
+    "ar": "النفايات والمخلفات الناتجة عن التشغيل",
     "en": "Operation Waste"
   },
   "project-data": {
@@ -896,7 +896,7 @@
     "en": "Gaseous Emissions"
   },
   "liquid-waste": {
-    "ar": "النفايات السائلة",
+    "ar": "المخلفات السائلة",
     "en": "Liquid Waste"
   },
   "noise-level": {
@@ -940,16 +940,20 @@
     "en": "Application Number"
   },
   "licensing-authority": {
-    "ar": "الجهة المرخصة",
+    "ar": "الجهة المانحة للترخيص",
     "en": "Licensing Authority"
   },
-  "project-name": {
+  "application_number": {
+    "ar": "رقم الطلب",
+    "en": "Application number"
+  },
+  "project_name": {
     "ar": "اسم المشروع",
     "en": "Project Name"
   },
   "project-proponent": {
-    "ar": "الجهة المنفذة للمشروع",
-    "en": "Project Proponent"
+    "ar": "اسم مالك المشروع",
+    "en": "Name of Project Proponent"
   },
   "project-type": {
     "ar": "نوع المشروع",
@@ -976,7 +980,7 @@
     "en": "Analysis"
   },
   "control-methods": {
-    "ar": "طرق التحكم",
+    "ar": "وسائل التحكم",
     "en": "Control Methods"
   },
   "discharge-rate": {
@@ -1000,8 +1004,8 @@
     "en": "Transport, Handling, and Storage"
   },
   "available-infrastructure": {
-    "ar": "البنية التحتية المتاحة",
-    "en": "Available Infrastructure"
+    "ar": "البنية الأساسية المتوفرة وغير المتوفرة",
+    "en": "Available/Unavailable Infrastructure"
   },
   "electric-power-grid": {
     "ar": "شبكة الطاقة الكهربائية",
@@ -1055,6 +1059,10 @@
     "ar": "الموافقة البيئية السابقة",
     "en": "Previous Environmental Approval"
   },
+  "previous-environmental-approval-question": {
+    "ar": "إذا كانت طبيعة المشروع توسعات/تجديد ، هل كانت هناك أي EIA للمشروع الأصلي؟",
+    "en": "If the Project type is expansion/renovation, was there any EIA for the original Project?"
+  },
   "project-location": {
     "ar": "موقع المشروع",
     "en": "Project Location"
@@ -1063,12 +1071,16 @@
     "ar": "طبيعة المشروع",
     "en": "Project Nature"
   },
+  "project-name": {
+    "ar": "اسم المشروع",
+    "en": "Project Name"
+  },
   "total-construction-area": {
-    "ar": "إجمالي مساحة البناء",
+    "ar": "المساحة الكلية لمباني المشروع (م2)",
     "en": "Total Construction Area"
   },
   "total-project-area": {
-    "ar": "إجمالي مساحة المشروع",
+    "ar": "المساحة الكلية للمشروع (م2)",
     "en": "Total Project Area"
   },
   "village": {
@@ -1090,5 +1102,149 @@
   "disposal-methods": {
     "ar": "طرق التخلص",
     "en": "Disposal Methods"
+  },
+  "video_analyzer": {
+    "ar": "محلل الفيديو",
+    "en": "Video Analyzer"
+  },
+  "upload_video": {
+    "ar": "ارفع فيديو",
+    "en": "Upload Video"
+  },
+  "choose_video_from_list": {
+    "ar": "اختر فيديو من القائمة",
+    "en": "Choose video from list"
+  },
+  "videos_list": {
+    "ar": "قائمة الفيديوهات",
+    "en": "Videos List"
+  },
+  "people": {
+    "ar": "الأشخاص",
+    "en": "People"
+  },
+  "audio_effects": {
+    "ar": "تأثيرات الصوت",
+    "en": "Audio Effects"
+  },
+  "labels": {
+    "ar": "الوسوم",
+    "en": "Labels"
+  },
+  "chat_about_video": {
+    "ar": "تحدث عن الفيديو",
+    "en": "Chat about video"
+  },
+  "uploading_file_msg": {
+    "ar": "جاري رفع وتحليل الملف ,يرجى الانتظار..",
+    "en": "Uploading and analysis file, please wait..."
+  },
+  "file_info_msg": {
+    "ar": "جاري جلب الملف, يرجى الانتظار...",
+    "en": "Get file data, please wait..."
+  },
+  "insights": {
+    "ar": "المشاهد",
+    "en": "Insights"
+  },
+  "locations": {
+    "ar": "الأماكن",
+    "en": "Locations"
+  },
+  "brands": {
+    "ar": "العلامات التجارية",
+    "en": "Brands"
+  },
+  "emotions": {
+    "ar": "المشاعر",
+    "en": "ُEmotions"
+  },
+  "scenes": {
+    "ar": "المشاهد",
+    "en": "Scenes"
+  },
+  "shots_in_this_scene": {
+    "ar": "اللقطات في هذا المشهد",
+    "en": "Shots in this scene"
+  },
+  "keyframes_in_this_shot": {
+    "ar": "الإطارات الرئيسية في هذه اللقطة",
+    "en": "Keyframes in this shot"
+  },
+  "named_entity": {
+    "ar": "الكيانات المسماة",
+    "en": "Named Entity"
+  },
+  "show_description": {
+    "ar": "عرض التفاصيل",
+    "en": "Show description"
+  },
+  "show_biography": {
+    "ar": "عرض السيرة الذاتية",
+    "en": "Show Biography"
+  },
+  "find_on_bing": {
+    "ar": "ابحث عن طريق Bing",
+    "en": "Find on Bing"
+  },
+  "anger": {
+    "ar": "غضب",
+    "en": "Anger"
+  },
+  "joy": {
+    "ar": "مرح",
+    "en": "Joy"
+  },
+  "fear": {
+    "ar": "خوف",
+    "en": "Fear"
+  },
+  "sad": {
+    "ar": "حزن",
+    "en": "Sad"
+  },
+  "observed_people": {
+    "ar": "الأشخاص الملاحظون",
+    "en": "Observed People"
+  },
+  "appear_in": {
+    "ar": "يظهر في",
+    "en": "Appears in"
+  },
+  "of_video": {
+    "ar": "من الفيديو",
+    "en": "of video"
+  },
+  "read_more": {
+    "ar": "اقرأ المزيد",
+    "en": "read more"
+  },
+  "certainty": {
+    "ar": "يقين",
+    "en": "Certainty"
+  },
+  "this_is_an_estimated_identification_and_might_be_incorrect": {
+    "ar": "هذا تعريف تقديري وقد يكون غير صحيح",
+    "en": "This is an estimated identification and might be incorrect"
+  },
+  "transcript": {
+    "ar": "النص",
+    "en": "Transcript"
+  },
+  "video_summary": {
+    "ar": "ملخص الفيديو",
+    "en": "Video Summary"
+  },
+  "choose_language": {
+    "ar": "من فضلك اختر لغة لرفع الفيديو",
+    "en": "Please choose language to upload video"
+  },
+  "general_info": {
+    "ar": "معلومات عامة",
+    "en": "General Information"
+  },
+  "industrial_discharge": {
+    "ar": "الصرف الصناعي",
+    "en": "Industrial Discharge"
   }
 }

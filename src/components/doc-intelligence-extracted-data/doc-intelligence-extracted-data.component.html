@@ -1,62 +1,212 @@
-<mat-accordion class="w-full mt-4">
-  <!-- Loop through each section dynamically -->
-  @for (section of mappedData() | keyvalue; track section.key) {
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title class="text-lg text-gray-800">
-          {{ getLocalizedKey(section.key) }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+<div
+  @fadeInSlideUp
+  appPerfectScroll
+  [perfectScrollOptions]="{ suppressScrollX: true }"
+  class="max-w-4xl mx-auto max-h-[70vh] bg-gray-100 shadow-lg rounded-lg p-6 border border-primary/30">
+  <!-- General Information -->
+  <h2 class="text-2xl bg-gray-200 rounded-md p-2 shadow-smfont-bold border-b pb-2 mb-4 text-primary">
+    {{ lang.locals.general_info }}
+  </h2>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['application-number'] }}:</strong>
+      {{ extractedData()['extracted-details']['application-number'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['project-name'] }}:</strong> {{ extractedData()['extracted-details']['project-name'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['project-nature'] }}:</strong> {{ extractedData()['extracted-details']['project-type'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['project-proponent'] }}:</strong>
+      {{ extractedData()['extracted-details']['project-proponent'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['licensing-authority'] }}:</strong>
+      {{ extractedData()['extracted-details']['licensing-authority'] }}
+    </p>
+  </div>
 
-      <!-- ✅ Table Wrapper for Overflow Fix -->
-      <div class="overflow-x-auto w-full">
-        <table class="w-full border border-gray-300 rounded-lg shadow-md">
-          <thead class="bg-primary text-white text-left">
-            <tr>
-              @for (column of asRecord(section.value) | keyvalue; track column.key) {
-                <th class="px-4 py-2 border text-center">
-                  {{ getLocalizedKey(column.key) }}
-                </th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              @for (column of asRecord(section.value) | keyvalue; track column.key) {
-                <td class="px-4 py-2 border-b text-center">
-                  <!-- ✅ If the value is a nested object, display it as a sub-table inside the cell -->
-                  @if (isObject(column.value)) {
-                    <div class="border p-2 bg-gray-100 rounded-md shadow-sm">
-                      <table class="w-full border border-gray-200 rounded-lg">
-                        <thead>
-                          <tr class="bg-gray-300">
-                            @for (subColumn of asRecord(column.value) | keyvalue; track subColumn.key) {
-                              <th class="px-2 py-1 border text-center">
-                                {{ getLocalizedKey(subColumn.key) }}
-                              </th>
-                            }
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            @for (subColumn of asRecord(column.value) | keyvalue; track subColumn.key) {
-                              <td class="px-2 py-1 border text-center">
-                                {{ subColumn.value || 'N/A' }}
-                              </td>
-                            }
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  } @else {
-                    <span class="text-gray-700">{{ column.value || 'N/A' }}</span>
-                  }
-                </td>
-              }
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </mat-expansion-panel>
-  }
-</mat-accordion>
+  <h3 class="text-lg font-semibold mt-4 text-primary/80">{{ lang.locals['person-in-charge'] }}</h3>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.name }}:</strong> {{ extractedData()['extracted-details']['person-in-charge'].name }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.address }}:</strong> {{ extractedData()['extracted-details']['person-in-charge'].address }}
+    </p>
+    e
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.phone }}:</strong> {{ extractedData()['extracted-details']['person-in-charge'].phone }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.fax }}:</strong> {{ extractedData()['extracted-details']['person-in-charge'].fax }}
+    </p>
+  </div>
+
+  <!-- Project Details -->
+  <h2 class="text-2xl bg-gray-200 rounded-md p-2 shadow-smfont-bold border-b pb-2 mt-6 mb-4 text-primary">
+    {{ lang.locals['project-data'] }}
+  </h2>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['project-location'] }}:</strong> {{ extractedData()['project-data']['project-location'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['total-project-area'] }}:</strong>
+      {{ extractedData()['project-data']['total-project-area'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['total-construction-area'] }}:</strong>
+      {{ extractedData()['project-data']['total-construction-area'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['expansion-or-renovation'] }}:</strong>
+      {{ extractedData()['project-data']['expansion-or-renovation'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['project-nature'] }}:</strong>
+      {{ extractedData()['project-data']['project-nature'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['previous-approval-date'] }}:</strong>
+      <span class="ml-2">{{ extractedData()['project-data']['previous-approval-date'] }}</span>
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['previous-environmental-approval-question'] }}:</strong>
+      <span class="ml-2">{{ extractedData()['project-data']['previous-environmental-approval'] }}</span>
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['final-product'] }}:</strong> {{ extractedData()['project-data']['final-product'] }}
+    </p>
+  </div>
+
+  <h3 class="text-lg font-semibold mt-4 text-primary">{{ lang.locals['available-infrastructure'] }}</h3>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p
+      *ngFor="let infra of extractedData()['project-data']['available-infrastructure'] | keyvalue"
+      class="text-gray-800">
+      ({{ extractedData()['project-data']['available-infrastructure'][infra.key] }})
+      {{ lang.locals[infra.key] }}
+    </p>
+  </div>
+
+  <!-- Project Phases -->
+  <h2 class="text-2xl bg-gray-200 rounded-md p-2 shadow-smfont-bold border-b pb-2 mt-6 mb-4 text-primary">
+    {{ lang.locals['project-phases'] }}
+  </h2>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['construction-start-date'] }}:</strong>
+      {{ extractedData()['project-phases']['construction-start-date'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['operation-start-date'] }}:</strong>
+      {{ extractedData()['project-phases']['operation-start-date'] }}
+    </p>
+  </div>
+
+  <!-- Construction Stage -->
+  <h2 class="text-2xl bg-gray-200 rounded-md p-2 shadow-smfont-bold border-b pb-2 mt-6 mb-4 text-primary">
+    {{ lang.locals['construction-stage'] }}
+  </h2>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.description }}:</strong> {{ extractedData()['construction-stage'].description }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['fuel-type'] }}:</strong> {{ extractedData()['construction-stage']['fuel-type'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['fuel-source'] }}:</strong> {{ extractedData()['construction-stage']['fuel-source'] }}
+    </p>
+  </div>
+
+  <!-- Construction Waste -->
+  <h2 class="text-2xl bg-gray-200 rounded-md p-2 shadow-smfont-bold border-b pb-2 mt-6 mb-4 text-primary">
+    {{ lang.locals['construction-waste'] }}
+  </h2>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['solid-waste'] }}:</strong> {{ extractedData()['construction-waste']['solid-waste'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['liquid-waste'] }}:</strong> {{ extractedData()['construction-waste']['liquid-waste'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['gaseous-emissions'] }}:</strong>
+      {{ extractedData()['construction-waste']['gaseous-emissions'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['noise-level'] }}:</strong> {{ extractedData()['construction-waste']['noise-level'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['noise-type'] }}:</strong> {{ extractedData()['construction-waste']['noise-type'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['equipment-used'] }}:</strong>
+      {{ extractedData()['construction-waste']['equipment-used'].join(', ') }}
+    </p>
+  </div>
+
+  <h2 class="text-2xl bg-gray-200 rounded-md p-2 shadow-smfont-bold border-b pb-2 mt-6 mb-4 text-primary">
+    {{ lang.locals['operation-waste'] }}
+  </h2>
+  <div class="grid grid-cols-2 p-2 gap-4 text-sm">
+    <h3 class="text-lg font-semibold col-span-2 text-primary/80">{{ lang.locals['liquid-waste'] }}</h3>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['control-methods'] }}:</strong>
+      {{ extractedData()['operation-waste']['liquid-waste']['control-methods'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['disposal-methods'] }}:</strong>
+      {{ extractedData()['operation-waste']['liquid-waste']['disposal-methods'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['sanitary-discharge-rate'] }}:</strong>
+      {{ extractedData()['operation-waste']['liquid-waste']['sanitary-discharge-rate'] }}
+    </p>
+
+    <h3 class="text-lg font-semibold col-span-2 text-primary/80">{{ lang.locals.industrial_discharge }}</h3>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['discharge-rate'] }}:</strong>
+      {{ extractedData()['operation-waste']['industrial-discharge']['discharge-rate'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['control-methods'] }}:</strong>
+      {{ extractedData()['operation-waste']['industrial-discharge']['control-methods'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.analysis }}:</strong>
+      {{ extractedData()['operation-waste']['industrial-discharge']['analysis'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['disposal-methods'] }}:</strong>
+      {{ extractedData()['operation-waste']['industrial-discharge']['disposal-method'] }}
+    </p>
+
+    <h3 class="text-lg font-semibold col-span-2 text-primary/80">{{ lang.locals['gaseous-emissions'] }}</h3>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['stationary-sources'] }}:</strong>
+      {{ extractedData()['operation-waste']['gaseous-emissions']['stationary-sources'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['mobile-sources'] }}:</strong>
+      {{ extractedData()['operation-waste']['gaseous-emissions']['mobile-sources'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['fuel-combustion-sources'] }}:</strong>
+      {{ extractedData()['operation-waste']['gaseous-emissions']['fuel-combustion-sources'] }}
+    </p>
+
+    <h3 class="text-lg font-semibold col-span-2 text-primary/80">{{ lang.locals['solid-waste'] }}</h3>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals['transport-handling-storage'] }}:</strong>
+      {{ extractedData()['operation-waste']['solid-waste']['transport-handling-storage'] }}
+    </p>
+    <p class="text-gray-800">
+      <strong>{{ lang.locals.disposal }}:</strong> {{ extractedData()['operation-waste']['solid-waste']['disposal'] }}
+    </p>
+  </div>
+</div>
