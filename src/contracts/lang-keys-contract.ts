@@ -272,4 +272,41 @@ export interface LangKeysContract {
   'operation-start-date': string
   'extracted-details': string
   'disposal-methods': string
+  video_analyzer: string
+  upload_video: string
+  choose_video_from_list: string
+  videos_list: string
+  uploading_file_msg: string
+  file_info_msg: string
+  people: string
+  audio_effects: string
+  labels: string
+  chat_about_video: string
+  insights: string
+  locations: string
+  brands: string
+  emotions: string
+  scenes: string
+  shots_in_this_scene: string
+  keyframes_in_this_shot: string
+  named_entity: string
+  show_description: string
+  show_biography: string
+  find_on_bing: string
+  anger: string
+  joy: string
+  fear: string
+  sad: string
+  observed_people: string
+  appear_in: string
+  of_video: string
+  read_more: string
+  certainty: string
+  this_is_an_estimated_identification_and_might_be_incorrect: string
+  transcript: string
+  video_summary: string
+  choose_language: string
+  general_info: string
+  industrial_discharge: string
+  'previous-environmental-approval-question': string
 }

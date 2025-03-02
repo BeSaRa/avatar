@@ -13,7 +13,7 @@ export class DocIntelligenceService {
 
   documentAnalyze(file: File): Observable<DocumentIntelligenceContract> {
     const url = `${this.urlService.URLS.DOC_INTELLIGENCE}/analyze-pdf`
-    const params = new HttpParams().append('model_id', 'TestMECC')
+    const params = new HttpParams().append('model_id', 'TestMECC2')
     const formData = new FormData()
     formData.append('file', file)
     return this.http.post<DocumentIntelligenceContract>(url, formData, { params })
