@@ -209,8 +209,10 @@ export class ChatHistoryChartsComponent {
       if (this.isValidFeedback(conversation.feedback)) {
         if (conversation.feedback > 0) {
           likes++
-        } else {
+        } else if (conversation.feedback < 0) {
           dislikes++
+        } else {
+          unspecified++
         }
       } else {
         unspecified++
@@ -265,8 +267,10 @@ export class ChatHistoryChartsComponent {
       if (this.isValidFeedback(conversation.feedback)) {
         if (conversation.feedback > 0) {
           botPerformance[bot].likes++
-        } else {
+        } else if (conversation.feedback < 0) {
           botPerformance[bot].dislikes++
+        } else {
+          botPerformance[bot].unspecified++
         }
       } else {
         botPerformance[bot].unspecified++
