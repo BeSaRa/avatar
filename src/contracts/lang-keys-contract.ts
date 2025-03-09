@@ -205,6 +205,7 @@ export interface LangKeysContract {
   user_name: string
   password: string
   login: string
+  login_failed: string
   permission_managment: string
   statistics: string
   total_reports: string
@@ -318,8 +319,11 @@ export interface LangKeysContract {
   keywords: string
   add_keyword: string
   welcome_back: string
-  login_failed: string
   welcome_user: string
   bot_welcom_message: string
   links_count: string
+  video_generator: string
+  test: string
+  download: string
+  video_generating_and_downloading_progress: string
 }

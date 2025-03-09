@@ -1,0 +1,78 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<div
+  id="video-wrapper"
+  class="relative flex flex-col justify-center items-center gap-2 h-[100vh] px-4 py-4 overflow-hidden">
+  <div class="flex flex-col items-end w-full md:w-[700px] h-full overflow-hidden justify-center relative rounded-md">
+    <div
+      (click)="toggleStream()"
+      class="flex items-center gap-1 shadow-2xl shadow-white bg-black/20 p-1 absolute z-50 top-2 end-2 rounded-md"
+      [ngClass]="{ 'cursor-pointer': store.isStreamStopped() || store.isStreamStarted() }">
+      <div
+        [ngClass]="{
+          'bg-red-600': store.isStreamStopped(),
+          'bg-green-700': store.isStreamStarted(),
+          'bg-orange-500': store.isStreamLoading(),
+        }"
+        class="p-4 rounded-full"></div>
+      <div
+        [ngClass]="{
+          'bg-red-600': store.isStreamStopped(),
+          'bg-green-700': store.isStreamStarted(),
+          'bg-orange-500': store.isStreamLoading(),
+        }"
+        class="p-4 absolute pulse rounded-full"></div>
+      <span class="text-white font-semibold">{{ onlineStatus() }}</span>
+    </div>
+    @if (store.isStreamStarted()) {
+      <div class="absolute z-50 top-2 start-2 w-10"><app-avatar-interrupter-btn /></div>
+    }
+
+    <video autoplay [hidden]="store.isStreamStopped() || store.isStreamLoading()" #video class="w-full -mb-10"></video>
+    <video #idleVideo [hidden]="store.isStreamStarted()" class="w-full -mb-96">
+      <source src="assets/videos/idle-full.webm" type="video/webm" />
+    </video>
+  </div>
+  <div class="w-full md:w-[700px]">
+    <div class="w-full">
+      <textarea
+        (keydown.enter)="$event.preventDefault(); test()"
+        [formControl]="text"
+        type="text"
+        tabindex="1"
+        rows="3"
+        class="w-full resize-none text-lg p-2 text-gray-700 border border-gray-300 rounded-lg bg-gray-100 focus:ring-gray-400 focus:border-gray-400 focus:ring-4 outline-none ring-2 ring-gray-500"></textarea>
+    </div>
+    <div class="flex justify-center items-center gap-4">
+      <button
+        (click)="test()"
+        [disabled]="!store.isStreamStarted() || isLoading || !text.value"
+        class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 disabled:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
+        @if (isLoading) {
+          <app-spinner-loader [width]="24" [borderWidth]="4" color="#374151"></app-spinner-loader>
+        } @else {
+          {{ lang.locals.test }}
+        }
+      </button>
+      <button
+        (click)="updateAndDownload()"
+        [disabled]="isLoading || isDownloading || !text.value"
+        class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 disabled:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
+        {{ lang.locals.download }}
+      </button>
+    </div>
+  </div>
+  {{ init$ | async }}
+</div>
+
+@if (isDownloading) {
+  <div
+    class="absolute top-0 left-0 w-full h-full bg-black/75 z-50 flex items-center justify-center gap-2 text-gray-200">
+    <span class="font-medium text-2xl">{{ lang.locals.video_generating_and_downloading_progress }}</span>
+    <span class="flex text-6xl">
+      <span class="animate-[bounce_1s_ease-in-out_infinite]">.</span>
+      <span class="animate-[bounce_1s_ease-in-out_infinite_0.2s]">.</span>
+      <span class="animate-[bounce_1s_ease-in-out_infinite_0.4s]">.</span>
+    </span>
+  </div>
+}

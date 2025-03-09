@@ -851,6 +851,18 @@
     "ar": "مساعد الموارد البشرية",
     "en": "HR Agent"
   },
+  "video_generator": {
+    "ar": "مولد الفيديو",
+    "en": "Video generator"
+  },
+  "test": {
+    "ar": "اختبار",
+    "en": "Test"
+  },
+  "download": {
+    "ar": "تحميل",
+    "en": "Download"
+  },
   "construction-stage": {
     "ar": "مرحلة البناء",
     "en": "Construction Stage"
@@ -1298,5 +1310,9 @@
   "links_count": {
     "ar": "عدد الروابط",
     "en": "Links count"
+  },
+  "video_generating_and_downloading_progress": {
+    "ar": "جاري توليد وتحميل الفيديو",
+    "en": "Video generating and downloading progress"
   }
 }
