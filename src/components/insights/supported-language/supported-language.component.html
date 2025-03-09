@@ -1,4 +1,4 @@
-<div class="relative w-48">
+<div class="relative w-full">
   <!-- Button to trigger dropdown -->
   <button
     cdkOverlayOrigin
@@ -10,7 +10,7 @@
         <path
           d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
       </svg>
-      <span class="mx-1">{{ selectedLanguage() || 'Choose a language' }}</span>
+      <span class="mx-1">{{ selectedLanguage() || lang.locals.choose_lang }}</span>
     </span>
 
     <!-- Chevron Up/Down -->
@@ -38,10 +38,12 @@
       @for (language of languages; track language.languageCode) {
         <button
           type="button"
-          (click)="selectLanguage(language.name, language.languageCode)"
+          (click)="
+            selectLanguage(lang.currentLanguage === 'ar' ? language.arName : language.name, language.languageCode)
+          "
           [ngClass]="{ '!bg-gray-100': language.name === selectedLanguage() }"
           class="w-full px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
-          <span>{{ language.name }}</span>
+          <span>{{ lang.currentLanguage === 'ar' ? language.arName : language.name }}</span>
         </button>
       }
     </div>

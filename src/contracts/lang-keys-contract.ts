@@ -309,4 +309,7 @@ export interface LangKeysContract {
   general_info: string
   industrial_discharge: string
   'previous-environmental-approval-question': string
+  translating: string
+  this_may_take_few_moments: string
+  choose_lang: string
 }

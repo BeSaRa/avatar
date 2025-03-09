@@ -1,7 +1,7 @@
 import { HttpBackend, HttpClient, HttpParams } from '@angular/common/http'
 import { computed, inject, Injectable, signal } from '@angular/core'
 import { UrlService } from './url.service'
-import { BehaviorSubject, map, Observable } from 'rxjs'
+import { BehaviorSubject, map, Observable, Subject } from 'rxjs'
 import { MediaVideoResultContract, VideoData, VideoIndexInfo } from '@/contracts/media-video-result-contract'
 import { timeToSeconds } from '@/utils/insights.utils'
 import { InsightsContract } from '@/contracts/insights'
@@ -18,6 +18,7 @@ export class VideoAnalyzerService {
   videoLengthInSeconds = computed(() => timeToSeconds(this.videoDuration()))
   timelineSeek = new BehaviorSubject<number>(0)
   subtitleFile = signal('')
+  translatingLoader = new Subject<boolean>()
 
   getListOfVideos(): Observable<VideoData[]> {
     const url = `${this.urlService.URLS.VIDEO_ANALYZER}/videos`

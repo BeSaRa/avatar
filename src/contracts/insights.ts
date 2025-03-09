@@ -1,4 +1,21 @@
+// eslint-disable-next-line max-len
+import { VideoInsightsAudioEffectsComponent } from '@/components/insights/video-insights-audio-effects/video-insights-audio-effects.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsEmotionsComponent } from '@/components/insights/video-insights-emotions/video-insights-emotions.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsLabelsComponent } from '@/components/insights/video-insights-labels/video-insights-labels.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsNamedEntitiesComponent } from '@/components/insights/video-insights-named-entities/video-insights-named-entities.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsObservedPeopleComponent } from '@/components/insights/video-insights-observed-people/video-insights-observed-people.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsPeopleComponent } from '@/components/insights/video-insights-people/video-insights-people.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsScenesComponent } from '@/components/insights/video-insights-scenes/video-insights-scenes.component'
+// eslint-disable-next-line max-len
+import { VideoInsightsTopicsComponent } from '@/components/insights/video-insights-topics/video-insights-topics.component'
 import { TailwindColorWithShade } from '@/types/tailwind-colors-type'
+import { InputSignal } from '@angular/core'
 export interface InsightsContract {
   partition?: unknown
   description?: string
@@ -327,4 +344,54 @@ interface VideosRange {
 interface VideoRange {
   start: string
   end: string
+}
+
+type NonNever<T> = Pick<
+  T,
+  {
+    [K in keyof T]: T[K] extends never ? never : K
+  }[keyof T]
+>
+export type InputProps<T> = NonNever<{
+  [K in keyof T]: T[K] extends InputSignal<infer R> ? (InputSignal<R> extends T[K] ? R : never) : never
+}>
+
+// Enum to define configuration keys
+export enum InsightComponentKey {
+  People = 'people',
+  ObservedPeople = 'observedPeople',
+  Topics = 'topics',
+  Emotions = 'emotions',
+  AudioEffects = 'audioEffects',
+  Labels = 'labels',
+  NamedEntities = 'namedEntities',
+  Scenes = 'scenes',
+}
+
+type InsightsComponents =
+  | VideoInsightsPeopleComponent
+  | VideoInsightsObservedPeopleComponent
+  | VideoInsightsTopicsComponent
+  | VideoInsightsEmotionsComponent
+  | VideoInsightsAudioEffectsComponent
+  | VideoInsightsLabelsComponent
+  | VideoInsightsNamedEntitiesComponent
+  | VideoInsightsScenesComponent
+
+export interface InsightsComponentsConfig<T extends InsightsComponents> {
+  component: new () => T
+  inputs: InputProps<T>
+  show: boolean
+}
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type InsightConfigMap = {
+  [InsightComponentKey.People]: InsightsComponentsConfig<VideoInsightsPeopleComponent>
+  [InsightComponentKey.ObservedPeople]: InsightsComponentsConfig<VideoInsightsObservedPeopleComponent>
+  [InsightComponentKey.Topics]: InsightsComponentsConfig<VideoInsightsTopicsComponent>
+  [InsightComponentKey.Emotions]: InsightsComponentsConfig<VideoInsightsEmotionsComponent>
+  [InsightComponentKey.AudioEffects]: InsightsComponentsConfig<VideoInsightsAudioEffectsComponent>
+  [InsightComponentKey.Labels]: InsightsComponentsConfig<VideoInsightsLabelsComponent>
+  [InsightComponentKey.NamedEntities]: InsightsComponentsConfig<VideoInsightsNamedEntitiesComponent>
+  [InsightComponentKey.Scenes]: InsightsComponentsConfig<VideoInsightsScenesComponent>
 }
