@@ -312,4 +312,8 @@ export interface LangKeysContract {
   translating: string
   this_may_take_few_moments: string
   choose_lang: string
+  video_generator: string
+  test: string
+  download: string
+  video_generating_and_downloading_progress: string
 }

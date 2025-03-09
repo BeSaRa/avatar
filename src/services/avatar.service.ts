@@ -54,7 +54,15 @@ export class AvatarService {
     return this.http.delete<StreamResultContract>(this.urlService.URLS.AVATAR + `/stop-render/${this.store.streamId()}`)
   }
 
-  renderText(): Observable<unknown> {
-    return this.http.post(this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`, {})
+  renderText(text: string): Observable<unknown> {
+    return this.http.post(this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`, { text })
+  }
+
+  updateVideo(text: string): Observable<unknown> {
+    return this.http.patch(this.urlService.URLS.AVATAR + '/update-video', {}, { params: { text } })
+  }
+
+  retrieveVideo(): Observable<unknown> {
+    return this.http.get(this.urlService.URLS.AVATAR + '/retrieve-video')
   }
 }

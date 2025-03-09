@@ -78,4 +78,11 @@ export const MENU_ITEMS: MenuItem[] = [
     svg: 'VIDEO',
     permissions: ['MEDIA'],
   },
+  {
+    id: 11,
+    label: 'video_generator',
+    route: '/video-generator',
+    svg: 'VIDEO_GENERATOR',
+    permissions: ['AVATAR'],
+  },
 ]
