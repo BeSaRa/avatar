@@ -1103,6 +1103,18 @@
     "ar": "محلل الفيديو",
     "en": "Video Analyzer"
   },
+  "upload_video": {
+    "ar": "ارفع فيديو",
+    "en": "Upload Video"
+  },
+  "choose_video_from_list": {
+    "ar": "اختر فيديو من القائمة",
+    "en": "Choose video from list"
+  },
+  "videos_list": {
+    "ar": "قائمة الفيديوهات",
+    "en": "Videos List"
+  },
   "people": {
     "ar": "الأشخاص",
     "en": "People"
@@ -1230,5 +1242,17 @@
   "industrial_discharge": {
     "ar": "الصرف الصناعي",
     "en": "Industrial Discharge"
+  },
+  "translating": {
+    "ar": "جاري الترجمة...",
+    "en": "Translating..."
+  },
+  "this_may_take_few_moments": {
+    "ar": "ربما سيتسغرق بضع دقائق",
+    "en": "This may take a few moments"
+  },
+  "choose_lang": {
+    "ar": "اختر اللغة",
+    "en": "Choose language"
   }
 }

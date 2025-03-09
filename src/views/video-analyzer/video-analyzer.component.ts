@@ -248,6 +248,7 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
     )
   }
   handelTranslateInsights(lang: string) {
+    this.videoAnalyzerService.translatingLoader.next(true)
     this.videoAnalyzerService
       .indexVideo(this.videoId(), lang)
       .pipe(
@@ -255,7 +256,8 @@ export class VideoAnalyzerComponent extends OnDestroyMixin(class {}) implements 
         tap(({ data }) => {
           this.videoSummary.set(data.summary)
           this.insights.set(data.res_data)
-        })
+        }),
+        finalize(() => this.videoAnalyzerService.translatingLoader.next(false))
       )
       .subscribe()
   }

@@ -1,9 +1,9 @@
-<div class="flex flex-col">
-  <div class="flex items-center sticky top-0 bg-gray-100 shadow-sm z-10 p-2">
-    <div class="w-1/2">
+<div class="relative flex flex-col">
+  <div class="flex flex-wrap md:flex-nowrap items-center sticky top-0 bg-gray-100 shadow-sm z-10 p-2">
+    <div class="w-full md:w-1/2">
       <app-supported-language (onLanguageChange)="onInsightsLangChange.emit($event)" />
     </div>
-    <div class="w-1/2">
+    <div class="w-full md:w-1/2">
       <!-- Tabs -->
       <div class="relative flex justify-between items-center m-2 bg-gray-200 rounded-md">
         <button
@@ -37,43 +37,18 @@
       </div>
     </div>
   </div>
-  <div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="bg-gray-100 h-[300px]">
+  <div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="bg-gray-100 h-[50vh]">
     @if (activeTab() === 'INSIGHTS') {
-      @if (videoInsights().faces?.length) {
-        <app-video-insights-people [people]="videoInsights().faces!" />
-      }
-      @if (videoInsights().observedPeople?.length) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-observed-people [observedPeople]="videoInsights().observedPeople!" />
-      }
-      @if (videoInsights().topics?.length) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-topics [topics]="videoInsights().topics!" />
-      }
-      @if (videoInsights().audioEffects?.length) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-audio-effects [audioEffects]="videoInsights().audioEffects!" />
-      }
-      @if (videoInsights().labels?.length) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-labels [labels]="videoInsights().labels!" />
-      }
-      @if (
-        videoInsights().brands?.length || videoInsights().namedLocations?.length || videoInsights().namedPeople?.length
-      ) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-named-entities
-          [brands]="videoInsights().brands ?? []"
-          [namedLocations]="videoInsights().namedLocations ?? []"
-          [namedPeople]="videoInsights().namedPeople ?? []" />
-      }
-      @if (videoInsights().emotions?.length) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-emotions [emotions]="videoInsights().emotions!" />
-      }
-      @if (videoInsights().scenes.length) {
-        <hr class="h-0.5 bg-gray-200" />
-        <app-video-insights-scenes [scenes]="videoInsights().scenes" [shots]="videoInsights().shots" />
+      @if (insightsSections()) {
+        @for (config of insightsSections() | keyvalue: originalOrder; track $index) {
+          @let cmpConfig = config.value;
+          @if (cmpConfig.show) {
+            <ng-container [ngComponentOutlet]="cmpConfig.component" [ngComponentOutletInputs]="cmpConfig.inputs" />
+          }
+          @if ($index > 1) {
+            <hr class="h-0.5 bg-gray-200" />
+          }
+        }
       }
     }
     @if (activeTab() === 'TIMELINE') {
@@ -85,4 +60,10 @@
       </p>
     }
   </div>
+  @if (videoAnalyzerService.translatingLoader | async) {
+    <div class="flex flex-col justify-center items-center absolute inset-0 bg-white">
+      <p class="text-gray-700 text-center text-xl font-bold animate-pulse">{{ lang.locals.translating }}</p>
+      <p class="text-gray-700 text-center text-sm">{{ lang.locals.this_may_take_few_moments }}</p>
+    </div>
+  }
 </div>

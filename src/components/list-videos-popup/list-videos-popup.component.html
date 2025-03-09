@@ -2,7 +2,7 @@
   <div class="p-4 bg-primary text-white">{{ lang.locals.videos_list }}</div>
   <mat-dialog-content appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }">
     <div class="p-4 min-h-0 flex flex-auto flex-col">
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         @if (isLoading()) {
           @for (skeleton of [1, 2, 3, 4, 5, 6]; track $index) {
             <div class="flex flex-col space-y-4 p-4 size-60 animate-pulse">
