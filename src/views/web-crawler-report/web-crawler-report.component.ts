@@ -3,7 +3,13 @@ import { URL_PATTERN } from '@/constants/url-pattern'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { LocalService } from '@/services/local.service'
 import { WebCrawlerService } from '@/services/web-crawler.service'
-import { convertMarkdownToHtmlHeaders, extractFileName, formatString, formatText } from '@/utils/utils'
+import {
+  convertMarkdownToHtmlHeaders,
+  extractFileName,
+  formatString,
+  formatText,
+  markAllControlsAsTouchedAndDirty,
+} from '@/utils/utils'
 import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { Component, ElementRef, inject, signal, viewChildren } from '@angular/core'
 import { FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -11,11 +17,13 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { catchError, finalize, takeUntil, tap } from 'rxjs'
 import html2pdf from 'html2pdf.js'
 import { CrawlerUrl, MediaCrawler } from '@/models/media-crawler'
+import { GenerteReportContract } from '@/contracts/generate-report-contract'
+import { ChipsInputComponent } from '@/components/chips-input/chips-input.component'
 
 @Component({
   selector: 'app-web-crawler-report',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, MatTooltipModule, NgTemplateOutlet],
+  imports: [ReactiveFormsModule, NgClass, MatTooltipModule, NgTemplateOutlet, ChipsInputComponent],
   templateUrl: './web-crawler-report.component.html',
   styleUrl: './web-crawler-report.component.scss',
   animations: [fadeInSlideUp],
@@ -34,6 +42,14 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
   crawlerForm = this.fb.group({
     topics: this.fb.array([this.fb.control('', Validators.required)]),
     urls: this.fb.array([this.fb.control('', [Validators.required, Validators.pattern(URL_PATTERN)])]),
+  })
+  reportForm = this.fb.group({
+    search_text: this.fb.control(null, Validators.required),
+    index_date_from: this.fb.control(null),
+    index_date_to: this.fb.control(null),
+    news_date_from: this.fb.control(null),
+    news_date_to: this.fb.control(null),
+    tags: this.fb.control([]),
   })
   animateTrigger = signal<boolean>(false)
 
@@ -108,13 +124,19 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
       .subscribe()
   }
 
-  generateReport(text: string): void {
-    if (!text) return
-
+  generateReport(): void {
+    if (this.reportForm.invalid) {
+      markAllControlsAsTouchedAndDirty(this.reportForm)
+      return
+    }
     this.loaderUrl.set(true)
-
+    const reportFilter: Partial<GenerteReportContract> = Object.fromEntries(
+      Object.entries(this.reportForm.value).filter(([, value]) =>
+        Array.isArray(value) ? value && value.length > 0 : Boolean(value)
+      )
+    )
     this.crawlerService
-      .generateReport(text)
+      .generateReport(reportFilter)
       .pipe(
         takeUntil(this.destroy$),
         tap(() => this.animateTrigger.set(!this.animateTrigger())),
