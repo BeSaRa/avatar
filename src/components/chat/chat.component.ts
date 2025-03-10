@@ -2,7 +2,7 @@ import { Component, effect, ElementRef, HostListener, inject, Injector, OnInit, 
 import { MatRipple } from '@angular/material/core'
 import { LocalService } from '@/services/local.service'
 import { AsyncPipe, DOCUMENT, NgClass } from '@angular/common'
-import { catchError, exhaustMap, filter, map, Subject, takeUntil, tap } from 'rxjs'
+import { catchError, exhaustMap, filter, iif, map, Subject, switchMap, takeUntil, tap } from 'rxjs'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import PerfectScrollbar from 'perfect-scrollbar'
@@ -18,6 +18,10 @@ import { ChatHistoryService } from '@/services/chat-history.service'
 import { FeedbackChat } from '@/enums/feedback-chat'
 import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
 import { SecureUrlDirective } from '@/directives/secure-url.directive'
+import { FAQComponent } from '../faq/faq.component'
+import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
+import { FAQService } from '@/services/faq.service'
+import { FAQContract } from '@/contracts/FAQ-contract'
 
 @Component({
   selector: 'app-chat',
@@ -35,6 +39,8 @@ import { SecureUrlDirective } from '@/directives/secure-url.directive'
     AvatarInterrupterBtnComponent,
     AsyncPipe,
     SecureUrlDirective,
+    PerfectScrollDirective,
+    FAQComponent,
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
@@ -57,9 +63,13 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   animating = signal(false)
   stopAnimate = signal(false)
   ratingDone = signal(false)
-  botNames$ = this.chatHistoryService
-    .getAllBotNames()
-    .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
+  FAQService = inject(FAQService)
+  questions = signal<FAQContract[]>([])
+  selectedBot = signal(this.chatService.botNameCtrl.value)
+  botNames$ = this.chatHistoryService.getAllBotNames().pipe(
+    tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)),
+    tap(bots => this.getQuestions(3, bots.at(0)!))
+  )
   declare scrollbarRef: PerfectScrollbar
   feedbackOptions = FeedbackChat
   // noinspection JSUnusedGlobalSymbols
@@ -107,7 +117,14 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   }
 
   listenToBotNameChange() {
-    this.chatService.onBotNameChange().pipe(takeUntil(this.destroy$)).subscribe()
+    this.chatService
+      .onBotNameChange()
+      .pipe(
+        tap(name => this.selectedBot.set(name)),
+        takeUntil(this.destroy$),
+        switchMap(name => this.getQuestions(3, name))
+      )
+      .subscribe()
   }
 
   toggleChat() {
@@ -212,5 +229,16 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .subscribe(() => {
         this.ratingDone.set(true)
       })
+  }
+  handleSuggestionsQuestions(question: string) {
+    this.messageCtrl.setValue(question)
+    this.sendMessage$.next()
+  }
+  getQuestions(numberOfQuestions: number, botName?: string) {
+    return iif(
+      () => !!botName,
+      this.FAQService.getQuestions(numberOfQuestions, botName),
+      this.FAQService.getQuestions(numberOfQuestions)
+    ).pipe(tap(questions => this.questions.set(questions)))
   }
 }

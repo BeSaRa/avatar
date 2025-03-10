@@ -1,0 +1,9 @@
+<div class="w-full flex gap-4">
+  @for (q of questions(); track $index) {
+    <button
+      (click)="selectedQuestion.emit(q.ActualQuestion)"
+      class="bg-primary rounded-xl p-2 text-white text-xs h-fit whitespace-nowrap outline-none">
+      {{ q.ActualQuestion }}
+    </button>
+  }
+</div>

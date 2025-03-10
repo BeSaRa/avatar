@@ -2,6 +2,7 @@
   [hidden]="status()"
   (click)="toggleChat()"
   mat-ripple
+  [matTooltip]="lang.locals.chat"
   class="mb-10 bg-black/30 rounded-2xl rtl:mr-5 ltr:ml-5 text-white p-2">
   <svg class="size-10" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <path
@@ -113,6 +114,15 @@
         </div>
       }
     </div>
+    @if (questions().length) {
+      <div
+        appPerfectScroll
+        [perfectScrollOptions]="{ suppressScrollY: true }"
+        class="flex items-center p-4 bg-gray-100">
+        <app-faq [questions]="questions()" (selectedQuestion)="handleSuggestionsQuestions($event)" />
+      </div>
+    }
+
     <div class="p-4 gap-2 flex justify-center items-stretch">
       <button
         (click)="clearChatHistory()"
