@@ -22,7 +22,7 @@
         <ng-container [ngTemplateOutlet]="spinnerIcon" />
       }
     </div>
-    <app-recorder #recorder (recognized$)="searchForm.setValue($event)" (recognizing$)="searchForm.setValue($event)" />
+    <app-recorder (recognized$)="searchForm.setValue($event)" (recognizing$)="searchForm.setValue($event)" />
   </div>
 </div>
 @if (searchResults$ | async; as searchResults) {

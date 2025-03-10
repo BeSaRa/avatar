@@ -84,10 +84,16 @@ export const AppStore = signalStore(
     }
     return {
       onInit() {
-        effect(() => {
-          const state = getState(store)
-          localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
-        })
+        effect(
+          () => {
+            if (store.isRecordingLoading()) {
+              store.recordingStopped()
+            }
+            const state = getState(store)
+            localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
+          },
+          { allowSignalWrites: true }
+        )
       },
     }
   })

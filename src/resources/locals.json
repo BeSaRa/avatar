@@ -1254,5 +1254,41 @@
   "choose_lang": {
     "ar": "اختر اللغة",
     "en": "Choose language"
+  },
+  "index_start_date": {
+    "ar": "تاريخ بداية الفهرسة",
+    "en": "Index start date"
+  },
+  "index_end_date": {
+    "ar": "تاريخ نهاية الفهرسة",
+    "en": "Index end data"
+  },
+  "news_start_date": {
+    "ar": "تاريخ بداية الخبر",
+    "en": "News start date"
+  },
+  "news_end_data": {
+    "ar": "تاريخ نهاية الخبر",
+    "en": "News end date"
+  },
+  "keywords": {
+    "ar": "الكلمات المفتاحية",
+    "en": "tags"
+  },
+  "add_keyword": {
+    "ar": "اضف كلمات مفتاحية",
+    "en": "Add tags"
+  },
+  "welcome_back": {
+    "ar": "تم تسجيل الدخول بنجاح!",
+    "en": "Login successful!"
+  },
+  "login_failed": {
+    "ar": "فشل تسجيل الدخول. تحقق من بيانات تسجيل الدخول الخاصة بك وحاول مرة أخرى.",
+    "en": "Login failed. Check your credentials and try again."
+  },
+  "welcome_user": {
+    "ar": "مرحبًا بعودتك، ",
+    "en": "Welcome back,"
   }
 }
