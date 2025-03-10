@@ -851,6 +851,18 @@
     "ar": "مساعد الموارد البشرية",
     "en": "HR Agent"
   },
+  "video_generator": {
+    "ar": "مولد الفيديو",
+    "en": "Video generator"
+  },
+  "test": {
+    "ar": "اختبار",
+    "en": "Test"
+  },
+  "download": {
+    "ar": "تحميل",
+    "en": "Download"
+  },
   "construction-stage": {
     "ar": "مرحلة البناء",
     "en": "Construction Stage"
@@ -1111,6 +1123,10 @@
     "ar": "اختر فيديو من القائمة",
     "en": "Choose video from list"
   },
+  "videos_list": {
+    "ar": "قائمة الفيديوهات",
+    "en": "Videos List"
+  },
   "people": {
     "ar": "الأشخاص",
     "en": "People"
@@ -1238,5 +1254,65 @@
   "industrial_discharge": {
     "ar": "الصرف الصناعي",
     "en": "Industrial Discharge"
+  },
+  "translating": {
+    "ar": "جاري الترجمة...",
+    "en": "Translating..."
+  },
+  "this_may_take_few_moments": {
+    "ar": "ربما سيتسغرق بضع دقائق",
+    "en": "This may take a few moments"
+  },
+  "choose_lang": {
+    "ar": "اختر اللغة",
+    "en": "Choose language"
+  },
+  "index_start_date": {
+    "ar": "تاريخ بداية الفهرسة",
+    "en": "Index start date"
+  },
+  "index_end_date": {
+    "ar": "تاريخ نهاية الفهرسة",
+    "en": "Index end data"
+  },
+  "news_start_date": {
+    "ar": "تاريخ بداية الخبر",
+    "en": "News start date"
+  },
+  "news_end_data": {
+    "ar": "تاريخ نهاية الخبر",
+    "en": "News end date"
+  },
+  "keywords": {
+    "ar": "الكلمات المفتاحية",
+    "en": "tags"
+  },
+  "add_keyword": {
+    "ar": "اضف كلمات مفتاحية",
+    "en": "Add tags"
+  },
+  "welcome_back": {
+    "ar": "تم تسجيل الدخول بنجاح!",
+    "en": "Login successful!"
+  },
+  "login_failed": {
+    "ar": "فشل تسجيل الدخول. تحقق من بيانات تسجيل الدخول الخاصة بك وحاول مرة أخرى.",
+    "en": "Login failed. Check your credentials and try again."
+  },
+  "welcome_user": {
+    "ar": "مرحبًا بعودتك، ",
+    "en": "Welcome back,"
+  },
+  "bot_welcom_message": {
+    "ar": "مرحبا بك في المساعد القانوني الذكي",
+    "en": "Welcome to the AI Legal Assistant"
+  },
+  "links_count": {
+    "ar": "عدد الروابط",
+    "en": "Links count"
+  },
+  "video_generating_and_downloading_progress": {
+    "ar": "جاري توليد وتحميل الفيديو",
+    "en": "Video generating and downloading progress"
   }
 }
