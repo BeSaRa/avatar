@@ -6,6 +6,8 @@ import { catchError, Observable, of, tap } from 'rxjs'
 import { Router } from '@angular/router'
 import { STORAGE_ITEMS } from '@/constants/storage-items'
 import { CONFIGURATIONS } from '../../../resources/configurations'
+import { MessageService } from '@/services/message.service'
+import { LocalService } from '@/services/local.service'
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,8 @@ export class ApplicationUserService {
   private readonly _http = inject(HttpClient)
   private readonly _urlService = inject(UrlService)
   private readonly _router = inject(Router)
+  private readonly messagesService = inject(MessageService)
+  private readonly lang = inject(LocalService)
   $applicationUser = signal<ApplicationUser>(new ApplicationUser())
   $isAuthenticated = signal<boolean>(false)
 
@@ -38,8 +42,13 @@ export class ApplicationUserService {
       ),
       tap(() => this.$isAuthenticated.set(true)),
       tap(() => this._router.navigate(['/home'])),
+      tap(() =>
+        this.messagesService.showInfo(`${this.lang.locals.welcome_user}, ${username}! ${this.lang.locals.welcome_back}`)
+      ),
+
       catchError(() => {
         this.$isAuthenticated.set(false)
+        this.messagesService.showError(`${this.lang.locals.login_failed}`)
         return of(new ApplicationUser())
       })
     )
