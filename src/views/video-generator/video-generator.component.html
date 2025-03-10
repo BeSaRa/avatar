@@ -28,10 +28,16 @@
       <div class="absolute z-50 top-2 start-2 w-10"><app-avatar-interrupter-btn /></div>
     }
 
-    <video autoplay [hidden]="store.isStreamStopped() || store.isStreamLoading()" #video class="w-full -mb-10"></video>
-    <video #idleVideo [hidden]="store.isStreamStarted()" class="w-full -mb-96">
-      <source src="assets/videos/idle-full.webm" type="video/webm" />
-    </video>
+    <div class="relative w-full h-[500px] overflow-hidden">
+      <video
+        [hidden]="store.isStreamStopped() || store.isStreamLoading()"
+        autoplay
+        #video
+        class="absolute min-w-full min-h-full"></video>
+      <video #idleVideo [hidden]="store.isStreamStarted()" class="absolute min-w-full min-h-full">
+        <source src="assets/videos/idle-full.webm" type="video/webm" />
+      </video>
+    </div>
   </div>
   <div class="w-full md:w-[700px]">
     <div class="w-full">
