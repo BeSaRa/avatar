@@ -1,29 +1,43 @@
-<div class="h-[90vh] grid items-center justify-center">
-  <section class="flex flex-col w-full p-4 bg-gray-100 rounded-md border-2 border-gray-300 max-h-[60vh] min-w-[500px]">
-    <h1 class="font-medium text-xl text-center">{{ lang.locals.login }}</h1>
+<div class="h-screen flex items-center justify-center p-4">
+  <section class="flex flex-col w-full max-w-md p-6 bg-gray-100 rounded-lg border-2 border-gray-300 shadow-md">
+    <h1 class="font-medium text-2xl text-center mb-6">{{ lang.locals.login }}</h1>
+
     <form class="contents" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="mb-4">
-        <label for="userName">{{ lang.locals.user_name }}</label>
+        <label for="userName" class="block mb-1">{{ lang.locals.user_name }}</label>
         <input
           [placeholder]="lang.locals.user_name"
           formControlName="userName"
           id="userName"
           type="text"
-          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary" />
+          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary transition-colors" />
+        @if (form.get('userName')?.invalid && form.get('userName')?.touched) {
+          <p class="text-red-500 text-sm mt-1">
+            {{ lang.locals.required }}
+          </p>
+        }
       </div>
+
       <div class="mb-4">
-        <label for="password">{{ lang.locals.password }}</label>
+        <label for="password" class="block mb-1">{{ lang.locals.password }}</label>
         <input
           [placeholder]="lang.locals.password"
           formControlName="password"
           id="password"
           type="password"
-          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary" />
+          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary transition-colors" />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <p class="text-red-500 text-sm mt-1">
+            {{ lang.locals.required }}
+          </p>
+        }
       </div>
-      <button type="submit" class="bg-primary m-auto rounded-md w-full md:w-1/3 text-white p-1">
-        <span>
-          {{ lang.locals.login }}
-        </span>
+
+      <button
+        type="submit"
+        class="bg-primary rounded-md w-full text-white p-2 mt-4 transition-transform hover:scale-105 disabled:opacity-50"
+        [disabled]="form.invalid">
+        {{ lang.locals.login }}
       </button>
     </form>
   </section>

@@ -5,6 +5,7 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { take } from 'rxjs'
 import { ApplicationUserService } from '../services/application-user.service'
 import { Router } from '@angular/router'
+import { MessageService } from '@/services/message.service'
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ import { Router } from '@angular/router'
 export class LoginComponent {
   lang = inject(LocalService)
   fb = inject(NonNullableFormBuilder)
+  messagesService = inject(MessageService)
   form = this.fb.group({
     userName: this.fb.control('', [Validators.required]),
     password: this.fb.control('', [Validators.required]),
@@ -23,6 +25,11 @@ export class LoginComponent {
   userService = inject(ApplicationUserService)
   router = inject(Router)
   onSubmit() {
-    this.userService.login(this.form.value.userName!, this.form.value.password!).pipe(take(1)).subscribe()
+    if (this.form.invalid) {
+      this.messagesService.showInfo('Please fill in all required fields correctly.')
+      return
+    }
+    const { userName, password } = this.form.value
+    this.userService.login(userName!, password!).pipe(take(1)).subscribe()
   }
 }
