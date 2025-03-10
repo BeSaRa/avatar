@@ -205,7 +205,6 @@ export interface LangKeysContract {
   user_name: string
   password: string
   login: string
-  login_failed: string
   permission_managment: string
   statistics: string
   total_reports: string
@@ -312,4 +311,13 @@ export interface LangKeysContract {
   translating: string
   this_may_take_few_moments: string
   choose_lang: string
+  index_start_date: string
+  index_end_date: string
+  news_start_date: string
+  news_end_data: string
+  keywords: string
+  add_keyword: string
+  welcome_back: string
+  login_failed: string
+  welcome_user: string
 }

@@ -34,7 +34,23 @@ export class RecorderComponent extends OnDestroyMixin(class {}) {
 
   async toggleRecording() {
     if (this.store.isRecordingLoading()) return
+    const hasMicrophoneAccess = await this.checkMicrophonePermission()
+    if (!hasMicrophoneAccess) {
+      alert('Microphone permission is not granted. Please enable it and try again.')
+      return
+    }
     this.store.isRecordingStarted() && this.recognizer ? await this.stopRecording() : await this.startRecording()
+  }
+
+  private async checkMicrophonePermission(): Promise<boolean> {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      stream.getTracks().forEach(track => track.stop())
+      return true
+    } catch (error) {
+      console.error('Microphone access denied:', error)
+      return false
+    }
   }
 
   async stopRecording() {
@@ -53,13 +69,29 @@ export class RecorderComponent extends OnDestroyMixin(class {}) {
       await this.prepareRecognizer()
     }
 
-    this.store.recordingInProgress()
-    this.recognizer.startContinuousRecognitionAsync(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(this.recognizer.internalData as unknown as any).privConnectionPromise.__zone_symbol__state === true &&
-        this.store.recordingStarted()
-      this.recognizingStatus.set(true)
-    })
+    try {
+      const hasMicrophoneAccess = await this.checkMicrophonePermission()
+      if (!hasMicrophoneAccess) {
+        this.store.recordingStopped()
+        return
+      }
+      this.store.recordingInProgress()
+      this.recognizer.startContinuousRecognitionAsync(
+        () => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(this.recognizer.internalData as unknown as any).privConnectionPromise.__zone_symbol__state === true &&
+            this.store.recordingStarted()
+          this.recognizingStatus.set(true)
+        },
+        error => {
+          console.error('Error starting recognition:', error)
+          this.store.recordingStopped()
+        }
+      )
+    } catch (error) {
+      console.error('Error starting recording:', error)
+      this.store.recordingStopped()
+    }
   }
 
   private async prepareRecognizer() {
