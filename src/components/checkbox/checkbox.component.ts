@@ -1,6 +1,6 @@
 import { OnChange, OnTouched } from '@/types/CVA-functions-types'
 import { NgClass } from '@angular/common'
-import { Component, forwardRef, input, signal } from '@angular/core'
+import { Component, forwardRef, input, output, signal } from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 
 @Component({
@@ -24,6 +24,8 @@ export class CheckboxComponent implements ControlValueAccessor {
   id = input('checkbox')
   classes = input('')
 
+  onSelect = output<boolean>()
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched: OnTouched = () => {}
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -33,6 +35,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   onChecked(event: Event): void {
     const inputElement = event.target as HTMLInputElement
     this.checked.set(inputElement.checked)
+    this.onSelect.emit(inputElement.checked)
     this.onChange(inputElement.checked)
   }
 
