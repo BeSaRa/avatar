@@ -45,6 +45,7 @@ export class ApplicationUserService {
       tap(() =>
         this.messagesService.showInfo(`${this.lang.locals.welcome_user}, ${username}! ${this.lang.locals.welcome_back}`)
       ),
+      tap(() => localStorage.setItem(STORAGE_ITEMS.USERNAME, username)),
 
       catchError(() => {
         this.$isAuthenticated.set(false)
