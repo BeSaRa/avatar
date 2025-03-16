@@ -1,0 +1,10 @@
+@if (username()) {
+  <div
+    class="fixed inline-flex items-center justify-center gap-2 z-20 rounded-full bg-gray-100 text-gray-700 px-4 py-1 m-2 opacity-70">
+    <svg class="fill-gray-700 size-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path
+        d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+    </svg>
+    <span>{{ username() }}</span>
+  </div>
+}
