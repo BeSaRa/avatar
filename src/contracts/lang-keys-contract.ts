@@ -326,4 +326,6 @@ export interface LangKeysContract {
   test: string
   download: string
   video_generating_and_downloading_progress: string
+  greeting_chat_message: string
+  ai_answers_alert: string
 }

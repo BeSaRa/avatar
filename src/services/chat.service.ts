@@ -10,13 +10,4 @@ export class ChatService extends BaseChatService {
   status = signal<boolean>(false)
   conversationId = signal<string>('')
   lang = inject(LocalService)
-
-  checkInteractivity() {
-    if (!this.store.isInteracted() && this.status()) {
-      setTimeout(() => {
-        this.messages.update(messages => [...messages, new Message(this.lang.locals.bot_welcom_message, 'assistant')])
-        this.store.updateInteractioinWithChat(true)
-      })
-    }
-  }
 }

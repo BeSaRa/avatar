@@ -14,7 +14,6 @@ interface AppStore {
   isVideo: boolean
   preview: boolean
   videoToken: string
-  isInteractiWithChat: boolean
 }
 
 const initialState: AppStore = {
@@ -32,13 +31,12 @@ const initialState: AppStore = {
   isVideo: false,
   preview: false,
   videoToken: '',
-  isInteractiWithChat: false,
 }
 
 export const AppStore = signalStore(
   { providedIn: 'root', protectedState: true },
   withState(initialState),
-  withComputed(({ streamId, speechToken, recording, streamingStatus, isInteractiWithChat }) => ({
+  withComputed(({ streamId, speechToken, recording, streamingStatus }) => ({
     hasToken: computed(() => !!speechToken().token),
     hasRegion: computed(() => !!speechToken().region),
     isRecordingStarted: computed(() => recording() === 'Started'),
@@ -48,7 +46,6 @@ export const AppStore = signalStore(
     isStreamStarted: computed(() => streamingStatus() === 'Started'),
     isStreamStopped: computed(() => streamingStatus() === 'Stopped'),
     isStreamLoading: computed(() => streamingStatus() === 'InProgress' || streamingStatus() === 'Disconnecting'),
-    isInteracted: computed(() => !!isInteractiWithChat()),
   })),
   withMethods(store => ({
     updateSpeechToken: (token: SpeechTokenContract = { token: '', region: '' }) => {
@@ -69,9 +66,6 @@ export const AppStore = signalStore(
     updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' | 'Disconnecting' = 'Stopped') => {
       patchState(store, { streamingStatus: status })
     },
-    updateInteractioinWithChat: (interact: boolean) => {
-      patchState(store, { isInteractiWithChat: interact })
-    },
   })),
   withMethods(store => {
     return {
@@ -87,11 +81,9 @@ export const AppStore = signalStore(
     } else {
       const state = getState(store)
       localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
-      localStorage.removeItem('isInteractiWithChat')
     }
     return {
       onInit() {
-        patchState(store, { isInteractiWithChat: false })
         if (store.isRecordingLoading()) {
           patchState(store, { recording: 'Stopped' })
         }

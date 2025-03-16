@@ -22,6 +22,8 @@ import { FAQComponent } from '../faq/faq.component'
 import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { FAQService } from '@/services/faq.service'
 import { FAQContract } from '@/contracts/FAQ-contract'
+import { AppStore } from '@/stores/app.store'
+import { AvatarService } from '@/services/avatar.service'
 
 @Component({
   selector: 'app-chat',
@@ -53,6 +55,8 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   document = inject(DOCUMENT)
   lang = inject(LocalService)
   chatService = inject(ChatService)
+  store = inject(AppStore)
+  avatarService = inject(AvatarService)
   chatHistoryService = inject(ChatHistoryService)
   status = this.chatService.status
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
@@ -78,6 +82,12 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       this.scrollbarRef = new PerfectScrollbar(this.chatBodyContainer()!.nativeElement)
     } else {
       this.scrollbarRef && this.scrollbarRef.destroy()
+    }
+  })
+  //greeting avatar
+  greetingAvatarEffect = effect(() => {
+    if (this.store.isStreamStarted()) {
+      this.avatarService.greeting(this.selectedBot(), this.lang.currentLanguage == 'ar').subscribe()
     }
   })
   // noinspection JSUnusedGlobalSymbols
@@ -129,7 +139,6 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   toggleChat() {
     this.status.update(value => !value)
-    this.chatService.checkInteractivity()
   }
 
   fullScreenToggle() {

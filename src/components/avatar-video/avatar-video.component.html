@@ -26,7 +26,7 @@
       autoplay
       [hidden]="store.isStreamStopped() || store.isStreamLoading()"
       #video
-      [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }"></video>
+      [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize(), 'overflow-hidden': !hasSize() }"></video>
 
     @if (hasSize()) {
       <video #idleVideo [ngClass]="{ 'h-full': hasSize(), 'w-full': !hasSize() }" [hidden]="store.isStreamStarted()">
