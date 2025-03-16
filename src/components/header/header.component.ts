@@ -71,7 +71,6 @@ export class HeaderComponent {
   openChatbot($event: Event) {
     $event.preventDefault()
     this.chatService.status.update(value => !value)
-    this.chatService.checkInteractivity()
   }
   hasPermission(permissions: (keyof typeof ALL_PERMISSIONS)[]) {
     if (!this.applicationUser) return false

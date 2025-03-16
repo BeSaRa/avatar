@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core'
 import { UrlService } from '@/services/url.service'
 import { Observable, tap } from 'rxjs'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { StreamResultContract } from '@/contracts/stream-result-contract'
 import { AppStore } from '@/stores/app.store'
 
@@ -64,5 +64,11 @@ export class AvatarService {
 
   retrieveVideo(): Observable<unknown> {
     return this.http.get(this.urlService.URLS.AVATAR + '/retrieve-video')
+  }
+
+  greeting(botName: string, isArabic: boolean) {
+    const url = `${this.urlService.URLS.AVATAR}/greeting/${botName}/${this.store.streamId()}`
+    const params = new HttpParams().append('is_ar', isArabic)
+    return this.http.post<void>(url, null, { params })
   }
 }

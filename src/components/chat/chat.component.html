@@ -2,6 +2,7 @@
   [hidden]="status()"
   (click)="toggleChat()"
   mat-ripple
+  #toggler
   [matTooltip]="lang.locals.chat"
   class="mb-10 bg-black/30 rounded-2xl rtl:mr-5 ltr:ml-5 text-white p-2">
   <svg class="size-10" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -56,6 +57,16 @@
       </div>
     </div>
     <div #chatBody class="flex-auto overflow-hidden flex flex-col relative min-h-0 p-4">
+      @defer (on interaction(toggler)) {
+        <div
+          class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
+          <span
+            appTextWriterAnimator
+            (animating)="animating.set($event)"
+            [stop]="stopAnimate()"
+            [text]="lang.locals.greeting_chat_message"></span>
+        </div>
+      }
       @for (message of chatService.messages(); track message.id) {
         @if (message.isUser()) {
           <div
@@ -114,6 +125,7 @@
         </div>
       }
     </div>
+    <div class="flex items-center justify-center text-xs p-2">{{ lang.locals.ai_answers_alert }}</div>
     @if (questions().length) {
       <div
         appPerfectScroll
