@@ -1322,5 +1322,13 @@
   "ai_answers_alert": {
     "ar": "تنويه: الإجابات تعتمد على تقنية الذكاء الاصطناعي وقد تكون عرضة للخطأ",
     "en": "Notice: The answers are based on AI technology and may be subject to errors."
+  },
+  "future_date_error": {
+    "ar": "لا يمكن أن يكون تاريخ الفهرسة في المستقبل",
+    "en": "Index date cannot be in the future."
+  },
+  "date_range_error": {
+    "ar": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية",
+    "en": "The end date must be after the start date."
   }
 }

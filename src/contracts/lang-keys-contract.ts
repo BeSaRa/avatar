@@ -328,4 +328,6 @@ export interface LangKeysContract {
   video_generating_and_downloading_progress: string
   greeting_chat_message: string
   ai_answers_alert: string
+  date_range_error: string
+  future_date_error: string
 }

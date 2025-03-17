@@ -24,28 +24,58 @@
           <input
             type="date"
             formControlName="index_date_from"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="
+              (reportForm.errors?.['futureDateInvalid'] || reportForm.errors?.['indexDateRangeInvalid']) &&
+              reportForm.touched
+            " />
+          <!-- Error Messages for Index Dates -->
+          @if (
+            reportForm.errors?.['futureDateInvalid'] &&
+            (reportForm.get('index_date_from')?.touched || reportForm.get('index_date_to')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.future_date_error }}</span>
+          }
+          @if (
+            reportForm.errors?.['indexDateRangeInvalid'] &&
+            (reportForm.get('index_date_from')?.touched || reportForm.get('index_date_to')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+          }
         </div>
         <div class="flex flex-col">
           <label for="index_date_to" class="text-sm font-medium">{{ lang.locals.index_end_date }}</label>
           <input
             type="date"
             formControlName="index_date_to"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="
+              (reportForm.errors?.['futureDateInvalid'] || reportForm.errors?.['indexDateRangeInvalid']) &&
+              reportForm.touched
+            " />
         </div>
         <div class="flex flex-col">
           <label for="news_date_from" class="text-sm font-medium">{{ lang.locals.news_start_date }}</label>
           <input
             type="date"
             formControlName="news_date_from"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="reportForm.errors?.['newsDateRangeInvalid'] && reportForm.touched" />
+
+          @if (
+            reportForm.errors?.['newsDateRangeInvalid'] &&
+            (reportForm.get('news_date_from')?.touched || reportForm.get('news_date_to')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+          }
         </div>
         <div class="flex flex-col">
           <label for="news_date_to" class="text-sm font-medium">{{ lang.locals.news_end_data }}</label>
           <input
             type="date"
             formControlName="news_date_to"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="reportForm.errors?.['newsDateRangeInvalid'] && reportForm.touched" />
         </div>
       </div>
 

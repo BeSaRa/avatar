@@ -12,7 +12,14 @@ import {
 } from '@/utils/utils'
 import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { Component, ElementRef, inject, signal, viewChildren } from '@angular/core'
-import { FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
+import {
+  AbstractControl,
+  FormArray,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { catchError, finalize, takeUntil, tap } from 'rxjs'
 import html2pdf from 'html2pdf.js'
@@ -43,15 +50,51 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
     topics: this.fb.array([this.fb.control('', Validators.required)]),
     urls: this.fb.array([this.fb.control('', [Validators.required, Validators.pattern(URL_PATTERN)])]),
   })
-  reportForm = this.fb.group({
-    search_text: this.fb.control(null, Validators.required),
-    index_date_from: this.fb.control(null),
-    index_date_to: this.fb.control(null),
-    news_date_from: this.fb.control(null),
-    news_date_to: this.fb.control(null),
-    tags: this.fb.control([]),
-  })
+  reportForm = this.fb.group(
+    {
+      search_text: this.fb.control(null, Validators.required),
+      index_date_from: this.fb.control(null),
+      index_date_to: this.fb.control(null),
+      news_date_from: this.fb.control(null),
+      news_date_to: this.fb.control(null),
+      tags: this.fb.control([]),
+    },
+    { validators: [this.dateRangeValidator, this.futureIndexDateValidator] }
+  )
   animateTrigger = signal<boolean>(false)
+
+  dateRangeValidator(group: AbstractControl): ValidationErrors | null {
+    const indexFrom = group.get('index_date_from')?.value
+    const indexTo = group.get('index_date_to')?.value
+    const newsFrom = group.get('news_date_from')?.value
+    const newsTo = group.get('news_date_to')?.value
+
+    const errors: ValidationErrors = {}
+
+    if (indexFrom && indexTo && indexFrom > indexTo) {
+      errors['indexDateRangeInvalid'] = true
+    }
+
+    if (newsFrom && newsTo && newsFrom > newsTo) {
+      errors['newsDateRangeInvalid'] = true
+    }
+
+    return Object.keys(errors).length > 0 ? errors : null
+  }
+
+  futureIndexDateValidator(group: AbstractControl): ValidationErrors | null {
+    const today = new Date().toISOString().split('T')[0]
+    const fields = ['index_date_to']
+
+    for (const field of fields) {
+      const control = group.get(field)
+      if (control?.value && control.value > today) {
+        return { futureDateInvalid: true }
+      }
+    }
+
+    return null
+  }
 
   get topics(): FormArray {
     return this.crawlerForm.get('topics') as FormArray
