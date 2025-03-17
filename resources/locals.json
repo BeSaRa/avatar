@@ -1314,5 +1314,21 @@
   "video_generating_and_downloading_progress": {
     "ar": "جاري توليد وتحميل الفيديو",
     "en": "Video generating and downloading progress"
+  },
+  "greeting_chat_message": {
+    "ar": "مرحبا بك في المساعد القانوني الذكي للهيئة العامة لتنظيم القطاع العقاري، كيف يمكنني مساعدتك؟",
+    "en": "Welcome to the Smart Legal Assistant of the Real Estate Regulatory Authority. How can I assist you?"
+  },
+  "ai_answers_alert": {
+    "ar": "تنويه: الإجابات تعتمد على تقنية الذكاء الاصطناعي وقد تكون عرضة للخطأ",
+    "en": "Notice: The answers are based on AI technology and may be subject to errors."
+  },
+  "future_date_error": {
+    "ar": "لا يمكن أن يكون تاريخ الفهرسة في المستقبل",
+    "en": "Index date cannot be in the future."
+  },
+  "date_range_error": {
+    "ar": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية",
+    "en": "The end date must be after the start date."
   }
 }
