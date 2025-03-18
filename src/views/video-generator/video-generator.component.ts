@@ -3,12 +3,14 @@ import { SpinnerLoaderComponent } from '@/components/spinner-loader/spinner-load
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
 import { LocalService } from '@/services/local.service'
+import { MessageService } from '@/services/message.service'
 import { AppStore } from '@/stores/app.store'
 import { ignoreErrors } from '@/utils/utils'
 import { CommonModule } from '@angular/common'
 import { AfterViewInit, Component, computed, ElementRef, inject, OnInit, viewChild } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatTooltipModule } from '@angular/material/tooltip'
 import {
   catchError,
   exhaustMap,
@@ -18,6 +20,7 @@ import {
   map,
   merge,
   Observable,
+  of,
   ReplaySubject,
   switchMap,
   takeUntil,
@@ -25,7 +28,7 @@ import {
 } from 'rxjs'
 
 @Component({
-  selector: 'app-text-avatar',
+  selector: 'app-video-generator',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,6 +36,7 @@ import {
     MatFormFieldModule,
     SpinnerLoaderComponent,
     AvatarInterrupterBtnComponent,
+    MatTooltipModule,
   ],
   templateUrl: './video-generator.component.html',
   styleUrl: './video-generator.component.scss',
@@ -44,6 +48,7 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
   lang = inject(LocalService)
   avatarService = inject(AvatarService)
   store = inject(AppStore)
+  messageService = inject(MessageService)
 
   start$ = new ReplaySubject<void>(1)
   stop$ = new ReplaySubject<void>(1)
@@ -52,6 +57,8 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
   text = new FormControl('')
   isLoading = false
   isDownloading = false
+
+  settingsOpened = false
 
   onlineStatus = computed(() => {
     this.lang.localChange() // just to track any change for the languages
@@ -159,6 +166,10 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
     this.start$.next()
   }
 
+  toggleSettings() {
+    this.settingsOpened = !this.settingsOpened
+  }
+
   interruptAvatar() {
     this.avatarService.interruptAvatar().subscribe()
   }
@@ -177,8 +188,22 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
     this.isDownloading = true
     this.avatarService
       .updateVideo(this.text.value!)
+      .pipe(
+        switchMap(res => {
+          if (res.status === 'SUCCESS') return this.avatarService.retrieveVideo()
+          else if (res.status === 'RENDERING')
+            this.messageService.showInfo(
+              this.lang.locals.another_video_is_being_generated_please_try_again_after_a_while
+            )
+          return of(null)
+        })
+      )
       .pipe(finalize(() => (this.isDownloading = false)))
-      .subscribe(res => console.log(res))
+      .subscribe(url => {
+        if (url) {
+          window.open(url)
+        }
+      })
   }
 
   ngAfterViewInit(): void {
