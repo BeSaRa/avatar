@@ -137,6 +137,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
     // trigger the start of stream
     // this.start$.next()
     // close when destroy component
+    this.store.updateStreamStatus('Stopped')
     merge(this.destroy$)
       .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2
       .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
@@ -150,6 +151,7 @@ export class AvatarVideoComponent extends OnDestroyMixin(class {}) implements On
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
       .subscribe(() => {
+        this.store.updateStreamStatus('Stopped')
         console.log('MANUAL CLOSE')
       })
 

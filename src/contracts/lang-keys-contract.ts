@@ -330,4 +330,5 @@ export interface LangKeysContract {
   ai_answers_alert: string
   date_range_error: string
   future_date_error: string
+  another_video_is_being_generated_please_try_again_after_a_while: string
 }
