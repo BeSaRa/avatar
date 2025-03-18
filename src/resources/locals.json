@@ -1394,5 +1394,9 @@
   "faq_manager_desc": {
     "ar": "إدارة الأسئلة الشائعة من حيث الإضافة والترتيب والتنظيم.",
     "en": "Manage FAQs including adding, organizing, and ordering questions."
+  },
+  "another_video_is_being_generated_please_try_again_after_a_while": {
+    "ar": "يتم توليد فيديو آخر حالياً. الرجاء المحاولة مرة آخرى بعد مدة",
+    "en": "Another video is being generated now. Please try again after a while"
   }
 }

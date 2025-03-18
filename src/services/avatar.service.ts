@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core'
-import { UrlService } from '@/services/url.service'
-import { Observable, tap } from 'rxjs'
-import { HttpClient, HttpParams } from '@angular/common/http'
 import { StreamResultContract } from '@/contracts/stream-result-contract'
+import { UrlService } from '@/services/url.service'
 import { AppStore } from '@/stores/app.store'
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { inject, Injectable } from '@angular/core'
+import { Observable, of, switchMap, tap, timer } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -55,15 +55,26 @@ export class AvatarService {
   }
 
   renderText(text: string): Observable<unknown> {
-    return this.http.post(this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`, { text })
+    return this.http.post(
+      this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`,
+      {},
+      { params: { text } }
+    )
   }
 
-  updateVideo(text: string): Observable<unknown> {
-    return this.http.patch(this.urlService.URLS.AVATAR + '/update-video', {}, { params: { text } })
+  updateVideo(text: string): Observable<{ status: string }> {
+    return this.http.post<{ status: string }>(this.urlService.URLS.AVATAR + '/update-video', {}, { params: { text } })
   }
 
-  retrieveVideo(): Observable<unknown> {
-    return this.http.get(this.urlService.URLS.AVATAR + '/retrieve-video')
+  retrieveVideo(): Observable<string> {
+    return this.http.get<{ status: string; data: string }>(this.urlService.URLS.AVATAR + '/retrieve-video').pipe(
+      switchMap(res => {
+        if (res.status === 'RENDERING') {
+          return timer(5000).pipe(switchMap(() => this.retrieveVideo()))
+        }
+        return of(res.data)
+      })
+    )
   }
 
   greeting(botName: string, isArabic: boolean) {
