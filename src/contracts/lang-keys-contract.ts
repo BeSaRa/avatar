@@ -347,4 +347,5 @@ export interface LangKeysContract {
   faq_manager_desc: string
   upload_document: string
   another_video_is_being_generated_please_try_again_after_a_while: string
+  another_video_is_being_generated_please_try_again_after_a_while: string
 }
