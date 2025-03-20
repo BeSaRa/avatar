@@ -1331,6 +1331,10 @@
     "ar": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية",
     "en": "The end date must be after the start date."
   },
+  "upload_document": {
+    "ar": "رفع ملف",
+    "en": "upload document."
+  },
   "faq_list": {
     "ar": "قائمة الأسئلة",
     "en": "FAQ List"

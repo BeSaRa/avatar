@@ -119,9 +119,11 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
 
   messageCtrl = new FormControl<string>('', { nonNullable: true })
   sendMessage$ = new Subject<void>()
+  uploadDocument$ = new Subject<FileList>()
 
   ngOnInit(): void {
     this.listenToSendMessage()
+    this.listenToUploadDocument()
     this.listenToBotNameChange()
     this.detectFullScreenMode()
   }
@@ -173,6 +175,35 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
               })
             )
             .pipe(ignoreErrors())
+        )
+      )
+      .subscribe(() => {
+        this.answerInProgress.set(false)
+        Promise.resolve().then(() => {
+          this.messageInput()?.nativeElement?.focus()
+          const timeoutID = setTimeout(() => {
+            this.scrollToTop()
+            clearInterval(timeoutID)
+          }, 50)
+        })
+      })
+  }
+
+  private listenToUploadDocument() {
+    return this.uploadDocument$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(files => files.length > 0))
+      .pipe(tap(() => this.answerInProgress.set(true)))
+      .pipe(
+        exhaustMap(files =>
+          this.chatService
+            .uploadDocument(files, this.chatService.botNameCtrl.value, this.chatService.conversationId())
+            .pipe(
+              catchError(err => {
+                this.answerInProgress.set(false)
+                throw new Error(err)
+              })
+            )
         )
       )
       .subscribe(() => {
@@ -250,5 +281,12 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       this.FAQService.getQuestions(numberOfQuestions, botName),
       this.FAQService.getQuestions(numberOfQuestions)
     ).pipe(tap(questions => this.questions.set(questions)))
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement
+    if (input.files && input.files.length > 0) {
+      this.uploadDocument$.next(input.files)
+    }
   }
 }
