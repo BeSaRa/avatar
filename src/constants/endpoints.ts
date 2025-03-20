@@ -16,6 +16,7 @@ export const EndPoints = {
   USER: 'user',
   VIDEO_ANALYZER: 'vi',
   FAQ: 'FAQ',
+  CHATBOT_UPLOAD_DOCUMENT: 'chatbot/upload_documents/',
 }
 
 export type EndpointsType = typeof EndPoints
