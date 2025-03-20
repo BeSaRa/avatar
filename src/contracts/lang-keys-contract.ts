@@ -345,4 +345,5 @@ export interface LangKeysContract {
   choose_bot_name: string
   faq_manager: string
   faq_manager_desc: string
+  upload_document: string
 }

@@ -2,12 +2,13 @@ import { ChatMessageResultContract } from '@/contracts/chat-message-result-contr
 import { Message } from '@/models/message'
 import { AppStore } from '@/stores/app.store'
 import { formatString, formatText } from '@/utils/utils'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { inject, Injectable, WritableSignal } from '@angular/core'
-import { Observable, catchError, distinctUntilChanged, forkJoin, map, of, tap } from 'rxjs'
+import { Observable, catchError, distinctUntilChanged, forkJoin, map, of, tap, exhaustMap } from 'rxjs'
 import { UrlService } from './url.service'
 import { AdminService } from './admin.service'
 import { FormControl } from '@angular/forms'
+import { MediaResultContract } from '@/contracts/media-result-contract'
 
 @Injectable({
   providedIn: 'root',
@@ -102,6 +103,43 @@ export abstract class BaseChatService {
       tap(() => {
         this.conversationId.set('')
         this.messages.set([])
+      })
+    )
+  }
+
+  uploadDocument(
+    files: FileList,
+    bot_name: string,
+    conversation_id: string | null
+  ): Observable<ChatMessageResultContract> {
+    const url = `${this.urlService.URLS.CHATBOT_UPLOAD_DOCUMENT}`
+    const formData = new FormData()
+
+    Array.from(files).forEach(file => {
+      formData.append('files', file, file.name)
+    })
+
+    let params = new HttpParams().set('bot_name', bot_name)
+    if (conversation_id) {
+      params = params.set('conversation_id', conversation_id)
+    }
+
+    return this.http.post<MediaResultContract<string>>(url, formData, { params }).pipe(
+      map(response => {
+        this.conversationId.set(response.data || '')
+        return response.data
+      }),
+      exhaustMap(() =>
+        this.sendMessage('summarize', bot_name).pipe(
+          catchError(err => {
+            console.error('Error sending summarize message:', err)
+            throw err
+          })
+        )
+      ),
+      catchError(err => {
+        console.error('Error uploading document:', err)
+        throw err
       })
     )
   }
