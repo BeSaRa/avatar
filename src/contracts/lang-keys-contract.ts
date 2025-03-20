@@ -330,4 +330,5 @@ export interface LangKeysContract {
   ai_answers_alert: string
   date_range_error: string
   future_date_error: string
+  upload_document: string
 }
