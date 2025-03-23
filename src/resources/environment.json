@@ -2,7 +2,7 @@
   "ENVIRONMENTS_URLS": {
     "DEV": "https://ebla-ai-demo-002.azurewebsites.net/api",
     "AQARAT_STG": "https://afnqcscbai01.azurewebsites.net/api",
-    "AZURE": "https://rera-api.azurewebsites.net/api",
+    "AZURE": "https://elba-dev.azurewebsites.net/api",
     "RERA": "https://rera-api-1.azurewebsites.net/api"
   },
   "API_VERSION": "v1",

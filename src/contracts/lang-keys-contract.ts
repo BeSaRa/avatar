@@ -330,4 +330,19 @@ export interface LangKeysContract {
   ai_answers_alert: string
   date_range_error: string
   future_date_error: string
+  faq_list: string
+  choose_questions_to_archive: string
+  add_to_archive: string
+  add_faq: string
+  select_all: string
+  deselect_all: string
+  update_table: string
+  all_questions_have_been_archived: string
+  order_index: string
+  question_text: string
+  edit_question: string
+  search_question: string
+  choose_bot_name: string
+  faq_manager: string
+  faq_manager_desc: string
 }
