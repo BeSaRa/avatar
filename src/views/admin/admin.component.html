@@ -121,6 +121,36 @@
       {{ lang.locals.web_crawling_desc }}
     </p>
   </a>
+  <!-- Card 3 -->
+  <a
+    routerLink="./faq"
+    class="relative group flex flex-col items-center justify-center w-64 h-80 rounded-lg bg-gray-200 shadow-lg transition-all transform hover:scale-105 hover:shadow-2xl">
+    <!-- Background Glow -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <!-- Icon -->
+    <div
+      class="relative flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-gray-100 shadow-inner transition-transform transform group-hover:scale-110">
+      <!-- Icon Border Effect -->
+      <div
+        class="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-primary transition-all"></div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="w-10 h-10 text-primary transition-transform transform group-hover:scale-110">
+        <path
+          d="M10,19H13V22H10V19M12,2C17.35,2.22 19.68,7.62 16.5,11.67C15.67,12.67 14.33,13.33 13.67,14.17C13,15 13,16 13,17H10C10,15.33 10,13.92 10.67,12.92C11.33,11.92 12.67,11.33 13.5,10.67C15.92,8.43 15.32,5.26 12,5A3,3 0 0,0 9,8H6A6,6 0 0,1 12,2Z" />
+      </svg>
+    </div>
+    <!-- Text -->
+    <span class="text-xl font-medium text-gray-800 transition-colors group-hover:text-primary">
+      {{ lang.locals.faq_manager }}
+    </span>
+    <!-- Description -->
+    <p class="mt-2 text-sm text-gray-600 text-center group-hover:text-gray-800">
+      {{ lang.locals.faq_manager_desc }}
+    </p>
+  </a>
 </div>
 
 <router-outlet />

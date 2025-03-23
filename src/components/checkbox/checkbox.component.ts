@@ -1,6 +1,6 @@
 import { OnChange, OnTouched } from '@/types/CVA-functions-types'
 import { NgClass } from '@angular/common'
-import { Component, forwardRef, input, output, signal } from '@angular/core'
+import { Component, forwardRef, input, model, output } from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 
 @Component({
@@ -18,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
   ],
 })
 export class CheckboxComponent implements ControlValueAccessor {
-  checked = signal(false)
+  checked = model(false)
 
   label = input('')
   id = input('checkbox')

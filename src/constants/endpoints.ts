@@ -16,6 +16,7 @@ export const EndPoints = {
   USER: 'user',
   VIDEO_ANALYZER: 'vi',
   FAQ: 'FAQ',
+  FAQ_ARCHIEVE: 'FAQ/faqs/archive',
 }
 
 export type EndpointsType = typeof EndPoints

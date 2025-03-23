@@ -1,3 +1,4 @@
+import { FaqListComponent } from '@/components/faq-list/faq-list.component'
 import { UsersComponent } from '@/components/users/users.component'
 import { PermissionRouteData } from '@/contracts/permission-rout-data'
 import { PermissionGuard } from '@/guards/permission.guard'
@@ -34,6 +35,12 @@ const routes: Routes = [
   {
     path: 'users',
     component: UsersComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
+  },
+  {
+    path: 'faq',
+    component: FaqListComponent,
     canActivate: [PermissionGuard.canActivate],
     data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
   },

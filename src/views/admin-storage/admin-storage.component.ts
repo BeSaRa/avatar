@@ -260,7 +260,7 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
     const listItemsHtml = selectedItems
       .map(
         item => `
-          <li
+         <li
           class="flex items-center border-b border-gray-200 truncate hover:bg-gray-100 transition-all duration-200 p-4">
             <img src="${getItemIcon(item)}" alt="item icon" class="w-8 h-8 object-contain" />
             <span title="${item}" class="truncate text-xs text-gray-800 w-full">${item}</span>
