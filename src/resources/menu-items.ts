@@ -73,13 +73,20 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 11,
+    label: 'ms_avatar',
+    route: '/ms-avatar',
+    svg: 'MS_AVATAR',
+    permissions: ['AVATAR'],
+  },
+  {
+    id: 12,
     label: 'video_indexer',
     route: '/home/video-indexer',
     svg: 'VIDEO',
     permissions: ['MEDIA'],
   },
   {
-    id: 11,
+    id: 13,
     label: 'video_generator',
     route: '/video-generator',
     svg: 'VIDEO_GENERATOR',

@@ -1,0 +1,23 @@
+<div class="flex flex-col overflow-hidden dialog-container min-w-[400px]">
+  <div class="bg-primary text-white text-xl p-4">{{ lang.locals.settings }}</div>
+  <div [formGroup]="form" class="p-4 flex flex-col flex-auto">
+    <mat-form-field class="w-full">
+      <mat-label>{{ lang.locals.background_url }}</mat-label>
+      <input formControlName="bgImgUrl" type="text" matInput />
+    </mat-form-field>
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>{{ lang.locals.shape }}</mat-label>
+      <mat-select formControlName="size">
+        <mat-option value="Square">Square</mat-option>
+        <mat-option value="Portrait">Portrait</mat-option>
+        <mat-option value="Cropped-Portrait">Cropped-Portrait</mat-option>
+        <mat-option value="Landscape">Landscape</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="p-4">
+    <button (click)="save()" [disabled]="form.invalid" mat-raised-button class="primary">
+      {{ lang.locals.save }}
+    </button>
+  </div>
+</div>
