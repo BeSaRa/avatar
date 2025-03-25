@@ -1,0 +1,135 @@
+<div id="video-wrapper" class="flex items-center w-full h-full justify-center">
+  <div class="flex flex-col items-center w-full h-full justify-center absolute">
+    <video autoplay [hidden]="store.isStreamStopped() || store.isStreamLoading()" #video class="h-full"></video>
+    <video #idleVideo class="h-full" [hidden]="store.isStreamStarted()">
+      <source src="assets/videos/idle-full.webm" type="video/webm" />
+    </video>
+
+    <audio autoplay hidden #audio></audio>
+  </div>
+</div>
+<app-overlay-chat #overlayChatComponent />
+
+<div
+  id="toolbar"
+  cdkDrag
+  class="absolute top-10 right-10 w-24 flex justify-center items-start text-white flex-col rounded-md p-2 pt-36 bg-black/50">
+  <button cdkDragHandle>
+    <svg width="24px" class="absolute cursor-move top-1 right-1" fill="currentColor" viewBox="0 0 24 24">
+      <path
+        d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+      <path d="M0 0h24v24H0z" fill="none"></path>
+    </svg>
+  </button>
+
+  <div
+    [ngClass]="{ '!-right-14': store.isRecordingStarted() }"
+    class="absolute w-1/2 right-0 top-16 transition-all duration-300">
+    <button [matTooltip]="lang.locals.cancel_recording" (click)="rejectText()" class="w-full bg-red-500 rounded-full">
+      <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <title>close</title>
+        <path
+          d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+      </svg>
+    </button>
+  </div>
+
+  <button
+    [disabled]="store.isRecordingLoading() || recognizingStatus()"
+    (pointerdown)="toggleRecording()"
+    (contextmenu)="$event.preventDefault()"
+    class="absolute top-8 left-1/2 disabled:bg-gray-400 -translate-x-1/2 flex flex-col p-2 bg-white size-28 overflow-hidden rounded-full"
+    aria-label="record">
+    <div class="relative flex items-center justify-center">
+      @if (store.isRecordingLoading()) {
+        <span class="absolute z-20 font-semibold text-white">{{ lang.locals.loading }}</span>
+      }
+      @if (store.isRecordingStopped()) {
+        <span class="absolute z-20 font-semibold text-black">{{ lang.locals.click_to_speak }}</span>
+      }
+      @if (store.isRecordingStarted() && recognizingStatus()) {
+        <span class="absolute z-20 font-semibold text-white">{{ lang.locals.listening_ongoing }}</span>
+      }
+      @if (store.isRecordingStarted() && !recognizingStatus()) {
+        <span class="absolute z-20 font-semibold text-white">{{ lang.locals.click_to_send }}</span>
+      }
+      <div
+        [@recordButton]="store.recording()"
+        [ngClass]="{ 'bg-red-500': recognizingStatus(), 'bg-green-500': !recognizingStatus() }"
+        class="size-24 overflow-hidden transition-all rounded-full relative">
+        <div
+          [ngClass]="{ hidden: !store.isRecordingStarted() }"
+          class="w-full mt-5 pointer-events-none h-full opacity-90"
+          #waves></div>
+      </div>
+    </div>
+  </button>
+
+  <button matRipple [matTooltip]="lang.locals.clear_chat_history" (click)="clearChat()" class="text-white">
+    <svg fill="currentColor" class="w-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <title>remove chat</title>
+      <path
+        d="M15.46 15.88L16.88 14.46L19 16.59L21.12 14.47L22.54 15.88L20.41 18L22.54 20.12L21.12 21.54L19 19.41L16.88 21.54L15.46 20.12L17.59 18L15.47 15.88M12 3C17.5 3 22 6.58 22 11C22 11.58 21.92 12.14 21.78 12.68C20.95 12.25 20 12 19 12C15.69 12 13 14.69 13 18L13.08 18.95L12 19C10.76 19 9.57 18.82 8.47 18.5C5.55 21 2 21 2 21C4.33 18.67 4.7 17.1 4.75 16.5C3.05 15.07 2 13.14 2 11C2 6.58 6.5 3 12 3Z" />
+    </svg>
+  </button>
+
+  <app-avatar-interrupter-btn [isDefault]="false" (interrupt)="stopSpeaking()" [disabled]="!isSpeaking" />
+  <select
+    [matTooltip]="lang.locals.change_bot + '\n' + lang.locals.change_bot_note"
+    [matTooltipClass]="'whitespace-pre-line'"
+    [formControl]="chatService.botNameCtrl"
+    class="block p-1 w-full truncate text-gray-200 text-sm border-b-2 border-gray-300 bg-transparent focus:ring-primary focus:border-primary outline-none">
+    @for (chatbot of botNames$ | async; track $index) {
+      <option class="text-gray-800 truncate" [value]="chatbot">{{ chatbot }}</option>
+    }
+  </select>
+</div>
+
+<div
+  class="bg-black/50 absolute left-0 top-60 rounded p-4 transition-transform"
+  [ngClass]="{ '-translate-x-full': !settingsOpened }"
+  id="settings">
+  <div class="relative flex flex-col items-center">
+    <button
+      (click)="toggleSettings()"
+      [matTooltip]="lang.locals.settings"
+      class="absolute -top-2 -right-14 z-20 bg-black/50 rounded-r text-white"
+      aria-label="Settings">
+      <svg class="size-10" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <title>cog</title>
+        <path
+          d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+      </svg>
+    </button>
+    @if (store.isStreamLoading()) {
+      <button aria-label="close stream" class="text-white cursor-progress size-20 bg-orange-500 rounded-full">
+        <div class="pulse rounded-full w-full h-full bg-primary flex justify-center items-center">
+          <span>{{ onlineStatus() }}</span>
+        </div>
+      </button>
+    } @else {
+      <button
+        matRipple
+        (click)="toggleStream()"
+        aria-label="close stream"
+        [ngClass]="{ 'bg-green-700': store.isStreamStarted(), 'bg-red-600': store.isStreamStopped() }"
+        class="text-white size-20 rounded-full">
+        {{ onlineStatus() }}
+      </button>
+    }
+
+    <button class="mt-2 text-white" (click)="openSettingsPopup()">
+      <svg fill="currentColor" class="size-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+      </svg>
+    </button>
+
+    <!-- <button matRipple (click)="fullscreen.emit()" class="text-white">
+      <svg fill="currentColor" class="size-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <title>fullscreen</title>
+        <path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
+      </svg>
+    </button> -->
+  </div>
+</div>

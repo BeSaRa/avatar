@@ -1,7 +1,8 @@
 import { StreamResultContract } from '@/contracts/stream-result-contract'
+import { NO_ACCESS_TOKEN } from '@/http-contexts/no-access-token'
 import { UrlService } from '@/services/url.service'
 import { AppStore } from '@/stores/app.store'
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { Observable, of, switchMap, tap, timer } from 'rxjs'
 
@@ -81,5 +82,17 @@ export class AvatarService {
     const url = `${this.urlService.URLS.AVATAR}/greeting/${botName}/${this.store.streamId()}`
     const params = new HttpParams().append('is_ar', isArabic)
     return this.http.post<void>(url, null, { params })
+  }
+
+  getMSICEServerInfo() {
+    return this.http.get<{
+      Urls: string[]
+      Username: string
+      Password: string
+      ExpiresIn: number
+    }>(`https://${this.store.speechToken.region()}.tts.speech.microsoft.com/cognitiveservices/avatar/relay/token/v1`, {
+      context: new HttpContext().set(NO_ACCESS_TOKEN, true),
+      headers: new HttpHeaders().set('Authorization', `Bearer ${this.store.speechToken.token()}`),
+    })
   }
 }

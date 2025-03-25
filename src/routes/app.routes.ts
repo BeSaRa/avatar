@@ -20,6 +20,14 @@ export const routes: Routes = [
     canDeactivate: [closeStreamGuard],
   },
   {
+    path: 'ms-avatar',
+    loadComponent: () => import('@/views/ms-avatar/ms-avatar.component'),
+    pathMatch: 'full',
+    canActivate: [AuthGuard, PermissionGuard.canActivate],
+    data: { permissions: ['AVATAR'], hasAnyPermission: false } as PermissionRouteData,
+    canDeactivate: [closeStreamGuard],
+  },
+  {
     path: 'video-generator',
     loadComponent: () => import('@/views/video-generator/video-generator.component'),
     pathMatch: 'full',
