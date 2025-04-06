@@ -1,0 +1,204 @@
+<main class="flex bg-white h-[75vh] gap-4 p-2 rounded-md">
+  <section class="relative w-3/4 flex flex-col border rounded-lg bg-gray-200">
+    <header class="bg-primary rounded-ss-lg rounded-se-lg">
+      <p class="text-center text-white p-2">{{ lang.locals.queries }}</p>
+    </header>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 p-4 gap-4 mt-12"
+      appPerfectScroll
+      [perfectScrollOptions]="{ suppressScrollX: true }">
+      @for (exp of items(); track $index) {
+        <div
+          [class.animate-editing]="editedItem()?.id === exp.id"
+          class="relative group inline-flex items-center bg-gray-100 text-gray-700 shadow-md p-2 gap-4 rounded-lg">
+          <div class="flex flex-shrink-0 justify-center items-center size-8 object-cover bg-black rounded-full">
+            <svg
+              class="size-4 fill-white"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 300 300.25"
+              fill="currentColor">
+              <path
+                d="M178.57 127.15 290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.25h26.46l102.4-116.59 81.8 116.59h89.34M36.01 19.54H76.66l187.13 262.13h-40.66" />
+            </svg>
+          </div>
+
+          <div class="flex flex-col w-full max-w-full">
+            <p [title]="exp.query" class="text-lg font-semibold truncate w-4/5">{{ exp.query }}</p>
+            <article class="flex gap-2 text-sm text-gray-500">
+              <span>{{ (exp.start_time | date: 'MM/dd/yyyy') ?? '-' }}</span>
+              <span>{{ (exp.end_time | date: 'MM/dd/yyyy') ?? '-' }}</span>
+            </article>
+            <p>{{ exp.max_results ?? '-' }}</p>
+          </div>
+
+          <button
+            (click)="deleteItem($index)"
+            class="outline-none flex items-center justify-center border-2 border-gray-300 hover:scale-125 transition-all duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto absolute -top-2 -left-2 rounded-full size-6 bg-red-500 hover:bg-red-600">
+            <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+            </svg>
+          </button>
+          <button
+            (click)="editItem(exp)"
+            class="outline-none flex items-center justify-center border-2 border-gray-300 hover:scale-125 transition-all duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto absolute -bottom-2 -left-2 rounded-full size-6 bg-gray-700 hover:bg-gray-800">
+            <svg class="size-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+    @if (items().length) {
+      <div
+        class="absolute slide-from-top z-20 px-4 py-2 bg-black/30 shadow-lg mt-10 rounded-ee-lg rounded-es-lg h-12 top-0 w-full flex items-center backdrop-blur-md">
+        <button
+          type="button"
+          (click)="searchX()"
+          class="inline-flex items-center justify-center gap-2 bg-primary/90 text-white font-medium py-2 px-4 text-sm rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none w-1/5">
+          {{ lang.locals.start_searching }}
+          @if (isLoading()) {
+            <ng-container [ngTemplateOutlet]="loader" />
+          }
+        </button>
+      </div>
+    }
+  </section>
+  <aside class="flip-card flex flex-col w-1/4 bg-gray-200 text-gray-700 rounded-lg" [class.flipped]="isEditing()">
+    <div class="flip-card-inner">
+      @if (!isEditing()) {
+        <div class="flip-card-front flip-card-face">
+          <ng-container
+            [ngTemplateOutlet]="formTemplate"
+            [ngTemplateOutletContext]="{ $implicit: lang.locals.add_query }"></ng-container>
+          <div class="p-2 mt-auto">
+            <button
+              type="button"
+              (click)="addSearchItem()"
+              [disabled]="socialMediaForm.invalid"
+              class="inline-flex items-center justify-center gap-2 bg-primary/90 w-full text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:opacity-50">
+              {{ lang.locals.add_query }}
+            </button>
+          </div>
+        </div>
+      } @else {
+        <div class="flip-card-back flip-card-face">
+          <ng-container
+            [ngTemplateOutlet]="formTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: lang.locals.edit_query + '-' + editedItem()?.query,
+            }"></ng-container>
+          <div class="p-2 mt-auto flex gap-2">
+            <button
+              type="button"
+              (click)="addSearchItem()"
+              [disabled]="socialMediaForm.invalid"
+              class="inline-flex items-center justify-center gap-2 bg-primary/90 w-full text-white font-medium py-2 px-4 rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none disabled:opacity-50">
+              {{ lang.locals.edit_query }}
+            </button>
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="inline-flex items-center justify-center gap-2 bg-gray-300 w-full text-white font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 focus:outline-none">
+              {{ lang.locals.cancel }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </aside>
+</main>
+
+<ng-template #formTemplate let-header>
+  <header class="bg-primary rounded-ss-lg rounded-se-lg">
+    <p [title]="header" class="text-center text-white text-lg p-2 truncate" [class.animate-header]="animateHeader()">
+      {{ header }}
+    </p>
+  </header>
+  <div
+    class="p-2 flex flex-col justify-between space-y-2"
+    [formGroup]="socialMediaForm"
+    appPerfectScroll
+    [perfectScrollOptions]="{ suppressScrollX: true }">
+    <div class="flex flex-col">
+      <label for="search_text" class="text-sm font-medium">{{ lang.locals.query }}</label>
+      <input
+        formControlName="query"
+        placeholder="{{ lang.locals.query }}"
+        type="text"
+        [class.border-red-500]="socialMediaForm.controls.query.invalid && socialMediaForm.controls.query.touched"
+        class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+      @if (socialMediaForm.controls.query.invalid && socialMediaForm.controls.query.touched) {
+        <span class="text-red-500 text-xs">{{ lang.locals.required }}</span>
+      }
+    </div>
+    <div class="flex flex-col">
+      <label for="start_time" class="text-sm font-medium">{{ lang.locals.start_time }}</label>
+      <input
+        type="date"
+        formControlName="start_time"
+        class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+        [class.border-red-500]="socialMediaForm.errors?.['timeDateRangeInvalid'] && socialMediaForm.touched" />
+      <!-- Error Messages for Index Dates -->
+      @if (
+        socialMediaForm.errors?.['timeDateRangeInvalid'] &&
+        (socialMediaForm.get('start_time')?.touched || socialMediaForm.get('end_time')?.touched)
+      ) {
+        <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+      }
+    </div>
+    <div class="flex flex-col">
+      <label for="end_time" class="text-sm font-medium">{{ lang.locals.end_time }}</label>
+      <input
+        type="date"
+        formControlName="end_time"
+        class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+        [class.border-red-500]="socialMediaForm.errors?.['timeDateRangeInvalid'] && socialMediaForm.touched" />
+      <!-- Error Messages for Index Dates -->
+      @if (
+        socialMediaForm.errors?.['timeDateRangeInvalid'] &&
+        (socialMediaForm.get('start_time')?.touched || socialMediaForm.get('end_time')?.touched)
+      ) {
+        <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+      }
+    </div>
+    <div class="flex flex-col">
+      <label class="text-sm font-medium" for="max_results">{{ lang.locals.max_results }}</label>
+      <input
+        id="max_results"
+        class="w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-gray-300 text-gray-800"
+        type="number"
+        [placeholder]="lang.locals.max_results"
+        [class.border-red-500]="
+          socialMediaForm.controls.max_results.invalid && socialMediaForm.controls.max_results.touched
+        "
+        formControlName="max_results" />
+      @if (socialMediaForm.controls.max_results.invalid && socialMediaForm.controls.max_results.touched) {
+        <span class="text-red-500 text-xs">{{ lang.locals.min_value_error }}</span>
+      }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loader>
+  <div class="loader flex items-center justify-center">
+    <!-- Your specific loader design -->
+    <div role="status">
+      <svg
+        aria-hidden="true"
+        class="inline size-6 text-gray-200 animate-spin fill-primary"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor" />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill" />
+      </svg>
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>
