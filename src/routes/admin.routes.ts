@@ -1,4 +1,5 @@
 import { FaqListComponent } from '@/components/faq-list/faq-list.component'
+import { SocialMediaCrawlingComponent } from '@/components/social-media-crawling/social-media-crawling.component'
 import { UsersComponent } from '@/components/users/users.component'
 import { PermissionRouteData } from '@/contracts/permission-rout-data'
 import { PermissionGuard } from '@/guards/permission.guard'
@@ -41,6 +42,12 @@ const routes: Routes = [
   {
     path: 'faq',
     component: FaqListComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
+  },
+  {
+    path: 'social-media',
+    component: SocialMediaCrawlingComponent,
     canActivate: [PermissionGuard.canActivate],
     data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
   },

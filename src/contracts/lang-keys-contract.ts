@@ -349,4 +349,15 @@ export interface LangKeysContract {
   another_video_is_being_generated_please_try_again_after_a_while: string
   ms_avatar: string
   shape: string
+  social_media_crawling: string
+  social_media_crawling_desc: string
+  query: string
+  start_time: string
+  end_time: string
+  max_results: string
+  add_query: string
+  queries: string
+  min_value_error: string
+  edit_query: string
+  start_searching: string
 }

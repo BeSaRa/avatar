@@ -1406,5 +1406,49 @@
   "shape": {
     "ar": "الشكل",
     "en": "Shape"
+  },
+  "social_media_crawling": {
+    "ar": "تتبع وسائل التواصل الاجتماعي",
+    "en": "Social media crawling"
+  },
+  "social_media_crawling_desc": {
+    "ar": "إدارة تتبع وسائل التواصل الاجتماعي بإضافة الوسوم والفلاتر",
+    "en": "Manage social medai crawling by adding tags and filters "
+  },
+  "query": {
+    "ar": "استعلام",
+    "en": "Query"
+  },
+  "start_time": {
+    "ar": "وقت البدء",
+    "en": "Start Time"
+  },
+  "end_time": {
+    "ar": "وقت الانتهاء",
+    "en": "End Time"
+  },
+  "max_results": {
+    "ar": "أقصى عدد للنتائج",
+    "en": "Max Results"
+  },
+  "add_query": {
+    "ar": "أضف استعلام",
+    "en": "Add Query"
+  },
+  "queries": {
+    "ar": "الاستعلامات",
+    "en": "Queries"
+  },
+  "min_value_error": {
+    "ar": "يجب أن يكون الرقم أكبر من صفر",
+    "en": "The number must be greater than zero"
+  },
+  "edit_query": {
+    "ar": "تعديل الاستعلام",
+    "en": "Edit Query"
+  },
+  "start_searching": {
+    "ar": "البدء بالبحث",
+    "en": "Start searching"
   }
 }

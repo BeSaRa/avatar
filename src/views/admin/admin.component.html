@@ -151,6 +151,36 @@
       {{ lang.locals.faq_manager_desc }}
     </p>
   </a>
+  <!-- Card 3 -->
+  <a
+    routerLink="./social-media"
+    class="relative group flex flex-col items-center justify-center w-64 h-80 rounded-lg bg-gray-200 shadow-lg transition-all transform hover:scale-105 hover:shadow-2xl">
+    <!-- Background Glow -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <!-- Icon -->
+    <div
+      class="relative flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-gray-100 shadow-inner transition-transform transform group-hover:scale-110">
+      <!-- Icon Border Effect -->
+      <div
+        class="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-primary transition-all"></div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="w-10 h-10 text-primary transition-transform transform group-hover:scale-110">
+        <path
+          d="M11,17V7H4V17H11M11,3A2,2 0 0,1 13,5V19A2,2 0 0,1 11,21H4C2.89,21 2,20.1 2,19V5A2,2 0 0,1 4,3H11M16.5,3H21.5A1.5,1.5 0 0,1 23,4.5V7.5A1.5,1.5 0 0,1 21.5,9H18L15,12V9L15,4.5A1.5,1.5 0 0,1 16.5,3Z" />
+      </svg>
+    </div>
+    <!-- Text -->
+    <span class="text-xl font-medium text-gray-800 transition-colors group-hover:text-primary">
+      {{ lang.locals.social_media_crawling }}
+    </span>
+    <!-- Description -->
+    <p class="mt-2 text-sm text-gray-600 text-center group-hover:text-gray-800">
+      {{ lang.locals.social_media_crawling_desc }}
+    </p>
+  </a>
 </div>
 
 <router-outlet />
