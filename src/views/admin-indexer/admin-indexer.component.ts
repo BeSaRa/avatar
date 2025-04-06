@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
-import { catchError, finalize, switchMap, of, debounceTime, distinctUntilChanged, tap, takeUntil } from 'rxjs'
+import { catchError, finalize, of, debounceTime, distinctUntilChanged, tap, takeUntil } from 'rxjs'
 import { AdminService } from '@/services/admin.service'
 import { IndexerInfoContract } from '@/contracts/indexer-info-contract'
 import { LocalService } from '@/services/local.service'
@@ -60,18 +60,17 @@ export class AdminIndexerComponent extends OnDestroyMixin(class {}) implements O
     this.runningIndex = indexerName
     this.errorMessage = ''
     this.adminService
-      .resetIndex(indexerName)
+      .runIndexer(indexerName)
       .pipe(
         takeUntil(this.destroy$),
-        switchMap(() => this.adminService.runIndexer(indexerName)),
         catchError(() => {
-          this.errorMessage = `Failed to reset and run indexer: ${indexerName}`
+          this.errorMessage = `Failed to run indexer: ${indexerName}`
           return of(null)
         }),
         finalize(() => (this.runningIndex = null))
       )
       .subscribe(() => {
-        if (!this.errorMessage) alert(`${indexerName} reset and run successfully.`)
+        if (!this.errorMessage) alert(`${indexerName} run successfully.`)
       })
   }
 
