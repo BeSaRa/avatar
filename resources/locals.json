@@ -1330,5 +1330,137 @@
   "date_range_error": {
     "ar": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية",
     "en": "The end date must be after the start date."
+  },
+  "upload_document": {
+    "ar": "رفع ملف",
+    "en": "upload document."
+  },
+  "faq_list": {
+    "ar": "قائمة الأسئلة",
+    "en": "FAQ List"
+  },
+  "choose_questions_to_archive": {
+    "ar": "قم باختيار الأسئلة لإضافتها إلى الأرشيف",
+    "en": "Choose Questions to add to archive"
+  },
+  "add_to_archive": {
+    "ar": "أضف إلى الأرشيف",
+    "en": " Add to Archive"
+  },
+  "add_faq": {
+    "ar": "أضف أسئلة",
+    "en": "Add Questions"
+  },
+  "select_all": {
+    "ar": "تحديد الكل",
+    "en": "Select All"
+  },
+  "deselect_all": {
+    "ar": "إلغاء تحديد الكل",
+    "en": "Deselect All"
+  },
+  "update_table": {
+    "ar": "جاري تحديث الجدول",
+    "en": "Update table in progress"
+  },
+  "all_questions_have_been_archived": {
+    "ar": "جميع الأسئلة مؤرشفة",
+    "en": "All questions have been archived"
+  },
+  "order_index": {
+    "ar": "رقم الترتيب",
+    "en": "Order index"
+  },
+  "question_text": {
+    "ar": "نص السؤال",
+    "en": "Question Text"
+  },
+  "edit_question": {
+    "ar": "تعديل السؤال",
+    "en": "Edit question"
+  },
+  "search_question": {
+    "ar": "ابحث عن سؤال...",
+    "en": "Search Question..."
+  },
+  "choose_bot_name": {
+    "ar": "اختر البوت",
+    "en": "Choose bot name"
+  },
+  "faq_manager": {
+    "ar": "الأسئلة الشائعة",
+    "en": "FAQ Manager"
+  },
+  "faq_manager_desc": {
+    "ar": "إدارة الأسئلة الشائعة من حيث الإضافة والترتيب والتنظيم.",
+    "en": "Manage FAQs including adding, organizing, and ordering questions."
+  },
+  "another_video_is_being_generated_please_try_again_after_a_while": {
+    "ar": "يتم توليد فيديو آخر حالياً. الرجاء المحاولة مرة آخرى بعد مدة",
+    "en": "Another video is being generated now. Please try again after a while"
+  },
+  "ms_avatar": {
+    "ar": "شخصية مايكروسوفت",
+    "en": "MS Avatar"
+  },
+  "shape": {
+    "ar": "الشكل",
+    "en": "Shape"
+  },
+  "tasks_agent": {
+    "ar": "مساعد المهام",
+    "en": "Tasks agent"
+  },
+  "update_task_status": {
+    "ar": "تعديل حالة المهمة",
+    "en": "Update task status"
+  },
+  "task_status": {
+    "ar": "حالة المهمة",
+    "en": "Task status"
+  },
+  "social_media_crawling": {
+    "ar": "تتبع وسائل التواصل الاجتماعي",
+    "en": "Social media crawling"
+  },
+  "social_media_crawling_desc": {
+    "ar": "إدارة تتبع وسائل التواصل الاجتماعي بإضافة الوسوم والفلاتر",
+    "en": "Manage social medai crawling by adding tags and filters "
+  },
+  "query": {
+    "ar": "استعلام",
+    "en": "Query"
+  },
+  "start_time": {
+    "ar": "وقت البدء",
+    "en": "Start Time"
+  },
+  "end_time": {
+    "ar": "وقت الانتهاء",
+    "en": "End Time"
+  },
+  "max_results": {
+    "ar": "أقصى عدد للنتائج",
+    "en": "Max Results"
+  },
+  "add_query": {
+    "ar": "أضف استعلام",
+    "en": "Add Query"
+  },
+  "queries": {
+    "ar": "الاستعلامات",
+    "en": "Queries"
+  },
+  "min_value_error": {
+    "ar": "يجب أن يكون الرقم أكبر من صفر",
+    "en": "The number must be greater than zero"
+  },
+  "edit_query": {
+    "ar": "تعديل الاستعلام",
+    "en": "Edit Query"
+  },
+  "start_searching": {
+    "ar": "البدء بالبحث",
+    "en": "Start searching"
   }
 }
