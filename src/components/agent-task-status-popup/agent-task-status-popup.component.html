@@ -1,0 +1,25 @@
+<div class="flex flex-col overflow-hidden dialog-container min-w-[400px]">
+  <div class="bg-primary text-white text-xl p-4">{{ lang.locals.update_task_status }}</div>
+  <div class="p-4 flex flex-col flex-auto">
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>{{ lang.locals.task_status }}</mat-label>
+      <mat-select [formControl]="status">
+        @for (item of taskStatus; track $index) {
+          <mat-option [value]="item">{{ item }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="p-4">
+    <button
+      [disabled]="isSaving || status.value === data.status"
+      (click)="save()"
+      class="bg-primary w-full text-white font-medium p-2 rounded-lg hover:bg-primary/85 disabled:bg-primary/60 focus:ring-2 focus:ring-primary focus:outline-none">
+      @if (isSaving) {
+        <app-spinner-loader [width]="24" [borderWidth]="4" color="white"></app-spinner-loader>
+      } @else {
+        {{ lang.locals.save }}
+      }
+    </button>
+  </div>
+</div>
