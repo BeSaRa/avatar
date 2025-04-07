@@ -41,6 +41,12 @@ const routes: Routes = [
     data: { permissions: ['CHATBOT'], hasAnyPermission: false } as PermissionRouteData,
   },
   {
+    path: 'tasks-agent',
+    loadComponent: () => import('@/views/agent-chat/agent-chat.component').then(c => c.AgentChatComponent),
+    canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['CHATBOT'], hasAnyPermission: false } as PermissionRouteData,
+  },
+  {
     path: 'web-crawler',
     loadComponent: () =>
       import('@/views/web-crawler-report/web-crawler-report.component').then(c => c.WebCrawlerReportComponent),

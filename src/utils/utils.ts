@@ -228,7 +228,7 @@ export const formatString = (text: string) => {
   return text
 }
 
-export function formatText<T extends { context: { citations: ICitations[] } }>(text: string, message: T): string {
+export function formatText<T extends { context: { citations: ICitations[] } }>(text: string, message?: T): string {
   let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
 
   if (!message?.context) {

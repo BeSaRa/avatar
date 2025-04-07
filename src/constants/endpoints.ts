@@ -5,6 +5,8 @@ export const EndPoints = {
   INTERACTIVE: 'interactive',
   INTERACTIVE_CHAT: 'chatbot/chat/interactive',
   INTERACTIVE_ACTION: 'interactive/action',
+  AGENT: 'agent',
+  AGENT_CHAT: 'agent/chat',
   AVATAR: 'avatar',
   LOCALS: 'http://localhost:3333',
   VIDEO_INDEXER: 'https://www.videoindexer.ai/embed',

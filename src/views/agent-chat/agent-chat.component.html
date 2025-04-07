@@ -1,0 +1,213 @@
+<div class="flex items-center justify-center" #chatContainer>
+  <div
+    class="z-20 transition-all duration-300 bg-white w-10/12 h-[70vh] relative shadow-2xl rounded-md overflow-hidden max-h-full max-w-full flex flex-col">
+    <div class="bg-gray-200 border-b border-primary/40 flex justify-between items-center px-4 py-2">
+      <span class="text-gray-700">{{ lang.locals.tasks_agent }}</span>
+      <div>
+        <button
+          matRipple
+          class="bg-gray-400 hover:bg-primary border rounded-full p-1 text-white"
+          (click)="fullScreenToggle()">
+          @if (fullscreenStatus()) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M144,104V64a8,8,0,0,1,16,0V84.69l42.34-42.35a8,8,0,0,1,11.32,11.32L171.31,96H192a8,8,0,0,1,0,16H152A8,8,0,0,1,144,104Zm-40,40H64a8,8,0,0,0,0,16H84.69L42.34,202.34a8,8,0,0,0,11.32,11.32L96,171.31V192a8,8,0,0,0,16,0V152A8,8,0,0,0,104,144Zm67.31,16H192a8,8,0,0,0,0-16H152a8,8,0,0,0-8,8v40a8,8,0,0,0,16,0V171.31l42.34,42.35a8,8,0,0,0,11.32-11.32ZM104,56a8,8,0,0,0-8,8V84.69L53.66,42.34A8,8,0,0,0,42.34,53.66L84.69,96H64a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V64A8,8,0,0,0,104,56Z"></path>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M216,48V96a8,8,0,0,1-16,0V67.31l-42.34,42.35a8,8,0,0,1-11.32-11.32L188.69,56H160a8,8,0,0,1,0-16h48A8,8,0,0,1,216,48ZM98.34,146.34,56,188.69V160a8,8,0,0,0-16,0v48a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16H67.31l42.35-42.34a8,8,0,0,0-11.32-11.32ZM208,152a8,8,0,0,0-8,8v28.69l-42.34-42.35a8,8,0,0,0-11.32,11.32L188.69,200H160a8,8,0,0,0,0,16h48a8,8,0,0,0,8-8V160A8,8,0,0,0,208,152ZM67.31,56H96a8,8,0,0,0,0-16H48a8,8,0,0,0-8,8V96a8,8,0,0,0,16,0V67.31l42.34,42.35a8,8,0,0,0,11.32-11.32Z"></path>
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+    <div #chatBody class="flex-auto overflow-hidden flex flex-col relative min-h-0 p-4">
+      @for (message of agentChatService.messages(); track message.id) {
+        @if (message.isUser()) {
+          <div
+            class="user-message chat-message ltr:self-end min-w-[min(400px,100%)] rtl:self-start rtl:!rounded-tr-none ltr:!rounded-tr-none">
+            <p>{{ message.content }}</p>
+          </div>
+        } @else if (message.isAssistant()) {
+          @if (message.hasTable()) {
+            <div
+              class="max-w-full assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
+              <span
+                appTextWriterAnimator
+                (animating)="animatingChange($event, message)"
+                [stop]="stopAnimate()"
+                [text]="message.content">
+              </span>
+              @if (!message.isAnimating) {
+                <div
+                  class="relative overflow-auto mt-4"
+                  [ngStyle]="{ 'min-height': 40 * (1 + (message.list?.length ?? 0)) + 'px' }">
+                  <div class="min-w-full border border-primary/40 rounded-md overflow-hidden">
+                    <table>
+                      <!-- Sticky Header -->
+                      <thead class="bg-primary text-white text-center sticky top-0 z-10">
+                        <tr>
+                          @for (col of message.getCols(); track $index) {
+                            <th class="px-4 py-2" [matTooltip]="col">{{ formatColHead(col) }}</th>
+                          }
+                        </tr>
+                      </thead>
+
+                      <!-- Table Body -->
+                      <tbody class="text-center text-primary">
+                        @for (item of message.list; track $index) {
+                          <tr class="border-b last-of-type:border-b-0 border-primary/40">
+                            @for (col of message.getCols(); track $index) {
+                              @if (col === 'status' && message.hasTaskId()) {
+                                <td class="px-4 py-2 truncate break-words max-w-40">
+                                  <button
+                                    (click)="updateTaskStatus(item)"
+                                    class="bg-primary w-full text-white font-medium p-2 rounded-lg hover:bg-primary/85 focus:ring-2 focus:ring-primary focus:outline-none">
+                                    {{ item[col] }}
+                                  </button>
+                                </td>
+                              } @else {
+                                <td [matTooltip]="item[col]" class="px-4 py-2 truncate break-words max-w-40">
+                                  {{ item[col] }}
+                                </td>
+                              }
+                            }
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div
+              class="assistant-message chat-message whitespace-break-spaces ltr:self-start min-w-[min(400px,100%)] rtl:self-end rtl:!rounded-tl-none ltr:!rounded-tr-none">
+              <span
+                appTextWriterAnimator
+                (animating)="animatingChange($event)"
+                [stop]="stopAnimate()"
+                [text]="message.content"></span>
+            </div>
+          }
+        } @else {
+          <div class="system-message chat-message">
+            <p>{{ message.content }}</p>
+          </div>
+        }
+      }
+
+      @if (answerInProgress()) {
+        <div class="spinner justify-center flex gap-1">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
+      }
+      @if (agentChatService.messages().length > 1 && !ratingDone()) {
+        <div
+          @slideFromBottom
+          class="sticky bottom-0 left-0 w-56 self-end scale-90 hover:scale-95 hover:duration-300 hover:transition-transform bg-gray-300/30 p-1 rounded-tl-md rounded-tr-md border border-gray-300 border-b-0 shadow-sm text-gray-700 flex items-center justify-evenly gap-4 mt-auto [&_button]:flex [&_button]:flex-col [&_button]:justify-center [&_button]:items-center [&_button]:text-sm [&_button]:leading-none">
+          <span>{{ lang.locals.rate_conversation }}</span>
+          <button
+            (click)="rateConversation(feedbackOptions.LIKE)"
+            class="bg-transparent text-primary/80 hover:text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67,3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18,21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z" />
+            </svg>
+            {{ lang.locals.i_like }}
+          </button>
+          <button
+            (click)="rateConversation(feedbackOptions.DISLIKE)"
+            class="bg-transparent text-gray-600 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-6 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M19,15V3H23V15H19M15,3A2,2 0 0,1 17,5V15C17,15.55 16.78,16.05 16.41,16.41L9.83,23L8.77,21.94C8.5,21.67 8.33,21.3 8.33,20.88L8.36,20.57L9.31,16H3C1.89,16 1,15.1 1,14V12C1,11.74 1.05,11.5 1.14,11.27L4.16,4.22C4.46,3.5 5.17,3 6,3H15M15,5H5.97L3,12V14H11.78L10.65,19.32L15,14.97V5Z" />
+            </svg>
+            {{ lang.locals.i_dislike }}
+          </button>
+        </div>
+      }
+    </div>
+    <div class="p-4 gap-2 flex justify-center items-stretch">
+      <button
+        (click)="clearChatHistory()"
+        [matTooltip]="lang.locals.clear_chat_history"
+        class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
+          <path
+            d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+        </svg>
+      </button>
+      <button
+        [matTooltip]="lang.locals.send"
+        [disabled]="answerInProgress()"
+        (click)="sendMessage$.next()"
+        class="bg-primary rounded outline-none ring-offset-1 focus:ring-2 ring-primary text-white px-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 256 256">
+          <path
+            d="M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z"></path>
+        </svg>
+      </button>
+
+      <div class="relative w-full text-gray-900">
+        <input
+          #textArea
+          (keydown.enter)="sendMessage$.next()"
+          [formControl]="messageCtrl"
+          class="border w-full outline-none rounded focus:ring-2 ring-offset-1 ring-primary resize-none p-2" />
+        @if (animating()) {
+          <button
+            [matTooltip]="lang.locals.send"
+            (click)="stopAnimate.set(true)"
+            class="absolute top-2 right-0 mr-1 rounded-full bg-white text-primary hover:bg-gray-200 overflow-hidden border-primary border-2 flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18,18H6V6H18V18Z" />
+            </svg>
+          </button>
+        }
+      </div>
+
+      <app-recorder
+        #recorder
+        (recognized$)="messageCtrl.setValue($event)"
+        (recognizing$)="messageCtrl.setValue($event)" />
+
+      <button
+        [matTooltip]="lang.locals.open_avatar"
+        class="rounded-full bg-white relative text-primary hover:bg-gray-200 shadow shadow-primary overflow-hidden border flex-shrink-0 flex-grow-0 flex items-center justify-center outline-none ring-offset-1 focus:ring-2 ring-primary size-12"
+        (click)="toggleAvatar()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M18.72,14.76C19.07,13.91 19.26,13 19.26,12C19.26,11.28 19.15,10.59 18.96,9.95C18.31,10.1 17.63,10.18 16.92,10.18C13.86,10.18 11.15,8.67 9.5,6.34C8.61,8.5 6.91,10.26 4.77,11.22C4.73,11.47 4.73,11.74 4.73,12A7.27,7.27 0 0,0 12,19.27C13.05,19.27 14.06,19.04 14.97,18.63C15.54,19.72 15.8,20.26 15.78,20.26C14.14,20.81 12.87,21.08 12,21.08C9.58,21.08 7.27,20.13 5.57,18.42C4.53,17.38 3.76,16.11 3.33,14.73H2V10.18H3.09C3.93,6.04 7.6,2.92 12,2.92C14.4,2.92 16.71,3.87 18.42,5.58C19.69,6.84 20.54,8.45 20.89,10.18H22V14.67H22V14.69L22,14.73H21.94L18.38,18L13.08,17.4V15.73H17.91L18.72,14.76M9.27,11.77C9.57,11.77 9.86,11.89 10.07,12.11C10.28,12.32 10.4,12.61 10.4,12.91C10.4,13.21 10.28,13.5 10.07,13.71C9.86,13.92 9.57,14.04 9.27,14.04C8.64,14.04 8.13,13.54 8.13,12.91C8.13,12.28 8.64,11.77 9.27,11.77M14.72,11.77C15.35,11.77 15.85,12.28 15.85,12.91C15.85,13.54 15.35,14.04 14.72,14.04C14.09,14.04 13.58,13.54 13.58,12.91A1.14,1.14 0 0,1 14.72,11.77Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  @if (avatarOn) {
+    <div
+      cdkDrag
+      class="bg-black border rounded-md border-gray-200 size-80 z-30 rtl:right-[500px] ltr:left-[500px] rtl:mr-5 ltr:ml-m absolute bottom-10 overflow-hidden">
+      <div class="w-full flex">
+        <span class="w-full bg-gray-200 p-2 text-center relative">
+          <svg
+            cdkDragHandle
+            class="size-6 absolute top-0 right-0 cursor-move fill-gray-500 m-2"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path
+              d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z" />
+          </svg>
+          {{ lang.locals.avatar_chat }}
+        </span>
+      </div>
+      <app-avatar-video class="w-full" [size]="undefined" />
+      <app-avatar-interrupter-btn class="absolute z-10 top-12 w-12 mx-4" />
+    </div>
+  }
+</div>

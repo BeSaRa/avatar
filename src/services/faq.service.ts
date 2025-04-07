@@ -12,7 +12,7 @@ export class FAQService {
   private readonly http = inject(HttpClient)
 
   getQuestions(numberOfQuestoins: number, botName = 'website') {
-    const url = `${this.urlServices.URLS.FAQ}/questions`
+    const url = `${this.urlServices.URLS.FAQ}/faqs`
     const params = new HttpParams().append('n', numberOfQuestoins).append('bot_name', botName)
     return this.http.get<FAQContract[]>(url, { params: params })
   }

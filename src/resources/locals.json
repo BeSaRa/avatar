@@ -1407,6 +1407,18 @@
     "ar": "الشكل",
     "en": "Shape"
   },
+  "tasks_agent": {
+    "ar": "مساعد المهام",
+    "en": "Tasks agent"
+  },
+  "update_task_status": {
+    "ar": "تعديل حالة المهمة",
+    "en": "Update task status"
+  },
+  "task_status": {
+    "ar": "حالة المهمة",
+    "en": "Task status"
+  },
   "social_media_crawling": {
     "ar": "تتبع وسائل التواصل الاجتماعي",
     "en": "Social media crawling"

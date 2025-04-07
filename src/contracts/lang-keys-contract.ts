@@ -360,4 +360,7 @@ export interface LangKeysContract {
   min_value_error: string
   edit_query: string
   start_searching: string
+  tasks_agent: string
+  update_task_status: string
+  task_status: string
 }
