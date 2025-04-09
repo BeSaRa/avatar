@@ -52,7 +52,7 @@ export class ChatHistoryChartsComponent {
         chart: this.getSentimentChartConfig(),
       },
       performance_chart: {
-        title: this.lang.locals.performance_chart,
+        title: this.lang.locals.user_feedback_by_chatbot,
         chart: this.getBotPerformanceChartConfig(),
       },
     }

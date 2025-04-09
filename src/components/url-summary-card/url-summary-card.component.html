@@ -1,15 +1,31 @@
-@let urlData = urlForm().getRawValue();
-<div class="flex flex-col bg-gray-50 shadow-lg rounded-lg w-full">
+@let urlData = crawlerSettingGroupForm().controls.crawl_settings.controls.urls.at(0).getRawValue();
+@let status = crawlerSettingGroupForm().getRawValue().crawling_status;
+@let lastCrawl = crawlerSettingGroupForm().getRawValue().last_crawl;
+<div class="relative flex flex-col bg-gray-50 shadow-lg rounded-lg w-full">
+  @if (status) {
+    <div
+      class="text-white text-xs absolute -top-4 -right-1 py-1 px-6 rounded-lg"
+      [ngClass]="{
+        'bg-yellow-500': status === 'InProgress',
+        'bg-red-500': status === 'Error',
+        'bg-green-500': status === 'Success',
+      }">
+      {{ status }}
+    </div>
+  }
   <!-- Sticky Card Header -->
   <div
     class="flex justify-between items-center text-gray-800 text-lg font-bold text-end bg-gray-50 p-2 rounded-lg shadow-sm">
-    <a
-      target="_blank"
-      [title]="urlData.link"
-      [href]="urlData.link"
-      class="truncate no-underline text-gray-700 hover:text-primary transition-colors"
-      >{{ urlData.link }}</a
-    >
+    <div class="flex flex-col gap-1 items-start">
+      <a
+        target="_blank"
+        [title]="urlData.link"
+        [href]="urlData.link"
+        class="truncate no-underline text-gray-700 hover:text-primary transition-colors"
+        >{{ urlData.link }}</a
+      >
+      <small class="text-gray-300 text-sm font-normal">last-update: {{ lastCrawl }}</small>
+    </div>
     <div class="flex gap-2 flex-nowrap">
       <button
         [matTooltip]="lang.locals.edit"

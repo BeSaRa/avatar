@@ -1,7 +1,12 @@
 <main class="flex bg-white h-[75vh] gap-4 p-2 rounded-md">
   <section class="relative w-3/4 flex flex-col border rounded-lg bg-gray-200">
     <header class="bg-primary rounded-ss-lg rounded-se-lg">
-      <p class="text-center text-white p-2">{{ lang.locals.queries }}</p>
+      <p class="text-center text-white p-2 flex gap-2 items-center justify-center">
+        {{ lang.locals.queries }}
+        @if (isLoadingData()) {
+          <ng-container [ngTemplateOutlet]="loader" />
+        }
+      </p>
     </header>
     <div
       class="grid grid-cols-1 md:grid-cols-3 p-4 gap-4 mt-12"
@@ -57,7 +62,7 @@
           type="button"
           (click)="searchX()"
           class="inline-flex items-center justify-center gap-2 bg-primary/90 text-white font-medium py-2 px-4 text-sm rounded-lg hover:bg-primary focus:ring-4 focus:ring-gray-300 focus:outline-none w-1/5">
-          {{ lang.locals.start_searching }}
+          {{ lang.locals.save_queries }}
           @if (isLoading()) {
             <ng-container [ngTemplateOutlet]="loader" />
           }
@@ -100,7 +105,7 @@
             <button
               type="button"
               (click)="cancelEdit()"
-              class="inline-flex items-center justify-center gap-2 bg-gray-300 w-full text-white font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 focus:outline-none">
+              class="inline-flex items-center justify-center gap-2 text-gray-700 bg-gray-300 w-full font-medium py-2 px-4 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-300 focus:outline-none">
               {{ lang.locals.cancel }}
             </button>
           </div>

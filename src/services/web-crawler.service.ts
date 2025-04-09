@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core'
 import { UrlService } from './url.service'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { MediaResultContract } from '@/contracts/media-result-contract'
 import { Observable } from 'rxjs'
 import { ChatMessageResultContract } from '@/contracts/chat-message-result-contract'
 import { MediaCrawler } from '@/models/media-crawler'
 import { GenerteReportContract } from '@/contracts/generate-report-contract'
+import { MostIndexedUrlsContract, MostUsedKeywordsContract } from '@/contracts/statistics-contract'
 
 @Injectable({
   providedIn: 'root',
@@ -28,5 +29,29 @@ export class WebCrawlerService {
   crawlWebPages(crawlingData: MediaCrawler): Observable<MediaResultContract> {
     const url = `${this.urlService.URLS.MEDIA}/crawl`
     return this.http.post<MediaResultContract>(url, crawlingData)
+  }
+
+  getMostIndexedStatistics(fromDate?: string, toDate?: string) {
+    const url = `${this.urlService.URLS.MEDIA}/indexed-urls`
+    let params = new HttpParams()
+    if (fromDate) {
+      params = params.set('from_date', fromDate)
+    }
+    if (toDate) {
+      params = params.set('to_date', toDate)
+    }
+    return this.http.get<MostIndexedUrlsContract[]>(url, { params })
+  }
+
+  getMostUsedKeywordStatistics(fromDate?: string, toDate?: string) {
+    const url = `${this.urlService.URLS.MEDIA}/used-keywords`
+    let params = new HttpParams()
+    if (fromDate) {
+      params = params.set('from_date', fromDate)
+    }
+    if (toDate) {
+      params = params.set('to_date', toDate)
+    }
+    return this.http.get<MostUsedKeywordsContract[]>(url, { params })
   }
 }
