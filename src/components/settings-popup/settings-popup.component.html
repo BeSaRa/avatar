@@ -13,6 +13,14 @@
       <mat-label>{{ lang.locals.video_token }}</mat-label>
       <input formControlName="videoToken" matInput />
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ lang.locals.idle_avatar }}</mat-label>
+      <mat-select formControlName="idleAvatar">
+        @for (item of config.CONFIG.IDLE_AVATARS; track $index) {
+          <mat-option [value]="item">{{ item }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
     <div class="flex gap-2 mb-4 items-center">
       <input type="color" formControlName="backgroundColor" id="color" class="size-10 border-none" />
       <label for="color">{{ lang.locals.background_color }}</label>

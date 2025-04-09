@@ -6,6 +6,7 @@ export const Config = {
   API_VERSION: 'v1',
   KUNA: '',
   EXTERNAL_PROTOCOLS: ['http', 'https'],
+  IDLE_AVATARS: [] as string[],
 }
 
 export type ConfigType = typeof Config

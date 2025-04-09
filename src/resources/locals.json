@@ -1467,6 +1467,10 @@
     "ar": "البدء بالبحث",
     "en": "Start searching"
   },
+  "idle_avatar": {
+    "ar": "الشخصية الافتراضية المؤقتة",
+    "en": "Idle avatar"
+  },
   "schedule_days": {
     "ar": "أيام الجدولة",
     "en": "Schedule days"

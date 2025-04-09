@@ -7,5 +7,9 @@
   },
   "API_VERSION": "v1",
   "BASE_ENVIRONMENT": "RERA",
-  "KUNA": "i-mEGilYdirGxQO_579aS_Y226Qq8Bi1SCwBehnp_jK_AzFu9Lhwig=="
+  "KUNA": "i-mEGilYdirGxQO_579aS_Y226Qq8Bi1SCwBehnp_jK_AzFu9Lhwig==",
+  "IDLE_AVATARS": [
+    "gulf",
+    "suit"
+  ]
 }
