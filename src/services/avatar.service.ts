@@ -5,6 +5,7 @@ import { AppStore } from '@/stores/app.store'
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { Observable, of, switchMap, tap, timer } from 'rxjs'
+import { ConfigService } from './config.service'
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,11 @@ export class AvatarService {
   private readonly urlService = inject(UrlService)
   private readonly http = inject(HttpClient)
   private readonly store = inject(AppStore)
+  private readonly config = inject(ConfigService)
+
+  constructor() {
+    if (this.store.idleAvatar()) this.store.updateIdleAvatar(this.config.CONFIG.IDLE_AVATARS[0])
+  }
 
   startStream(size?: 'life-size'): Observable<StreamResultContract> {
     return this.http

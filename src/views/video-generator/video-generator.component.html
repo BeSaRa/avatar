@@ -32,7 +32,7 @@
         #video
         class="absolute min-w-full min-h-full"></video>
       <video #idleVideo [hidden]="store.isStreamStarted()" class="absolute min-w-full min-h-full">
-        <source src="assets/videos/idle-full.webm" type="video/webm" />
+        <source [src]="store.idleAvatarUrl()" type="video/webm" />
       </video>
     </div>
   </div>

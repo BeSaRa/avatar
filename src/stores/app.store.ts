@@ -1,6 +1,6 @@
-import { getState, patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals'
 import { SpeechTokenContract } from '@/contracts/speech-token-contract'
 import { computed, effect } from '@angular/core'
+import { getState, patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals'
 
 interface AppStore {
   speechToken: SpeechTokenContract
@@ -14,6 +14,7 @@ interface AppStore {
   isVideo: boolean
   preview: boolean
   videoToken: string
+  idleAvatar: string
 }
 
 const initialState: AppStore = {
@@ -31,12 +32,13 @@ const initialState: AppStore = {
   isVideo: false,
   preview: false,
   videoToken: '',
+  idleAvatar: '',
 }
 
 export const AppStore = signalStore(
   { providedIn: 'root', protectedState: true },
   withState(initialState),
-  withComputed(({ streamId, speechToken, recording, streamingStatus }) => ({
+  withComputed(({ streamId, speechToken, recording, streamingStatus, idleAvatar }) => ({
     hasToken: computed(() => !!speechToken().token),
     hasRegion: computed(() => !!speechToken().region),
     isRecordingStarted: computed(() => recording() === 'Started'),
@@ -46,7 +48,10 @@ export const AppStore = signalStore(
     isStreamStarted: computed(() => streamingStatus() === 'Started'),
     isStreamStopped: computed(() => streamingStatus() === 'Stopped'),
     isStreamLoading: computed(() => streamingStatus() === 'InProgress' || streamingStatus() === 'Disconnecting'),
+    idleAvatar: computed(() => idleAvatar()),
+    idleAvatarUrl: computed(() => `assets/videos/${idleAvatar()}-idle.webm`),
   })),
+
   withMethods(store => ({
     updateSpeechToken: (token: SpeechTokenContract = { token: '', region: '' }) => {
       patchState(store, { speechToken: token })
@@ -66,6 +71,9 @@ export const AppStore = signalStore(
     updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' | 'Disconnecting' = 'Stopped') => {
       patchState(store, { streamingStatus: status, streamId: status === 'Stopped' ? undefined : store.streamId() })
     },
+    updateIdleAvatar(idle: string) {
+      patchState(store, { idleAvatar: idle })
+    },
   })),
   withMethods(store => {
     return {
@@ -74,6 +82,7 @@ export const AppStore = signalStore(
       },
     }
   }),
+
   withHooks(store => {
     const storageState = sessionStorage.getItem('CURRENT_STATE')
     if (storageState) {

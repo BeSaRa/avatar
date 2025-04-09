@@ -378,4 +378,5 @@ export interface LangKeysContract {
   legal_document_management: string
   legal_document_desc: string
   scan_qr: string
+  idle_avatar: string
 }

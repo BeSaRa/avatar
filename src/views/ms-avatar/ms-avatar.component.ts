@@ -57,7 +57,7 @@ export default class MsAvatarComponent implements AfterViewInit {
   readonly store = inject(AppStore)
   readonly lang = inject(LocalService)
   private readonly speechService = inject(SpeechService)
-  private readonly avatarService = inject(AvatarService)
+  readonly avatarService = inject(AvatarService)
   readonly chatService = inject(ChatService)
   private readonly chatHistoryService = inject(ChatHistoryService)
   private readonly injector = inject(Injector)

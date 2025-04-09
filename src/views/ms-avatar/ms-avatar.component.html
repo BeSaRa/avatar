@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center w-full h-full justify-center absolute">
     <video autoplay [hidden]="store.isStreamStopped() || store.isStreamLoading()" #video class="h-full"></video>
     <video #idleVideo class="h-full" [hidden]="store.isStreamStarted()">
-      <source src="assets/videos/idle-full.webm" type="video/webm" />
+      <source [src]="store.idleAvatarUrl()" type="video/webm" />
     </video>
 
     <audio autoplay hidden #audio></audio>
