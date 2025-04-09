@@ -24,7 +24,9 @@
         class="truncate no-underline text-gray-700 hover:text-primary transition-colors"
         >{{ urlData.link }}</a
       >
-      <small class="text-gray-300 text-sm font-normal">last-update: {{ lastCrawl }}</small>
+      <small class="text-gray-300 text-sm font-normal"
+        >{{ lang.locals.last_scheduled_date }} {{ lastCrawl | date: 'MM/dd/yyyy' }}</small
+      >
     </div>
     <div class="flex gap-2 flex-nowrap">
       <button
