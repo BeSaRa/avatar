@@ -1494,5 +1494,17 @@
   "user_feedback_by_chatbot": {
     "en": "User feedback by chat bot",
     "ar": "آراء المستخدمين حسب بوت الدردشة"
+  },
+  "last_scheduled_date": {
+    "en": "Last Scheduled Date",
+    "ar": "آخر تاريخ تم جدولته"
+  },
+  "recurring_every": {
+    "en": "Recurring Every",
+    "ar": "يُجدول كل"
+  },
+  "save_urls": {
+    "en": "Save URLs",
+    "ar": "حفظ الروابط"
   }
 }

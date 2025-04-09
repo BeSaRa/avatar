@@ -372,4 +372,7 @@ export interface LangKeysContract {
   chart_zoom_tip: string
   undefined: string
   user_feedback_by_chatbot: string
+  last_scheduled_date: string
+  recurring_every: string
+  save_urls: string
 }

@@ -1,6 +1,6 @@
 import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { AdminService } from '@/services/admin.service'
-import { NgClass, NgTemplateOutlet } from '@angular/common'
+import { DatePipe, NgClass, NgTemplateOutlet } from '@angular/common'
 import { AfterViewInit, Component, ElementRef, inject, input, output, signal, viewChildren } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { AddUrlPopupComponent } from '../add-url-popup/add-url-popup.component'
@@ -18,7 +18,7 @@ import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 @Component({
   selector: 'app-url-summary-card',
   standalone: true,
-  imports: [PerfectScrollDirective, NgTemplateOutlet, MatTooltip, NgClass],
+  imports: [PerfectScrollDirective, NgTemplateOutlet, MatTooltip, NgClass, DatePipe],
   templateUrl: './url-summary-card.component.html',
   styleUrl: './url-summary-card.component.scss',
 })
