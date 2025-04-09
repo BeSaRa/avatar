@@ -7,12 +7,13 @@ export class MediaCrawler {
     this.urls = []
   }
 }
-class CrawlerSettings {
+export class CrawlerSettings {
   deep: boolean
   selectors: string[]
   mediaCrawling: boolean
   topics?: string[]
   containerName: string
+  schedule_by_days: number
 
   constructor(mediaCrawling = false) {
     this.deep = false
@@ -20,6 +21,7 @@ class CrawlerSettings {
     this.mediaCrawling = mediaCrawling
     this.topics = []
     this.containerName = 'rera-storage'
+    this.schedule_by_days = 0
   }
 }
 
@@ -27,7 +29,7 @@ export class CrawlerUrl {
   link: string
   headers?: Record<string, string>
   cookies?: Record<string, string>
-  payload?: Record<string, unknown>
+  payload?: Record<string, string>
   settings: CrawlerSettings
 
   constructor(link = '', topics: string[] = [], mediaCrawling = false) {

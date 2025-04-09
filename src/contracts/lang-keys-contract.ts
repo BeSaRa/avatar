@@ -363,4 +363,13 @@ export interface LangKeysContract {
   tasks_agent: string
   update_task_status: string
   task_status: string
+  schedule_days: string
+  save_queries: string
+  most_indexed_urls: string
+  most_used_keywords: string
+  keywords_count: string
+  reset_zoom: string
+  chart_zoom_tip: string
+  undefined: string
+  user_feedback_by_chatbot: string
 }

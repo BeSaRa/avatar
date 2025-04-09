@@ -6,6 +6,9 @@ import { map, Observable } from 'rxjs'
 import { UploadBlobsOptions } from '@/types/upload-blobs.type'
 import { IndexerInfoContract } from '@/contracts/indexer-info-contract'
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms'
+import { CrawlUrlContract, SettingsContract } from '@/contracts/settings-contract'
+import { generateUUID } from '@/utils/utils'
+import { SocialMeidaSearchItem } from '@/types/social-media-search-type'
 
 @Injectable({
   providedIn: 'root',
@@ -113,5 +116,31 @@ export class AdminService {
   getCrawlingStatistics(): Observable<Record<string, string[]>> {
     const url = `${this.urlService.URLS.ADMIN}/get-subfolders-blobs/rera-media`
     return this.http.get<Record<string, string[]>>(url)
+  }
+  getSettingsByEntityName(entityName = 'rera') {
+    const url = `${this.urlService.URLS.ADMIN}/settings/${entityName}`
+    return this.http.get<SettingsContract[]>(url)
+  }
+  getCrawlingData() {
+    return this.getSettingsByEntityName().pipe(map(el => el.at(0)!.media_settings.crawling_urls))
+  }
+  getXCrawlingData(): Observable<Partial<SocialMeidaSearchItem>[]> {
+    return this.getSettingsByEntityName().pipe(
+      map(el =>
+        el
+          .at(0)!
+          .media_settings.x_crawling.map(
+            expression => ({ ...expression, id: generateUUID() }) as Partial<SocialMeidaSearchItem>
+          )
+      )
+    )
+  }
+  scheduleUrl(crawlerUrls: CrawlUrlContract[]) {
+    const url = `${this.urlService.URLS.ADMIN}/settings/schedule`
+    return this.http.put(url, crawlerUrls)
+  }
+  updateXScheduleSettings(expressions: Partial<SocialMeidaSearchItem>[]) {
+    const url = `${this.urlService.URLS.ADMIN}/settings/x`
+    return this.http.put(url, expressions)
   }
 }

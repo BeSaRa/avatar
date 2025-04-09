@@ -1,13 +1,14 @@
 import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { AdminService } from '@/services/admin.service'
 import { LocalService } from '@/services/local.service'
 import { SocialMediaService } from '@/services/social-media.service'
 import { createSocialMediaSearchItemGroup, SocialMeidaSearchItem } from '@/types/social-media-search-type'
 import { generateUUID, removeNullableAndIgnoreKeys } from '@/utils/utils'
 import { DatePipe, NgTemplateOutlet } from '@angular/common'
-import { Component, computed, inject, signal } from '@angular/core'
+import { Component, computed, inject, OnInit, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { catchError, finalize, takeUntil } from 'rxjs'
+import { catchError, finalize, takeUntil, tap } from 'rxjs'
 
 @Component({
   selector: 'app-social-media-crawling',
@@ -16,25 +17,46 @@ import { catchError, finalize, takeUntil } from 'rxjs'
   templateUrl: './social-media-crawling.component.html',
   styleUrl: './social-media-crawling.component.scss',
 })
-export class SocialMediaCrawlingComponent extends OnDestroyMixin(class {}) {
+export class SocialMediaCrawlingComponent extends OnDestroyMixin(class {}) implements OnInit {
   lang = inject(LocalService)
   socialMediaService = inject(SocialMediaService)
+  adminService = inject(AdminService)
   socialMediaForm = createSocialMediaSearchItemGroup()
   items = signal<Partial<SocialMeidaSearchItem>[]>([])
   prevEditedKey = signal<string | null>(null)
   animateHeader = signal(false)
   isLoading = signal<boolean>(false)
+  isLoadingData = signal(false)
   editedItem = signal<Partial<SocialMeidaSearchItem> | null>(null)
   readonly isEditing = computed(() => this.editedItem() !== null)
 
+  ngOnInit(): void {
+    this.getXCrawlingItems()
+  }
+
+  getXCrawlingItems() {
+    this.isLoadingData.set(true)
+    this.adminService
+      .getXCrawlingData()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(els => this.items.set(els)),
+        finalize(() => this.isLoadingData.set(false)),
+        catchError(err => {
+          console.error(err)
+          throw err
+        })
+      )
+      .subscribe()
+  }
   searchX() {
     this.isLoading.set(true)
     this.items.update(exps => exps.map(el => removeNullableAndIgnoreKeys(el, ['id'])))
-    this.socialMediaService
-      .Xsearch(this.items())
+    this.adminService
+      .updateXScheduleSettings(this.items())
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => finalize(() => this.isLoading.set(false))),
+        finalize(() => this.isLoading.set(false)),
         catchError(err => {
           this.isLoading.set(false)
           console.error(err)

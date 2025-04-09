@@ -1,6 +1,6 @@
 import { UploadProgressContract } from '@/contracts/upload-progress-contract'
 import { ICitations } from '@/models/base-message'
-import { TransformedData, TransformedGrouped } from '@/types/url-crawler'
+import { CrawlerSettingsGroupRawValue, TransformedData, TransformedGrouped } from '@/types/url-crawler'
 import { HttpEvent, HttpResponse, HttpEventType, HttpProgressEvent } from '@angular/common/http'
 // noinspection JSUnusedGlobalSymbols
 
@@ -303,19 +303,27 @@ export function transformKeyValueArrayToObject(arr: { key: string; value: string
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isCrawlUrl(data: any): data is CrawlerSettingsGroupRawValue[] {
+  return Array.isArray(data) && 'crawl_settings' in data[0] && typeof data === 'object'
+}
+
 // Enhanced version of the transformData function
 export function transformData<TData extends TransformedGrouped>(input: TData): TransformedData<TData> {
-  if ('urls' in input) {
-    // Input is of type { urls: UrlGroupRawValue[]; settings: SettingsGroupRawValue }
-    return {
-      ...input,
-      urls: input.urls.map(url => ({
-        ...url,
-        headers: url.headers ? transformKeyValueArrayToObject(url.headers) : {},
-        cookies: url.cookies ? transformKeyValueArrayToObject(url.cookies) : {},
-        payload: url.payload ? transformKeyValueArrayToObject(url.payload) : {},
-      })),
-    } as unknown as TransformedData<TData> // Explicit type assertion due to TypeScript's structural type system
+  if (isCrawlUrl(input)) {
+    return input.flatMap(crawlUrl => ({
+      ...crawlUrl,
+      crawl_settings: {
+        ...crawlUrl.crawl_settings,
+        urls: crawlUrl.crawl_settings.urls.map(url => ({
+          ...url,
+          headers: url.headers ? transformKeyValueArrayToObject(url.headers) : {},
+          cookies: url.cookies ? transformKeyValueArrayToObject(url.cookies) : {},
+          payload: url.payload ? transformKeyValueArrayToObject(url.payload) : {},
+        })),
+      },
+    })) as unknown as TransformedData<TData>
+    // Explicit type assertion due to TypeScript's structural type system
   } else {
     // Input is of type UrlGroupRawValue
     return {

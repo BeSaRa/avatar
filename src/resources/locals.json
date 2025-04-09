@@ -1462,5 +1462,37 @@
   "start_searching": {
     "ar": "البدء بالبحث",
     "en": "Start searching"
+  },
+  "schedule_days": {
+    "ar": "أيام الجدولة",
+    "en": "Schedule days"
+  },
+  "save_queries": {
+    "ar": "حفظ الاستعلامات",
+    "en": "Save Queries"
+  },
+  "most_indexed_urls": {
+    "en": "Most Indexed URLs",
+    "ar": "أكثر الروابط فهرسة"
+  },
+  "most_used_keywords": {
+    "en": "Most Used Keywords",
+    "ar": "أكثر الكلمات استخداماً"
+  },
+  "keywords_count": {
+    "en": "Keywords Count",
+    "ar": "عدد الكلمات"
+  },
+  "reset_zoom": {
+    "en": "Reset Zoom",
+    "ar": "إعادة تعيين التكبير"
+  },
+  "chart_zoom_tip": {
+    "en": "Tip: You can zoom in using scroll, drag, or pinch gestures.",
+    "ar": "نصيحة: يمكنك التكبير باستخدام عجلة الماوس أو السحب أو الإيماءات بالإصبعين على الشاشة."
+  },
+  "user_feedback_by_chatbot": {
+    "en": "User feedback by chat bot",
+    "ar": "آراء المستخدمين حسب بوت الدردشة"
   }
 }

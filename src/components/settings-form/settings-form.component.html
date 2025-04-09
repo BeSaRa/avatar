@@ -50,5 +50,15 @@
         formControlName="containerName"
         class="w-full p-2 border border-gray-300 bg-transparent rounded-lg focus:outline-none focus:ring focus:ring-gray-300 text-gray-800" />
     </div>
+    <div>
+      <label for="schedule_by_days-{{ urlIndex() }}" class="block text-sm font-medium text-gray-800">{{
+        lang.locals.schedule_days
+      }}</label>
+      <input
+        id="schedule_by_days-{{ urlIndex() }}"
+        type="number"
+        formControlName="schedule_by_days"
+        class="w-full p-2 border border-gray-300 bg-transparent rounded-lg focus:outline-none focus:ring focus:ring-gray-300 text-gray-800" />
+    </div>
   </div>
 </ng-container>
