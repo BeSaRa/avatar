@@ -30,6 +30,8 @@ export class ApplicationUserService {
           state.access_token = res.access_token
           state.refresh_token = res.refresh_token
           state.permissions = res.permissions
+          state.user_id = res.user_id
+          state.username = res.username
           return state
         })
       ),

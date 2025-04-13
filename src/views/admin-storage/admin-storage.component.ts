@@ -11,12 +11,12 @@ import { SelectableItemDirective } from '@/directives/selectable-item.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AdminService } from '@/services/admin.service'
 import { LocalService } from '@/services/local.service'
-import { AsyncPipe, NgClass, NgOptimizedImage, NgStyle } from '@angular/common'
+import { AsyncPipe, NgClass, NgOptimizedImage, NgStyle, NgTemplateOutlet } from '@angular/common'
 import { Component, inject, signal } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { ActivatedRoute, Router } from '@angular/router'
-import { catchError, distinctUntilChanged, filter, finalize, map, of, switchMap, takeUntil, tap } from 'rxjs'
+import { catchError, distinctUntilChanged, filter, finalize, iif, map, of, switchMap, takeUntil, tap } from 'rxjs'
 
 @Component({
   selector: 'app-admin-storage',
@@ -31,6 +31,7 @@ import { catchError, distinctUntilChanged, filter, finalize, map, of, switchMap,
     IgnoreSelectionDirective,
     MatTooltipModule,
     PerfectScrollDirective,
+    NgTemplateOutlet,
   ],
   animations: [slideFromBottom, contentAnimation],
   templateUrl: './admin-storage.component.html',
@@ -45,8 +46,20 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
 
   isContainerLoading = signal(true)
   loading = signal(false)
+  isLoadingIndexer = signal(false)
 
-  containers$ = this.adminService.getContainers().pipe(finalize(() => this.isContainerLoading.set(false)))
+  isReraLegal = signal(this.router.url.split('/').at(-1)!.includes('rera-legal-storage'))
+  containers$ = iif(
+    () => this.isReraLegal(),
+    this.adminService
+      .getContainers()
+      .pipe(map(containers => containers.filter(container => container === 'rera-legal'))),
+    this.adminService.getContainers()
+  ).pipe(
+    takeUntil(this.destroy$),
+    finalize(() => this.isContainerLoading.set(false))
+  )
+
   breadcrumbs = signal<string[]>([])
   isSubfolder = signal<boolean | undefined>(undefined)
   content = signal<string[]>([])
@@ -280,5 +293,23 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
         </ul>
       </div>
     `
+  }
+
+  runIndexer(indexerName = 'rera-legal'): void {
+    this.isLoadingIndexer.set(true)
+    let errorMessage = ''
+    this.adminService
+      .runIndexer(indexerName)
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => {
+          errorMessage = `Failed to run indexer: ${indexerName}`
+          return of(null)
+        }),
+        finalize(() => this.isLoadingIndexer.set(false))
+      )
+      .subscribe(() => {
+        if (!errorMessage) alert(`${indexerName} run successfully.`)
+      })
   }
 }

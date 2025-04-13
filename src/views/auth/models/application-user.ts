@@ -7,13 +7,28 @@ export class ApplicationUser {
   private _permissionsKeys: string[] = []
   private _refresh_token = signal<string>('')
   private _access_token = signal<string>('')
+  private _user_id = signal<string>('')
+  private _username = signal<string>('')
 
   isRefreshing = signal(false)
+
+  get username(): string {
+    return this._username()
+  }
+  set username(username: string) {
+    this._username.set(username)
+  }
+  get user_id(): string {
+    return this._user_id()
+  }
+  set user_id(userId: string) {
+    this._user_id.set(userId)
+  }
+
   set permissions(value: UserPermission[]) {
     this._permissions = value
     this._permissionsKeys = value.map(p => p._Permission__key)
   }
-
   get permissions(): UserPermission[] {
     return this._permissions
   }

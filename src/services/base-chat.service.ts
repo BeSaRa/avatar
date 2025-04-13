@@ -9,6 +9,8 @@ import { UrlService } from './url.service'
 import { AdminService } from './admin.service'
 import { FormControl } from '@angular/forms'
 import { MediaResultContract } from '@/contracts/media-result-contract'
+import { STORAGE_ITEMS } from '@/constants/storage-items'
+import { ApplicationUser } from '@/views/auth/models/application-user'
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +34,7 @@ export abstract class BaseChatService {
         messages: this.messages(),
         ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
         ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
+        ...(this.getUserId() ? { user_id: this.getUserId() } : null),
       })
       .pipe(
         catchError(err => {
@@ -142,5 +145,14 @@ export abstract class BaseChatService {
         throw err
       })
     )
+  }
+
+  getUserId() {
+    const userItem = localStorage.getItem(STORAGE_ITEMS.USER)
+    let userId = ''
+    if (userItem) {
+      userId = (JSON.parse(userItem) as ApplicationUser).user_id
+    }
+    return userId
   }
 }

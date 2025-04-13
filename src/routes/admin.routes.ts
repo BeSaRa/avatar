@@ -21,6 +21,12 @@ const routes: Routes = [
     data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
   },
   {
+    path: 'rera-legal-storage',
+    component: AdminStorageComponent,
+    canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['ADMIN'], hasAnyPermission: false } as PermissionRouteData,
+  },
+  {
     path: 'indexer',
     component: AdminIndexerComponent,
     canActivate: [PermissionGuard.canActivate],
