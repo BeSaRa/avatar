@@ -1506,5 +1506,13 @@
   "save_urls": {
     "en": "Save URLs",
     "ar": "حفظ الروابط"
+  },
+  "legal_document_management": {
+    "en": "Leagl Document Management",
+    "ar": "إدارة الوثائق القانونية"
+  },
+  "legal_document_desc": {
+    "ar": "أضف، احذف، ونظّم المستندات والوثائق القانونية.",
+    "en": "Manage legal documents: add, delete, or organize."
   }
 }

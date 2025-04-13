@@ -219,6 +219,7 @@ export class InteractiveChatService extends BaseChatService {
       messages: this.messages(),
       ...(this.store.streamId() ? { stream_id: this.store.streamId() } : null),
       ...(this.conversationId() ? { conversation_id: this.conversationId() } : null),
+      ...(this.getUserId() ? { user_id: this.getUserId() } : null),
     }
   }
   private bindDialogState<TCmp>(ref: MatDialogRef<TCmp>) {
