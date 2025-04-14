@@ -1,9 +1,9 @@
 .message {
-  @apply relative flex flex-col text-3xl;
+  @apply relative flex flex-col text-2xl;
 }
 
 .message.user {
-  @apply items-end;
+  @apply items-start;
   & > div {
     @apply bg-black/50 p-2 rounded-md rounded-tr-none;
     &:after {
@@ -20,7 +20,7 @@
 }
 
 .message.assistant {
-  @apply items-start;
+  @apply items-end;
   & > div {
     @apply bg-black/20 p-2 rounded-md rounded-tl-none;
     &:after {

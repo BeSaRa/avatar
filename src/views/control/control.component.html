@@ -1,6 +1,6 @@
-<div class="w-full h-full px-16 flex justify-between items-center gap-12">
+<div class="w-full h-full px-16 flex justify-start items-center gap-12">
   <app-screen-control (recognizing$)="recognizing($event)" [overlayChatComponent]="overlayChatComponent" />
-  <div class="flex flex-col items-center justify-center gap-4">
+  <div class="w-full flex flex-col items-center justify-center gap-4">
     <div class="flex-1 w-full max-h-[95vh] overflow-y-auto">
       <app-overlay-chat #overlayChatComponent class="w-full" />
     </div>

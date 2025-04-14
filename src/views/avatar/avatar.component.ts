@@ -33,6 +33,7 @@ export default class AvatarComponent {
   lang = inject(LocalService)
 
   settingsOpened = false
+  qrCodeOpened = false
 
   recognizing(value: string) {
     this.text.set(value)
