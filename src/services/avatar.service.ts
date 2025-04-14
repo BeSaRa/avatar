@@ -70,11 +70,7 @@ export class AvatarService {
   }
 
   renderText(text: string): Observable<unknown> {
-    return this.http.post(
-      this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`,
-      {},
-      { params: { text } }
-    )
+    return this.http.post(this.urlService.URLS.AVATAR + `/render-text/${this.store.streamId()}`, { text })
   }
 
   updateVideo(text: string): Observable<{ status: string }> {
