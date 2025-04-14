@@ -1522,5 +1522,9 @@
   "legal_document_desc": {
     "ar": "أضف، احذف، ونظّم المستندات والوثائق القانونية.",
     "en": "Manage legal documents: add, delete, or organize."
+  },
+  "words_limit_is": {
+    "ar": "الحد الأقصى لعدد الكلمات هو:",
+    "en": "Maximum words limit is:"
   }
 }

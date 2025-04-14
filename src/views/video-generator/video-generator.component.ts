@@ -57,6 +57,7 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
   text = new FormControl('')
   isLoading = false
   isDownloading = false
+  wordsLimitExceeded = false
 
   settingsOpened = false
 
@@ -147,6 +148,10 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
     // trigger the start of stream
     // this.start$.next()
     // close when destroy component
+    this.text.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(v => {
+      if ((v?.split(' ') ?? '').length > 70) this.wordsLimitExceeded = true
+      else this.wordsLimitExceeded = false
+    })
     merge(this.destroy$)
       .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2
       .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
@@ -175,7 +180,7 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
   }
 
   test() {
-    if (!this.text.value || this.isLoading || !this.store.isStreamStarted()) return
+    if (!this.text.value || this.isLoading || !this.store.isStreamStarted() || this.wordsLimitExceeded) return
     this.isLoading = true
     this.avatarService
       .renderText(this.text.value!)
@@ -184,7 +189,7 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
   }
 
   updateAndDownload() {
-    if (!this.text.value || this.isLoading || this.isDownloading) return
+    if (!this.text.value || this.isLoading || this.isDownloading || this.wordsLimitExceeded) return
     this.isDownloading = true
     this.avatarService
       .updateVideo(this.text.value!)

@@ -46,10 +46,13 @@
         rows="3"
         class="w-full resize-none text-lg p-2 text-gray-700 border border-gray-300 rounded-lg bg-gray-100 focus:ring-gray-400 focus:border-gray-400 focus:ring-4 outline-none ring-2 ring-gray-500"></textarea>
     </div>
+    @if (wordsLimitExceeded) {
+      <p class="text-gray-300 font-semibold text-sm">*{{ lang.locals.words_limit_is }} 70</p>
+    }
     <div class="flex justify-center items-center gap-4">
       <button
         (click)="test()"
-        [disabled]="!store.isStreamStarted() || isLoading || !text.value"
+        [disabled]="!store.isStreamStarted() || isLoading || !text.value || wordsLimitExceeded"
         class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 disabled:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
         @if (isLoading) {
           <app-spinner-loader [width]="24" [borderWidth]="4" color="#374151"></app-spinner-loader>
@@ -59,7 +62,7 @@
       </button>
       <button
         (click)="updateAndDownload()"
-        [disabled]="isLoading || isDownloading || !text.value"
+        [disabled]="isLoading || isDownloading || !text.value || wordsLimitExceeded"
         class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 disabled:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
         {{ lang.locals.download }}
       </button>
