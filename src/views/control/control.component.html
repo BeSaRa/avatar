@@ -1,0 +1,37 @@
+<div class="w-full h-full px-16 flex justify-between items-center gap-12">
+  <app-screen-control (recognizing$)="recognizing($event)" [overlayChatComponent]="overlayChatComponent" />
+  <div class="flex flex-col items-center justify-center gap-4">
+    <div class="flex-1 w-full max-h-[95vh] overflow-y-auto">
+      <app-overlay-chat #overlayChatComponent class="w-full" />
+    </div>
+
+    <div class="bg-black/40 text-white">{{ text() }}</div>
+  </div>
+</div>
+
+@if (isLoading) {
+  <div class="left-0 top-0 z-50 flex items-center justify-center w-full bg-black/60 h-full fixed">
+    <div class="lds-ellipsis">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+} @else if (!store.hasStream()) {
+  <div class="left-0 top-0 z-50 flex items-center justify-center w-full bg-black/80 h-full fixed">
+    <div class="flex flex-col items-center justify-center gap-8">
+      <span class="max-w-[700px] font-bold text-white text-3xl">{{ lang.locals.scan_qr }}:</span>
+      <mat-form-field dir="ltr" class="w-full">
+        <mat-label>Stream ID</mat-label>
+        <input [formControl]="streamId" matInput />
+      </mat-form-field>
+      <button
+        (click)="saveStreamId()"
+        [disabled]="streamId.invalid"
+        class="-mt-10 bg-white w-full text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-white/90 disabled:bg-gray-400 disabled:cursor-not-allowed focus:ring-2 focus:ring-white focus:outline-none">
+        {{ lang.locals.save }}
+      </button>
+    </div>
+  </div>
+}

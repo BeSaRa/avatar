@@ -1,3 +1,15 @@
+import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
+import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
+import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { AvatarService } from '@/services/avatar.service'
+import { ChatHistoryService } from '@/services/chat-history.service'
+import { ChatService } from '@/services/chat.service'
+import { LocalService } from '@/services/local.service'
+import { SpeechService } from '@/services/speech.service'
+import { AppStore } from '@/stores/app.store'
+import { animate, state, style, transition, trigger } from '@angular/animations'
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
+import { AsyncPipe, NgClass } from '@angular/common'
 import {
   Component,
   effect,
@@ -10,12 +22,9 @@ import {
   signal,
   viewChild,
 } from '@angular/core'
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
-import { AppStore } from '@/stores/app.store'
-import { animate, state, style, transition, trigger } from '@angular/animations'
-import { AsyncPipe, NgClass } from '@angular/common'
-import WaveSurfer from 'wavesurfer.js'
-import RecordPlugin from 'wavesurfer.js/plugins/record'
+import { ReactiveFormsModule } from '@angular/forms'
+import { MatRipple } from '@angular/material/core'
+import { MatTooltip } from '@angular/material/tooltip'
 import {
   AudioConfig,
   AutoDetectSourceLanguageConfig,
@@ -23,19 +32,9 @@ import {
   SpeechConfig,
   SpeechRecognizer,
 } from 'microsoft-cognitiveservices-speech-sdk'
-import { ChatService } from '@/services/chat.service'
-import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
-import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
-import { MatRipple } from '@angular/material/core'
 import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap } from 'rxjs'
-import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
-import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
-import { SpeechService } from '@/services/speech.service'
-import { AvatarService } from '@/services/avatar.service'
-import { MatTooltip } from '@angular/material/tooltip'
-import { LocalService } from '@/services/local.service'
-import { ChatHistoryService } from '@/services/chat-history.service'
-import { ReactiveFormsModule } from '@angular/forms'
+import WaveSurfer from 'wavesurfer.js'
+import RecordPlugin from 'wavesurfer.js/plugins/record'
 
 @Component({
   selector: 'app-screen-control',
@@ -78,7 +77,6 @@ import { ReactiveFormsModule } from '@angular/forms'
   ],
 })
 export class ScreenControlComponent extends OnDestroyMixin(class {}) implements OnInit {
-  avatarVideoComponent = input.required<AvatarVideoComponent>()
   overlayChatComponent = input.required<OverlayChatComponent>()
   waves = viewChild.required<ElementRef>('waves')
   store = inject(AppStore)
@@ -90,7 +88,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
   declare waveSurfer: WaveSurfer
   declare recorder: RecordPlugin
   declare recognizer: SpeechRecognizer
-  fullscreen = output<void>()
+
   recognizedText = signal<string>('')
   recognizingText = signal<string>('')
   speechService = inject(SpeechService)
@@ -102,7 +100,6 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
     .getAllBotNames()
     .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
 
-  settingsOpened = false
   lang = inject(LocalService)
 
   async ngOnInit(): Promise<void> {
@@ -242,15 +239,5 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   clearChat() {
     this.chatService.messages.set([])
-  }
-
-  toggleStream() {
-    if (this.store.isStreamLoading()) return
-
-    this.store.isStreamStopped() ? this.avatarVideoComponent().start$.next() : this.avatarVideoComponent().stop$.next()
-  }
-
-  toggleSettings() {
-    this.settingsOpened = !this.settingsOpened
   }
 }

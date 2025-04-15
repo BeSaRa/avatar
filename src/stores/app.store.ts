@@ -64,7 +64,7 @@ export const AppStore = signalStore(
       patchState(store, { recording: 'InProgress' })
     },
     updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' | 'Disconnecting' = 'Stopped') => {
-      patchState(store, { streamingStatus: status })
+      patchState(store, { streamingStatus: status, streamId: status === 'Stopped' ? undefined : store.streamId() })
     },
   })),
   withMethods(store => {
@@ -75,12 +75,12 @@ export const AppStore = signalStore(
     }
   }),
   withHooks(store => {
-    const storageState = localStorage.getItem('CURRENT_STATE')
+    const storageState = sessionStorage.getItem('CURRENT_STATE')
     if (storageState) {
       patchState(store, JSON.parse(storageState))
     } else {
       const state = getState(store)
-      localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
+      sessionStorage.setItem('CURRENT_STATE', JSON.stringify(state))
     }
     return {
       onInit() {
@@ -89,7 +89,7 @@ export const AppStore = signalStore(
         }
         effect(() => {
           const state = getState(store)
-          localStorage.setItem('CURRENT_STATE', JSON.stringify(state))
+          sessionStorage.setItem('CURRENT_STATE', JSON.stringify(state))
         })
       },
     }

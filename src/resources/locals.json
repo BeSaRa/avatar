@@ -847,6 +847,10 @@
     "ar": "عدد التقارير",
     "en": "Number of reports"
   },
+  "scan_qr": {
+    "ar": "قم باستخدام الكاميرا لمسح الرمز الخاص بالشخصية أو قم بإدخاله بشكل يدوي في الحقل التالي",
+    "en": "Use camera to scan avatar QR code or enter it manually in the following field"
+  },
   "hr_agent": {
     "ar": "مساعد الموارد البشرية",
     "en": "HR Agent"

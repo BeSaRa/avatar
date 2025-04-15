@@ -38,6 +38,14 @@ export class AvatarService {
     return this.http.delete<StreamResultContract>(this.urlService.URLS.AVATAR + `/close-stream/${streamId}`)
   }
 
+  retrieveStream() {
+    return this.http.get(this.urlService.URLS.AVATAR + `/retrieve-stream/${this.store.streamId()}`)
+  }
+
+  checkStreamStatus() {
+    return this.http.get(this.urlService.URLS.AVATAR + `/stream-status/${this.store.streamId()}`)
+  }
+
   sendCandidate(candidate: RTCIceCandidate): Observable<StreamResultContract> {
     return this.http.post<StreamResultContract>(
       this.urlService.URLS.AVATAR + `/send-candidate/${this.store.streamId()}`,

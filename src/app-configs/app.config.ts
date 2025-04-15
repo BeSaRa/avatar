@@ -8,7 +8,7 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule } from '@angular/material/snack-bar'
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
-import { provideRouter, withComponentInputBinding, withHashLocation, withViewTransitions } from '@angular/router'
+import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router'
 import { provideInterceptors } from 'cast-response'
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
 import configInit from '../inits/config.init'
@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     configInit,
     provideHttpClient(withFetch(), withInterceptors([errorCatchingInterceptor, apiKeyInterceptor, TokenInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withHashLocation(), withComponentInputBinding(), withViewTransitions()),
+    provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideAnimationsAsync(),
     provideCharts(withDefaultRegisterables()),
     importProvidersFrom(MatSnackBarModule),
