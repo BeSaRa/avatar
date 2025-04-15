@@ -1,24 +1,16 @@
 import { AvatarVideoComponent } from '@/components/avatar-video/avatar-video.component'
-import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
-import { ScreenControlComponent } from '@/components/screen-control/screen-control.component'
 import { LocalService } from '@/services/local.service'
 import { AppStore } from '@/stores/app.store'
 import { CommonModule } from '@angular/common'
 import { Component, ElementRef, HostBinding, inject, signal, viewChild } from '@angular/core'
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { Router } from '@angular/router'
 import { QRCodeComponent } from 'angularx-qrcode'
 
 @Component({
   selector: 'app-avatar',
   standalone: true,
-  imports: [
-    CommonModule,
-    AvatarVideoComponent,
-    OverlayChatComponent,
-    ScreenControlComponent,
-    QRCodeComponent,
-    MatTooltipModule,
-  ],
+  imports: [CommonModule, AvatarVideoComponent, QRCodeComponent, MatTooltipModule],
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss',
 })
@@ -31,6 +23,7 @@ export default class AvatarComponent {
   element: ElementRef<HTMLDivElement> = inject(ElementRef)
   store = inject(AppStore)
   lang = inject(LocalService)
+  router = inject(Router)
 
   settingsOpened = false
   qrCodeOpened = false
@@ -58,6 +51,11 @@ export default class AvatarComponent {
   }
 
   getQRData() {
-    return `${location.host}/control?streamId=${this.store.streamId()}`
+    return `${this.getOrigin()}/control?streamId=${this.store.streamId()}`
+  }
+
+  getOrigin() {
+    const idx = location.href.lastIndexOf(this.router.url)
+    return location.href.slice(0, idx)
   }
 }
