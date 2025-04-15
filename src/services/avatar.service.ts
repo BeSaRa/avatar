@@ -17,7 +17,7 @@ export class AvatarService {
   private readonly config = inject(ConfigService)
 
   constructor() {
-    if (this.store.idleAvatar()) this.store.updateIdleAvatar(this.config.CONFIG.IDLE_AVATARS[0])
+    if (!this.store.idleAvatar()) this.store.updateIdleAvatar(this.config.CONFIG.IDLE_AVATARS[0])
   }
 
   startStream(size?: 'life-size'): Observable<StreamResultContract> {
