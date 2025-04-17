@@ -1526,5 +1526,9 @@
   "words_limit_is": {
     "ar": "الحد الأقصى لعدد الكلمات هو:",
     "en": "Maximum words limit is:"
+  },
+  "session_timeout": {
+    "ar": "انتهت صلاحية الجلسة, الرجاء تسجيل الدخول مرة اخرى",
+    "en": "Session timeout, please to login"
   }
 }

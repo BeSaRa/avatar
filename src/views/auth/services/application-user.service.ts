@@ -2,12 +2,13 @@ import { inject, Injectable, signal } from '@angular/core'
 import { ApplicationUser } from '../models/application-user'
 import { UrlService } from '@/services/url.service'
 import { HttpClient } from '@angular/common/http'
-import { catchError, Observable, of, tap } from 'rxjs'
+import { catchError, Observable, of, Subscription, tap, timer } from 'rxjs'
 import { Router } from '@angular/router'
 import { STORAGE_ITEMS } from '@/constants/storage-items'
 import { CONFIGURATIONS } from '../../../resources/configurations'
 import { MessageService } from '@/services/message.service'
 import { LocalService } from '@/services/local.service'
+import { EXPIRY_MINUTES } from '@/constants/token-expiry-time'
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class ApplicationUserService {
   private readonly lang = inject(LocalService)
   $applicationUser = signal<ApplicationUser>(new ApplicationUser())
   $isAuthenticated = signal<boolean>(false)
+  declare logoutSubscription: Subscription
 
   login(username: string, password: string): Observable<ApplicationUser> {
     const url = `${this._urlService.URLS.USER}/login`
@@ -48,6 +50,7 @@ export class ApplicationUserService {
         this.messagesService.showInfo(`${this.lang.locals.welcome_user}, ${username}! ${this.lang.locals.welcome_back}`)
       ),
       tap(() => localStorage.setItem(STORAGE_ITEMS.USERNAME, username)),
+      tap(() => this.setExpirationSession()),
 
       catchError(() => {
         this.$isAuthenticated.set(false)
@@ -109,6 +112,42 @@ export class ApplicationUserService {
     this.$isAuthenticated.set(false)
     this.$applicationUser.set(new ApplicationUser())
     localStorage.removeItem(STORAGE_ITEMS.USER)
+    localStorage.removeItem(STORAGE_ITEMS.TOKEN_EXPIRY)
+    this.logoutSubscription?.unsubscribe()
     this._router.navigate(['/auth/login'])
+  }
+
+  startAutoLogout(expiryTime: number) {
+    const timeRemaining = expiryTime - Date.now()
+    console.log(timeRemaining / 1000)
+
+    // Cancel previous timer if any
+    this.logoutSubscription?.unsubscribe()
+
+    // Setup new timer
+    this.logoutSubscription = timer(timeRemaining).subscribe(() => {
+      this.logout()
+      this.messagesService.showError(this.lang.locals.session_timeout)
+    })
+  }
+
+  checkAutoLogoutOnRefresh() {
+    const expiryStr = localStorage.getItem(STORAGE_ITEMS.TOKEN_EXPIRY)
+    if (!expiryStr) return
+
+    const expiryTime = parseInt(expiryStr, 10)
+    const now = Date.now()
+
+    if (now >= expiryTime) {
+      this.logout()
+      this.messagesService.showError(this.lang.locals.session_timeout)
+    } else {
+      this.startAutoLogout(expiryTime)
+    }
+  }
+  setExpirationSession() {
+    const expiry = Date.now() + EXPIRY_MINUTES * 60 * 1000
+    localStorage.setItem(STORAGE_ITEMS.TOKEN_EXPIRY, expiry.toString())
+    this.startAutoLogout(expiry)
   }
 }
