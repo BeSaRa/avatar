@@ -5,6 +5,7 @@ import { catchError, forkJoin, of, switchMap, tap } from 'rxjs'
 import { SpeechService } from '@/services/speech.service'
 import { LocalService } from '@/services/local.service'
 import { AppStore } from '@/stores/app.store'
+import { ApplicationUserService } from '@/views/auth/services/application-user.service'
 
 export default {
   provide: APP_INITIALIZER,
@@ -29,7 +30,8 @@ export default {
             })
           )
         ),
-        switchMap(() => local.load())
+        switchMap(() => local.load()),
+        tap(() => injector.get(ApplicationUserService).checkAutoLogoutOnRefresh())
       )
   },
   deps: [ConfigService, UrlService, Injector, SpeechService, LocalService],

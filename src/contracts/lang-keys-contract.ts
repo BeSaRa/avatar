@@ -380,4 +380,5 @@ export interface LangKeysContract {
   scan_qr: string
   idle_avatar: string
   words_limit_is: string
+  session_timeout: string
 }
