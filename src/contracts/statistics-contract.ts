@@ -13,3 +13,9 @@ export interface MostUsedKeywordsContract {
   Count: number
   IndexDate: string
 }
+
+export interface NewsPercentageContract {
+  internal: number
+  external: number
+  social: number
+}
