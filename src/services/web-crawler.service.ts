@@ -6,7 +6,11 @@ import { Observable } from 'rxjs'
 import { ChatMessageResultContract } from '@/contracts/chat-message-result-contract'
 import { MediaCrawler } from '@/models/media-crawler'
 import { GenerteReportContract } from '@/contracts/generate-report-contract'
-import { MostIndexedUrlsContract, MostUsedKeywordsContract } from '@/contracts/statistics-contract'
+import {
+  MostIndexedUrlsContract,
+  MostUsedKeywordsContract,
+  NewsPercentageContract,
+} from '@/contracts/statistics-contract'
 
 @Injectable({
   providedIn: 'root',
@@ -53,5 +57,14 @@ export class WebCrawlerService {
       params = params.set('to_date', toDate)
     }
     return this.http.get<MostUsedKeywordsContract[]>(url, { params })
+  }
+
+  getIndexedNewsPercentage() {
+    const url = `${this.urlService.URLS.MEDIA}/news-percentage`
+    return this.http.get<NewsPercentageContract>(url)
+  }
+  getTotalNumberOfIndexedNews() {
+    const url = `${this.urlService.URLS.MEDIA}/news-cards`
+    return this.http.get<number>(url)
   }
 }

@@ -388,4 +388,6 @@ export interface LangKeysContract {
   start: string
   stop: string
   full_screen: string
+  total_indexed_news: string
+  indexed_sources_percentage: string
 }

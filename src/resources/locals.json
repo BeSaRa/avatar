@@ -1558,5 +1558,13 @@
   "full_screen": {
     "ar": "ملء الشاشة",
     "en": "Full screen"
+  },
+  "total_indexed_news": {
+    "ar": "إجمالي عدد الأخبار المفهرسة",
+    "en": "Total number of indexed news"
+  },
+  "indexed_sources_percentage": {
+    "ar": "نسبة مصادر الأخبار المفهرسة",
+    "en": "The percentage of indexed news sources"
   }
 }
