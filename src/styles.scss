@@ -1,8 +1,15 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'css/fonts';
+@import 'app-theme.scss';
+
+// Plus imports for other components in your app.
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
@@ -34,17 +41,17 @@ $avatar-theme: mat.define-theme(
   );
   @include mat.chips-overrides(
     (
-      outline-color: var(--app-primary-color),
-      label-text-color: var(--app-primary-color),
-      elevated-container-color: rgb(from var(--app-primary-color) r g b / 0.2),
+      outline-color: var(--app-primary-500),
+      label-text-color: var(--app-primary-500),
+      elevated-container-color: rgb(from var(--app-primary-500) r g b / 0.2),
       container-shape-radius: 0.375rem,
     )
   );
   @include mat.tabs-overrides(
     (
-      active-indicator-color: var(--app-primary-color),
-      active-focus-indicator-color: var(--app-primary-color),
-      active-hover-indicator-color: var(--app-primary-color),
+      active-indicator-color: var(--app-primary-500),
+      active-focus-indicator-color: var(--app-primary-500),
+      active-hover-indicator-color: var(--app-primary-500),
     )
   );
   @include mat.snack-bar-overrides(
@@ -61,10 +68,6 @@ $avatar-theme: mat.define-theme(
 // Comment out the line below if you want to use the deprecated `color` inputs.
 // @include mat.color-variants-backwards-compatibility($avatar-theme);
 /* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import 'css/fonts';
 
 html,
 body {
@@ -364,8 +367,11 @@ html[dir='rtl'] {
   pointer-events: none;
 }
 
-@layer base {
-  :root {
-    --app-primary-color: #8a1538;
-  }
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
