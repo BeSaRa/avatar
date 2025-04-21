@@ -1,0 +1,69 @@
+<div class="h-full py-4 bg-secondary-50 flex flex-col justify-between rounded-xl text-accent">
+  <div class="px-8 flex items-start gap-4">
+    <div class="flex flex-col gap-4">
+      @for (item of shownItems; track $index) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [matTooltip]="lang.locals[item.label]"
+          matTooltipPosition="after"
+          class="[&.active]:text-primary hover:text-primary transition-all">
+          <div [innerHTML]="svgIcons[item.svg] | sanitizer: 'html'"></div
+        ></a>
+      }
+      <button
+        [matTooltip]="lang.locals.chat"
+        matTooltipPosition="after"
+        (click)="toggleChat()"
+        class="hover:text-primary transition-all">
+        <div [innerHTML]="svgIcons.CHAT | sanitizer: 'html'"></div>
+      </button>
+      <button
+        [matTooltip]="isOpened ? lang.locals.close_menu : lang.locals.open_full_menu"
+        matTooltipPosition="after"
+        (click)="toggleFullMenu()"
+        class="hover:text-primary transition-all">
+        <div [innerHTML]="this.getArrowIcon() | sanitizer: 'html'"></div>
+      </button>
+    </div>
+    @if (isOpened) {
+      <div class="flex flex-col gap-4">
+        @for (item of hiddenItems; track $index) {
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [matTooltip]="lang.locals[item.label]"
+            matTooltipPosition="after"
+            class="[&.active]:text-primary hover:text-primary transition-all">
+            <div [innerHTML]="svgIcons[item.svg] | sanitizer: 'html'"></div
+          ></a>
+        }
+      </div>
+    }
+  </div>
+  <div class="border-t border-secondary-200 pt-4 px-8 flex flex-col gap-4">
+    <button
+      [matTooltip]="applicationUserService.getUsername()"
+      matTooltipPosition="after"
+      (click)="(null)"
+      class="hover:text-primary transition-all">
+      <div [innerHTML]="svgIcons.USER | sanitizer: 'html'"></div>
+    </button>
+    <button
+      [matTooltip]="lang.locals.settings"
+      matTooltipPosition="after"
+      (click)="openSettings()"
+      class="hover:text-primary transition-all">
+      <div [innerHTML]="svgIcons.SETTINGS | sanitizer: 'html'"></div>
+    </button>
+    <button
+      [matTooltip]="lang.locals.log_out"
+      matTooltipPosition="after"
+      (click)="logout()"
+      class="hover:text-primary transition-all">
+      <div [innerHTML]="svgIcons.LOGOUT | sanitizer: 'html'"></div>
+    </button>
+  </div>
+</div>

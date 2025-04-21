@@ -1,44 +1,53 @@
-<div class="h-screen flex items-center justify-center p-4">
-  <section class="flex flex-col w-full max-w-md p-6 bg-gray-100 rounded-lg border-2 border-gray-300 shadow-md">
-    <h1 class="font-medium text-2xl text-center mb-6">{{ lang.locals.login }}</h1>
+<div class="h-full flex items-center justify-center p-4">
+  <section class="flex w-[1100px] p-12 bg-secondary-100/70 rounded-lg shadow-md">
+    <div class="w-1/2 px-6 flex flex-col">
+      <h1 class="font-bold text-2xl text-center text-primary-500 mb-6">{{ lang.locals.login }}</h1>
 
-    <form class="contents" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="mb-4">
-        <label for="userName" class="block mb-1">{{ lang.locals.user_name }}</label>
-        <input
-          [placeholder]="lang.locals.user_name"
-          formControlName="userName"
-          id="userName"
-          type="text"
-          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary transition-colors" />
-        @if (form.get('userName')?.invalid && form.get('userName')?.touched) {
-          <p class="text-red-500 text-sm mt-1">
-            {{ lang.locals.required }}
-          </p>
-        }
+      <form class="flex flex-col justify-center gap-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label for="userName" class="block mb-1 text-accent">{{ lang.locals.user_name }}</label>
+          <input
+            [placeholder]="lang.locals.user_name"
+            formControlName="userName"
+            id="userName"
+            type="text"
+            class="rounded-md p-2 w-full border-2 border-accent-300 placeholder-accent-300 text-accent outline-none focus:border-accent transition-colors" />
+          @if (form.get('userName')?.invalid && form.get('userName')?.touched) {
+            <p class="text-red-500 text-sm mt-1">
+              {{ lang.locals.required }}
+            </p>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="block mb-1 text-accent">{{ lang.locals.password }}</label>
+          <input
+            [placeholder]="lang.locals.password"
+            formControlName="password"
+            id="password"
+            type="password"
+            class="rounded-md p-2 w-full border-2 border-accent-300 placeholder-accent-300 text-accent outline-none focus:border-accent transition-colors" />
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <p class="text-red-500 text-sm mt-1">
+              {{ lang.locals.required }}
+            </p>
+          }
+        </div>
+
+        <button type="submit" appButton color="accent" size="lg" class="mt-4" [disabled]="form.invalid || isLoading">
+          @if (isLoading) {
+            <app-spinner-loader color="white" [width]="20" [borderWidth]="2"></app-spinner-loader>
+          } @else {
+            {{ lang.locals.login }}
+          }
+        </button>
+      </form>
+    </div>
+    <div class="w-1/2 flex items-center justify-center">
+      <div class="relative max-w-[300px] text-4xl/10 text-accent text-center font-light">
+        <img class="absolute w-12 h-16 -top-6 -start-10" src="assets/icons/login-sparkles.svg" alt="login-sparkles" />
+        {{ lang.locals.login_greeting_message }}
       </div>
-
-      <div class="mb-4">
-        <label for="password" class="block mb-1">{{ lang.locals.password }}</label>
-        <input
-          [placeholder]="lang.locals.password"
-          formControlName="password"
-          id="password"
-          type="password"
-          class="rounded-md p-2 w-full border-2 border-gray-300 outline-none focus:border-primary transition-colors" />
-        @if (form.get('password')?.invalid && form.get('password')?.touched) {
-          <p class="text-red-500 text-sm mt-1">
-            {{ lang.locals.required }}
-          </p>
-        }
-      </div>
-
-      <button
-        type="submit"
-        class="bg-primary rounded-md w-full text-white p-2 mt-4 transition-transform hover:scale-105 disabled:opacity-50"
-        [disabled]="form.invalid">
-        {{ lang.locals.login }}
-      </button>
-    </form>
+    </div>
   </section>
 </div>

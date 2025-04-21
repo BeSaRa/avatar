@@ -1530,5 +1530,33 @@
   "session_timeout": {
     "ar": "انتهت صلاحية الجلسة, الرجاء تسجيل الدخول مرة اخرى",
     "en": "Session timeout, please to login"
+  },
+  "aqarat_ai_portal": {
+    "ar": "بوابة عقارات للذكاء الاصطناعي",
+    "en": "Aqarat AI portal"
+  },
+  "login_greeting_message": {
+    "ar": "مرحباً بكم في حلول الذكاء الاصطناعي",
+    "en": "Welcome to Aqarat AI solutions"
+  },
+  "open_full_menu": {
+    "ar": "فتح كامل القائمة",
+    "en": "Open full menu"
+  },
+  "close_menu": {
+    "ar": "إغلاق القائمة",
+    "en": "Close menu"
+  },
+  "start": {
+    "ar": "تشغيل",
+    "en": "Start"
+  },
+  "stop": {
+    "ar": "إيقاف",
+    "en": "Stop"
+  },
+  "full_screen": {
+    "ar": "ملء الشاشة",
+    "en": "Full screen"
   }
 }

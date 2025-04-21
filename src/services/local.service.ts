@@ -69,4 +69,8 @@ export class LocalService {
       .post<void>(this.urlService.URLS.LOCALS, model)
       .pipe(switchMap(value => this.load().pipe(map(() => value))))
   }
+
+  isLtr() {
+    return this.currentLanguage === 'en'
+  }
 }
