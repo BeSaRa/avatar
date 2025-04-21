@@ -1,14 +1,11 @@
-<div class="w-screen h-screen shadow-2xl">
+<div class="w-full h-full">
   <div class="h-full m-auto flex flex-col">
-    <app-header />
-    <main #main class="flex-auto min-h-0 text-white overflow-hidden relative">
-      <app-username-tag />
-      <div class="container m-auto p-4">
+    <main class="flex-auto text-white relative">
+      <div class="pe-4 pb-4 h-full">
         <router-outlet />
       </div>
     </main>
     <footer></footer>
   </div>
   <app-chat class="fixed z-20 rtl:right-16 ltr:left-16 bottom-0" />
-  <app-logout-button [matTooltip]="lang.locals.log_out" class="fixed z-20 rtl:right-0 ltr:left-0 bottom-0" />
 </div>

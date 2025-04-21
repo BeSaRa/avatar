@@ -1,10 +1,12 @@
 import { PermissionRouteData } from '@/contracts/permission-rout-data'
+import { closeStreamGuard } from '@/guards/close-stream.guard'
 import { PermissionGuard } from '@/guards/permission.guard'
 import { LandingComponent } from '@/views/landing/landing.component'
 import { Routes } from '@angular/router'
 
 const routes: Routes = [
   { path: '', component: LandingComponent },
+
   {
     path: 'video-indexer',
     loadComponent: () => import('@/views/video-indexer/video-indexer.component').then(c => c.VideoIndexerComponent),
@@ -68,6 +70,14 @@ const routes: Routes = [
   {
     path: 'video_analyzer',
     loadComponent: () => import('@/views/video-analyzer/video-analyzer.component').then(c => c.VideoAnalyzerComponent),
+  },
+  {
+    path: 'avatar',
+    loadComponent: () => import('@/views/temp-avatar/temp-avatar.component'),
+    pathMatch: 'full',
+    canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['AVATAR'], hasAnyPermission: false } as PermissionRouteData,
+    canDeactivate: [closeStreamGuard],
   },
   {
     path: '**',

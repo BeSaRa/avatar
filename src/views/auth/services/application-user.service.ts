@@ -150,4 +150,8 @@ export class ApplicationUserService {
     localStorage.setItem(STORAGE_ITEMS.TOKEN_EXPIRY, expiry.toString())
     this.startAutoLogout(expiry)
   }
+
+  getUsername() {
+    return localStorage.getItem(STORAGE_ITEMS.USERNAME) ?? ''
+  }
 }

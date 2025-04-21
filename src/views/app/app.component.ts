@@ -1,16 +1,20 @@
 import { Component, effect, HostListener, inject } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
+import { RouterModule, RouterOutlet } from '@angular/router'
 import { VersionComponent } from '@/components/version/version.component'
 import { LocalPopupComponent } from '@/components/local-popup/local-popup.component'
 import { MatDialog } from '@angular/material/dialog'
 import { LocalService } from '@/services/local.service'
 import { AppStore } from '@/stores/app.store'
-import { DOCUMENT } from '@angular/common'
+import { CommonModule, DOCUMENT } from '@angular/common'
+import { SidebarMenuComponent } from '@/components/sidebar-menu/sidebar-menu.component'
+import { HeaderComponent } from '@/components/header/header.component'
+import { BreadcumbService } from '@/services/breadcumb.service'
+import { ApplicationUserService } from '../auth/services/application-user.service'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, VersionComponent],
+  imports: [CommonModule, RouterOutlet, VersionComponent, SidebarMenuComponent, HeaderComponent, RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -19,6 +23,8 @@ export class AppComponent {
   lang = inject(LocalService)
   store = inject(AppStore)
   document = inject(DOCUMENT)
+  breadcumb = inject(BreadcumbService)
+  userService = inject(ApplicationUserService)
   storeEffect = effect(() => {
     this.document.body.style.setProperty('--app-primary-color', this.store.backgroundColor())
   })

@@ -1,2 +1,23 @@
-<router-outlet />
+<app-header />
+<div [ngStyle]="{ height: 'calc(100vh - 75px)' }" class="ps-4 flex justify-between items-start gap-4">
+  @if (userService.$isAuthenticated()) {
+    <app-sidebar-menu class="pb-4" />
+  }
+  <div [ngStyle]="{ height: 'calc(100vh - 75px)' }" class="w-full overflow-auto flex flex-col gap-1">
+    @if (userService.$isAuthenticated()) {
+      <h1 class="text-primary-400 font-light">{{ lang.locals.aqarat_ai_portal }}</h1>
+      <div class="flex items-center justify-start gap-2 text-primary text-xl font-semibold">
+        @for (item of breadcumb.getPathRoutes(); track $index) {
+          <a class="text-primary hover:text-primary-400 transition-all" [routerLink]="item.route">{{
+            lang.locals[item.label]
+          }}</a>
+          @if ($index !== breadcumb.getPathRoutes().length - 1) {
+            <span>></span>
+          }
+        }
+      </div>
+    }
+    <router-outlet />
+  </div>
+</div>
 <app-version class="absolute left-5 bottom-5" />
