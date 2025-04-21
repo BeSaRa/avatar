@@ -1,0 +1,99 @@
+@layer base {
+  :root {
+    --app-primary-50: #fdf2f4;
+    --app-primary-100: #fad6dd;
+    --app-primary-200: #f5a9b9;
+    --app-primary-300: #ee7a95;
+    --app-primary-400: #e34d6e;
+    --app-primary-500: #6e1029;
+    --app-primary-600: #5a0d21;
+    --app-primary-700: #450a19;
+    --app-primary-800: #310711;
+    --app-primary-900: #1d040a;
+    --app-primary-contrast: white;
+
+    --app-primary-50-rgb: 253, 242, 244;
+    --app-primary-100-rgb: 250, 214, 221;
+    --app-primary-200-rgb: 245, 169, 185;
+    --app-primary-300-rgb: 238, 122, 149;
+    --app-primary-400-rgb: 227, 77, 110;
+    --app-primary-500-rgb: 110, 16, 41;
+    --app-primary-600-rgb: 90, 13, 33;
+    --app-primary-700-rgb: 69, 10, 25;
+    --app-primary-800-rgb: 49, 7, 17;
+    --app-primary-900-rgb: 29, 4, 10;
+    --app-primary-contrast-rgb: 255, 255, 255;
+
+    --app-accent-50: #f0f4fa;
+    --app-accent-100: #d6e0f2;
+    --app-accent-200: #adc2e5;
+    --app-accent-300: #85a3d8;
+    --app-accent-400: #5c85cb;
+    --app-accent-500: #324e85;
+    --app-accent-600: #283e6a;
+    --app-accent-700: #1e2f50;
+    --app-accent-800: #141f35;
+    --app-accent-900: #0a101b;
+    --app-accent-contrast: white;
+
+    --app-accent-50-rgb: 240, 244, 250;
+    --app-accent-100-rgb: 214, 224, 242;
+    --app-accent-200-rgb: 173, 194, 229;
+    --app-accent-300-rgb: 133, 163, 216;
+    --app-accent-400-rgb: 92, 133, 203;
+    --app-accent-500-rgb: 50, 78, 133;
+    --app-accent-600-rgb: 40, 62, 106;
+    --app-accent-700-rgb: 30, 47, 80;
+    --app-accent-800-rgb: 20, 31, 53;
+    --app-accent-900-rgb: 10, 16, 27;
+    --app-accent-contrast-rgb: 255, 255, 255;
+
+    --app-secondary-50: #f9f6f2;
+    --app-secondary-100: #f0e8de;
+    --app-secondary-200: #e1d1bd;
+    --app-secondary-300: #d2ba9c;
+    --app-secondary-400: #c3a37b;
+    --app-secondary-500: #a98a6c;
+    --app-secondary-600: #876e56;
+    --app-secondary-700: #655340;
+    --app-secondary-800: #43372a;
+    --app-secondary-900: #211c15;
+    --app-secondary-contrast: var(--app-primary-500);
+
+    --app-secondary-50-rgb: 249, 246, 242;
+    --app-secondary-100-rgb: 240, 232, 222;
+    --app-secondary-200-rgb: 225, 209, 189;
+    --app-secondary-300-rgb: 210, 186, 156;
+    --app-secondary-400-rgb: 195, 163, 123;
+    --app-secondary-500-rgb: 169, 138, 108;
+    --app-secondary-600-rgb: 135, 110, 86;
+    --app-secondary-700-rgb: 101, 83, 64;
+    --app-secondary-800-rgb: 67, 55, 42;
+    --app-secondary-900-rgb: 33, 28, 21;
+    --app-secondary-contrast-rgb: 110, 16, 41;
+
+    --app-tertiary-50: #f5f5f5;
+    --app-tertiary-100: #e5e5e5;
+    --app-tertiary-200: #cacaca;
+    --app-tertiary-300: #b0b0b0;
+    --app-tertiary-400: #959595;
+    --app-tertiary-500: #404041;
+    --app-tertiary-600: #333334;
+    --app-tertiary-700: #262626;
+    --app-tertiary-800: #1a1a1a;
+    --app-tertiary-900: #0d0d0d;
+    --app-tertiary-contrast: white;
+
+    --app-tertiary-50-rgb: 245, 245, 245;
+    --app-tertiary-100-rgb: 229, 229, 229;
+    --app-tertiary-200-rgb: 202, 202, 202;
+    --app-tertiary-300-rgb: 176, 176, 176;
+    --app-tertiary-400-rgb: 149, 149, 149;
+    --app-tertiary-500-rgb: 64, 64, 65;
+    --app-tertiary-600-rgb: 51, 51, 52;
+    --app-tertiary-700-rgb: 38, 38, 38;
+    --app-tertiary-800-rgb: 26, 26, 26;
+    --app-tertiary-900-rgb: 13, 13, 13;
+    --app-tertiary-contrast-rgb: 255, 255, 255;
+  }
+}

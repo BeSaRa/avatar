@@ -4,19 +4,65 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        page: 'url(assets/images/bg.svg)',
+        page: 'url(assets/images/bg.png)',
       },
       colors: {
-        primary: ({ opacityValue }) => {
-          return opacityValue
-            ? `rgb(from var(--app-primary-color) r g b / ${opacityValue})`
-            : `rgb(from var(--app-primary-color) r g b)`
+        primary: {
+          50: 'rgba(var(--app-primary-50-rgb) , <alpha-value>)',
+          100: 'rgba(var(--app-primary-100-rgb) , <alpha-value>)',
+          200: 'rgba(var(--app-primary-200-rgb) , <alpha-value>)',
+          300: 'rgba(var(--app-primary-300-rgb) , <alpha-value>)',
+          400: 'rgba(var(--app-primary-400-rgb) , <alpha-value>)',
+          500: 'rgba(var(--app-primary-500-rgb) , <alpha-value>)',
+          600: 'rgba(var(--app-primary-600-rgb) , <alpha-value>)',
+          700: 'rgba(var(--app-primary-700-rgb) , <alpha-value>)',
+          800: 'rgba(var(--app-primary-800-rgb) , <alpha-value>)',
+          900: 'rgba(var(--app-primary-900-rgb) , <alpha-value>)',
+          DEFAULT: 'rgba(var(--app-primary-500-rgb) , <alpha-value>)',
         },
-        secondary: ({ opacityValue }) => {
-          return opacityValue
-            ? `rgb(from var(--app-secondary-color) r g b / ${opacityValue})`
-            : `rgb(from var(--app-secondary-color) r g b)`
+        'primary-contrast': 'rgba(var(--app-primary-contrast-rgb) , <alpha-value>)',
+        accent: {
+          50: 'rgba(var(--app-accent-50-rgb) , <alpha-value>)',
+          100: 'rgba(var(--app-accent-100-rgb) , <alpha-value>)',
+          200: 'rgba(var(--app-accent-200-rgb) , <alpha-value>)',
+          300: 'rgba(var(--app-accent-300-rgb) , <alpha-value>)',
+          400: 'rgba(var(--app-accent-400-rgb) , <alpha-value>)',
+          500: 'rgba(var(--app-accent-500-rgb) , <alpha-value>)',
+          600: 'rgba(var(--app-accent-600-rgb) , <alpha-value>)',
+          700: 'rgba(var(--app-accent-700-rgb) , <alpha-value>)',
+          800: 'rgba(var(--app-accent-800-rgb) , <alpha-value>)',
+          900: 'rgba(var(--app-accent-900-rgb) , <alpha-value>)',
+          DEFAULT: 'rgba(var(--app-accent-500-rgb) , <alpha-value>)',
         },
+        'accent-contrast': 'rgba(var(--app-accent-contrast-rgb) , <alpha-value>)',
+        secondary: {
+          50: 'rgba(var(--app-secondary-50-rgb) , <alpha-value>)',
+          100: 'rgba(var(--app-secondary-100-rgb) , <alpha-value>)',
+          200: 'rgba(var(--app-secondary-200-rgb) , <alpha-value>)',
+          300: 'rgba(var(--app-secondary-300-rgb) , <alpha-value>)',
+          400: 'rgba(var(--app-secondary-400-rgb) , <alpha-value>)',
+          500: 'rgba(var(--app-secondary-500-rgb) , <alpha-value>)',
+          600: 'rgba(var(--app-secondary-600-rgb) , <alpha-value>)',
+          700: 'rgba(var(--app-secondary-700-rgb) , <alpha-value>)',
+          800: 'rgba(var(--app-secondary-800-rgb) , <alpha-value>)',
+          900: 'rgba(var(--app-secondary-900-rgb) , <alpha-value>)',
+          DEFAULT: 'rgba(var(--app-secondary-500-rgb) , <alpha-value>)',
+        },
+        'secondary-contrast': 'rgba(var(--app-secondary-contrast-rgb) , <alpha-value>)',
+        tertiary: {
+          50: 'rgba(var(--app-tertiary-50-rgb) , <alpha-value>)',
+          100: 'rgba(var(--app-tertiary-100-rgb) , <alpha-value>)',
+          200: 'rgba(var(--app-tertiary-200-rgb) , <alpha-value>)',
+          300: 'rgba(var(--app-tertiary-300-rgb) , <alpha-value>)',
+          400: 'rgba(var(--app-tertiary-400-rgb) , <alpha-value>)',
+          500: 'rgba(var(--app-tertiary-500-rgb) , <alpha-value>)',
+          600: 'rgba(var(--app-tertiary-600-rgb) , <alpha-value>)',
+          700: 'rgba(var(--app-tertiary-700-rgb) , <alpha-value>)',
+          800: 'rgba(var(--app-tertiary-800-rgb) , <alpha-value>)',
+          900: 'rgba(var(--app-tertiary-900-rgb) , <alpha-value>)',
+          DEFAULT: 'rgba(var(--app-tertiary-500-rgb) , <alpha-value>)',
+        },
+        'tertiary-contrast': 'rgba(var(--app-tertiary-contrast-rgb) , <alpha-value>)',
       },
     },
   },
