@@ -20,7 +20,7 @@ import {
 import { ReactiveFormsModule, FormControl } from '@angular/forms'
 import { MatTooltip } from '@angular/material/tooltip'
 import PerfectScrollbar from 'perfect-scrollbar'
-import { Subject, combineLatest, startWith, debounceTime, distinctUntilChanged, map, tap } from 'rxjs'
+import { Subject, combineLatest, startWith, map, tap } from 'rxjs'
 
 @Component({
   selector: 'app-conversation-list',
@@ -38,7 +38,6 @@ export class ConversationListComponent implements OnInit {
   searchControl = new FormControl('', { nonNullable: true })
 
   filterOptions: { label: string; value: ChatFilterType }[] = [
-    { label: this.lang.locals.bot_name, value: 'bot_name' },
     { label: this.lang.locals.sentiment, value: 'sentiment' },
     { label: this.lang.locals.feedback, value: 'feedback' },
   ]
@@ -117,25 +116,17 @@ export class ConversationListComponent implements OnInit {
   }
 
   listenToFilter() {
-    const searchChanges$ = this.searchControl.valueChanges
     // Combine filter type, value, and search
     combineLatest([
-      searchChanges$.pipe(startWith(''), debounceTime(400), distinctUntilChanged()), // Start with initial empty value
       this.filterType$.pipe(startWith(this.selectedFilter().value)), // Trigger on filter type change
       this.filterValue$.pipe(startWith('')), // Avoid rapid changes
     ])
       .pipe(
-        map(([searchValue, filterType, filterValue]) => {
+        map(([filterType, filterValue]) => {
           if (filterType !== 'bot_name' && filterValue === '') {
             return this.conversations()
           }
           return this.conversations().filter(conversation => {
-            const searchMatch = conversation.bot_name?.toLowerCase().includes((searchValue || '').toLowerCase())
-
-            if (filterType === 'bot_name') {
-              return searchMatch
-            }
-
             if (filterType === 'sentiment' && typeof filterValue === 'string') {
               return conversation.sentiment?.toLowerCase() === filterValue.toLowerCase()
             }
