@@ -42,7 +42,7 @@
         <div class="h-56 bg-gray-300 rounded animate-pulse"></div>
       }
     </div>
-
+    <!--Most used keyword-->
     <div class="col-span-1 p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 class="text-2xl font-semibold text-gray-700 mb-1">{{ lang.locals.most_used_keywords }}</h2>
       <p class="text-xs text-gray-500 mb-3">{{ lang.locals.chart_zoom_tip }}</p>
@@ -84,6 +84,7 @@
         <div class="h-56 bg-gray-300 rounded animate-pulse"></div>
       }
     </div>
+    <!--Indexed Sources Percentage-->
     <div class="col-span-1 p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 class="text-2xl font-semibold text-gray-700 mb-1">{{ lang.locals.indexed_sources_percentage }}</h2>
 
@@ -104,10 +105,9 @@
         <div class="h-56 bg-gray-300 rounded animate-pulse"></div>
       }
     </div>
-
-    <!-- Count Cards (Right, stacked vertically) -->
-    <!-- Report Count Card -->
-    <div class="relative overflow-hidden h-28 p-6 bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition">
+    <!-- Total Indexed news -->
+    <div
+      class="relative overflow-hidden h-28 p-6 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition">
       <h2 class="text-gray-700 text-2xl font-semibold">{{ lang.locals.total_indexed_news }}</h2>
       @if (numberOfIndexedNews$ | async; as numberOfIndexedNews) {
         <p class="text-gray-900 text-4xl font-bold mt-2">{{ numberOfIndexedNews }}</p>
