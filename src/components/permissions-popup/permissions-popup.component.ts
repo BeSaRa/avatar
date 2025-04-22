@@ -94,7 +94,7 @@ export class PermissionsPopupComponent implements OnInit {
   private updateChildPermissions(parentIndex: number, userPermissions: Permission[]): void {
     const childrenList = this.getChildrenList(parentIndex)
 
-    let areAllChildrenChecked = true
+    let areAllChildrenChecked = !!childrenList.length
 
     childrenList.controls.forEach(ctrl => {
       const childId = ctrl.value.id
