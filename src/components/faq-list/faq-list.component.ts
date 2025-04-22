@@ -42,6 +42,7 @@ export class FaqListComponent extends OnDestroyMixin(class {}) implements OnInit
   ngOnInit(): void {
     this.prepareDate()
     this.listenToSearch()
+    this.listenToBotNameChange()
   }
   toggleSelection(isChecked: boolean, faq: ArchiveFAQContract) {
     if (isChecked) {
@@ -76,12 +77,13 @@ export class FaqListComponent extends OnDestroyMixin(class {}) implements OnInit
   }
 
   prepareDate() {
-    const botNames$ = this.chatHistoryService.getAllBotNames().pipe(
-      tap(bots => this.selectedBotName.patchValue(bots.at(0)!)),
-      tap(bots => this.botNames.set(bots))
-    )
-
-    return botNames$.pipe(switchMap(() => this.getArchivedFAQs())).subscribe()
+    this.chatHistoryService
+      .getAllBotNames()
+      .pipe(
+        tap(bots => this.selectedBotName.patchValue(bots.at(0)!)),
+        tap(bots => this.botNames.set(bots))
+      )
+      .subscribe()
   }
   getArchivedFAQs() {
     this.isLoading.set(true)
@@ -102,6 +104,15 @@ export class FaqListComponent extends OnDestroyMixin(class {}) implements OnInit
           this.allArchivedFAQs().filter(faq => faq.ActualQuestion.toLowerCase().includes(searchTerm.toLowerCase()))
         )
       })
+  }
+
+  listenToBotNameChange(): void {
+    this.selectedBotName.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => this.getArchivedFAQs())
+      )
+      .subscribe()
   }
 
   addArchivedFAQs() {
