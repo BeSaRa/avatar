@@ -11,6 +11,7 @@ import { generateUUID } from '@/utils/utils'
 import { SocialMeidaSearchItem } from '@/types/social-media-search-type'
 import { SHOW_SNACKBAR } from '@/http-contexts/show-snackbar'
 import { SUCCESS_MESSAGE } from '@/http-contexts/success-message-token'
+import { MediaResultContract } from '@/contracts/media-result-contract'
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +63,12 @@ export class AdminService {
       formData.append('files', file)
     })
     return this.http.post(url, formData, { params: params })
+  }
+
+  downloadBlob(containerName: string, bolbName: string) {
+    const url = `${this.urlService.URLS.ADMIN}/download-blob`
+    const params = new HttpParams().set('container_name', containerName).set('blob_name', bolbName)
+    return this.http.post<MediaResultContract<string>>(url, null, { params })
   }
 
   getIndexInfo(indexName: string): Observable<IndexerInfoContract> {

@@ -11,7 +11,7 @@ import { SelectableItemDirective } from '@/directives/selectable-item.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AdminService } from '@/services/admin.service'
 import { LocalService } from '@/services/local.service'
-import { AsyncPipe, NgClass, NgOptimizedImage, NgStyle, NgTemplateOutlet } from '@angular/common'
+import { AsyncPipe, DOCUMENT, NgClass, NgOptimizedImage, NgStyle, NgTemplateOutlet } from '@angular/common'
 import { Component, inject, signal } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -43,6 +43,7 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
   private readonly router = inject(Router)
   private readonly route = inject(ActivatedRoute)
   private readonly dialog = inject(MatDialog)
+  private readonly document = inject(DOCUMENT)
 
   isContainerLoading = signal(true)
   loading = signal(false)
@@ -309,6 +310,25 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
       )
       .subscribe(() => {
         if (!errorMessage) alert(`${indexerName} run successfully.`)
+      })
+  }
+  downloadBlob(event: MouseEvent, containerName: string, blobName: string) {
+    event.stopPropagation()
+    this.adminService
+      .downloadBlob(containerName, blobName)
+      .pipe(
+        tap(fileData => {
+          const { data: fileUrl } = fileData
+          const link = this.document.createElement('a')
+          link.href = fileUrl ?? ''
+          link.download = blobName
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        })
+      )
+      .subscribe(res => {
+        console.log(res)
       })
   }
 }
