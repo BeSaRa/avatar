@@ -11,14 +11,28 @@
           <input
             type="date"
             formControlName="from_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="indexedForm.errors?.['DateInvalidRangeIndexed'] && indexedForm.touched" />
+          @if (
+            indexedForm.errors?.['DateInvalidRangeIndexed'] &&
+            (indexedForm.get('from_date')?.touched || indexedForm.get('to_date')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+          }
         </div>
         <div class="flex flex-col flex-auto">
           <label for="to_date" class="text-sm font-medium">{{ lang.locals.end_time }}</label>
           <input
             type="date"
             formControlName="to_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="indexedForm.errors?.['DateInvalidRangeIndexed'] && indexedForm.touched" />
+          @if (
+            indexedForm.errors?.['DateInvalidRangeIndexed'] &&
+            (indexedForm.get('from_date')?.touched || indexedForm.get('to_date')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+          }
         </div>
       </form>
 
@@ -53,14 +67,28 @@
           <input
             type="date"
             formControlName="from_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="keywordsForm.errors?.['DateInvalidRangeKeyword'] && keywordsForm.touched" />
+          @if (
+            keywordsForm.errors?.['DateInvalidRangeKeyword'] &&
+            (keywordsForm.get('from_date')?.touched || keywordsForm.get('to_date')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+          }
         </div>
         <div class="flex flex-col flex-auto">
           <label for="to_date" class="text-sm font-medium">{{ lang.locals.end_time }}</label>
           <input
             type="date"
             formControlName="to_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary" />
+            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="keywordsForm.errors?.['DateInvalidRangeKeyword'] && keywordsForm.touched" />
+          @if (
+            keywordsForm.errors?.['DateInvalidRangeKeyword'] &&
+            (keywordsForm.get('from_date')?.touched || keywordsForm.get('to_date')?.touched)
+          ) {
+            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
+          }
         </div>
       </form>
 

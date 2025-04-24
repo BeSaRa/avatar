@@ -18,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (item of getKeyValuePairArray.controls; track $index; let keyValuePairIdx = $index) {
+          @for (item of getKeyValuePairArray.controls; track item; let keyValuePairIdx = $index) {
             <tr [formGroupName]="keyValuePairIdx">
               @let isInvalidKey = item.get('key')?.invalid && item.get('key')?.touched && item.get('key')?.dirty;
               @let isInvalidValue =

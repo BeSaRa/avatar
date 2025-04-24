@@ -1,3 +1,5 @@
+import { SnackbarComponent } from '@/components/snackbar/snackbar.component'
+import { SnackBarDataContract } from '@/contracts/snack-bar-data-contract'
 import { inject, Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 
@@ -7,11 +9,27 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 export class MessageService {
   private _snackBar = inject(MatSnackBar)
 
-  showError(error: string, action?: string) {
-    this._snackBar.open(error, action)
+  showError(error: string, title?: string) {
+    this._snackBar.openFromComponent<SnackbarComponent, SnackBarDataContract>(SnackbarComponent, {
+      data: {
+        title,
+        message: error,
+        status: 'error',
+      },
+      panelClass: ['bg-primary', 'rounded-lg'],
+      horizontalPosition: 'left',
+      verticalPosition: 'bottom',
+    })
   }
 
-  showInfo(msg: string, action?: string) {
-    this._snackBar.open(msg, action)
+  showInfo(message: string, title?: string) {
+    this._snackBar.openFromComponent<SnackbarComponent, SnackBarDataContract>(SnackbarComponent, {
+      data: {
+        title,
+        message,
+        status: 'success',
+      },
+      panelClass: ['bg-accent-700', 'rounded-lg'],
+    })
   }
 }

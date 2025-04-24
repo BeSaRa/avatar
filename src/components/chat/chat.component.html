@@ -85,6 +85,7 @@
           <div class="rect5"></div>
         </div>
       }
+      <ng-container #thanksMessageContainer></ng-container>
       @if (chatService.messages().length > 1 && !ratingDone()) {
         <div
           @slideFromBottom
@@ -211,3 +212,11 @@
     </div>
   }
 </div>
+
+<ng-template #thanksMessage>
+  <div
+    @slideFromBottom
+    class="absolute whitespace-pre-line bottom-0 mb-2 w-40 p-2 flex justify-center items-center bg-white rounded-xl shadow-md">
+    <p class="text-sm">{{ lang.locals.thanks_for_feedback }}</p>
+  </div>
+</ng-template>

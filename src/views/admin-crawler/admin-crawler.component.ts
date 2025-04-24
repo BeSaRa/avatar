@@ -121,7 +121,7 @@ export class AdminCrawlerComponent extends OnDestroyMixin(class {}) implements O
     this.isloading.set(true)
     const formattedValue = transformData(this.crawlerForm.getRawValue())
     this.adminService
-      .scheduleUrl(formattedValue)
+      .scheduleUrl(formattedValue, this.lang.locals.save_urls_successfully)
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => this.isloading.set(false))
