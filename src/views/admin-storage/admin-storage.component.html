@@ -156,7 +156,7 @@
               @let extension = item.split('.')[1];
               @let fileName = item.split('/')[1];
               <div
-                class="content-item flex flex-col items-center p-4 rounded-lg [&.selected]:shadow-lg"
+                class="content-item flex flex-col items-center p-4 rounded-lg [&.selected]:shadow-lg group relative"
                 appSelectableItem
                 [item]="item"
                 [attr.data-item]="item">
@@ -167,6 +167,15 @@
                 <span [title]="fileName" class="text-sm text-center text-gray-700 mt-2 truncate w-full">{{
                   fileName
                 }}</span>
+                <button
+                  (click)="downloadBlob($event, breadcrumbs()[0], item)"
+                  [matTooltip]="lang.locals.download"
+                  class="outline-none flex items-center justify-center border-2 border-gray-300 hover:scale-125 transition-all duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto absolute top-0 right-6 rounded-full size-6 bg-accent-500 hover:bg-accent-600">
+                  <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M2 12H4V17H20V12H22V17C22 18.11 21.11 19 20 19H4C2.9 19 2 18.11 2 17V12M12 15L17.55 9.54L16.13 8.13L13 11.25V2H11V11.25L7.88 8.13L6.46 9.55L12 15Z" />
+                  </svg>
+                </button>
               </div>
             }
           }
