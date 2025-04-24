@@ -1566,5 +1566,65 @@
   "indexed_sources_percentage": {
     "ar": "نسبة مصادر الأخبار المفهرسة",
     "en": "The percentage of indexed news sources"
+  },
+  "report_generator": {
+    "ar": "مولد التقارير",
+    "en": "Report Generator"
+  },
+  "thanks_for_feedback": {
+    "ar": "Thanks for your feedback!\nشكرًا لملاحظاتك!",
+    "en": "Thanks for your feedback!\nشكرًا لملاحظاتك!"
+  },
+  "bad_request": {
+    "en": "Bad Request – Your request has invalid parameters.",
+    "ar": "طلب غير صالح - يحتوي طلبك على معلمات غير صحيحة."
+  },
+  "unauthorized": {
+    "en": "Unauthorized – Please log in to continue.",
+    "ar": "غير مصرح - يرجى تسجيل الدخول للمتابعة."
+  },
+  "forbidden": {
+    "en": "Forbidden – You don’t have permission to access this resource.",
+    "ar": "ممنوع - لا تملك الصلاحية للوصول إلى هذا المورد."
+  },
+  "not_found": {
+    "en": "Not Found – The requested resource could not be found.",
+    "ar": "غير موجود - لم يتم العثور على المورد المطلوب."
+  },
+  "conflict": {
+    "en": "Conflict – There’s a conflict with the current state of the resource.",
+    "ar": "تعارض - يوجد تعارض مع الحالة الحالية للمورد."
+  },
+  "unprocessable_entity": {
+    "en": "Unprocessable Entity – Validation failed for your input.",
+    "ar": "لا يمكن معالجة الكيان - فشل التحقق من صحة الإدخال."
+  },
+  "internal_server_error": {
+    "en": "Internal Server Error – Something went wrong on our end.",
+    "ar": "خطأ في الخادم - حدث خطأ ما في الخادم."
+  },
+  "bad_gateway": {
+    "en": "Bad Gateway – Invalid response from upstream server.",
+    "ar": "بوابة غير صالحة - استجابة غير صالحة من الخادم العلوي."
+  },
+  "service_unavailable": {
+    "en": "Service Unavailable – Please try again later.",
+    "ar": "الخدمة غير متوفرة - يرجى المحاولة لاحقًا."
+  },
+  "network_error": {
+    "en": "Network Error – Please check your internet connection.",
+    "ar": "خطأ في الشبكة - يرجى التحقق من اتصال الإنترنت."
+  },
+  "unknown_error": {
+    "en": "An unexpected error occurred.",
+    "ar": "حدث خطأ غير متوقع."
+  },
+  "operation_success": {
+    "en": "Success – Your request was completed successfully.",
+    "ar": "تم بنجاح - تم تنفيذ طلبك بنجاح."
+  },
+  "save_urls_successfully": {
+    "en": "Success – The URLs were saved successfully.",
+    "ar": "تم بنجاح - تم حفظ الروابط بنجاح."
   }
 }

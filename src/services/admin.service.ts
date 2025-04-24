@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http'
 import { inject, Injectable } from '@angular/core'
 import { UrlService } from './url.service'
 import { MediaCrawler } from '@/models/media-crawler'
@@ -9,6 +9,8 @@ import { FormGroup, NonNullableFormBuilder } from '@angular/forms'
 import { CrawlUrlContract, SettingsContract } from '@/contracts/settings-contract'
 import { generateUUID } from '@/utils/utils'
 import { SocialMeidaSearchItem } from '@/types/social-media-search-type'
+import { SHOW_SNACKBAR } from '@/http-contexts/show-snackbar'
+import { SUCCESS_MESSAGE } from '@/http-contexts/success-message-token'
 
 @Injectable({
   providedIn: 'root',
@@ -135,9 +137,11 @@ export class AdminService {
       )
     )
   }
-  scheduleUrl(crawlerUrls: CrawlUrlContract[]) {
+  scheduleUrl(crawlerUrls: CrawlUrlContract[], successMessage?: string) {
     const url = `${this.urlService.URLS.ADMIN}/settings/schedule`
-    return this.http.put(url, crawlerUrls)
+    return this.http.put(url, crawlerUrls, {
+      context: new HttpContext().set(SHOW_SNACKBAR, true).set(SUCCESS_MESSAGE, successMessage),
+    })
   }
   updateXScheduleSettings(expressions: Partial<SocialMeidaSearchItem>[]) {
     const url = `${this.urlService.URLS.ADMIN}/settings/x`

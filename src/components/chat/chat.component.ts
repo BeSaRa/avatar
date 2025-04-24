@@ -1,4 +1,16 @@
-import { Component, effect, ElementRef, HostListener, inject, Injector, OnInit, signal, viewChild } from '@angular/core'
+import {
+  Component,
+  effect,
+  ElementRef,
+  HostListener,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  TemplateRef,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core'
 import { MatRipple } from '@angular/material/core'
 import { LocalService } from '@/services/local.service'
 import { AsyncPipe, DOCUMENT, NgClass } from '@angular/common'
@@ -62,6 +74,8 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
   chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('chatContainer')
   chatBodyContainer = viewChild<ElementRef<HTMLDivElement>>('chatBody')
   messageInput = viewChild.required<ElementRef<HTMLTextAreaElement>>('textArea')
+  thanksMessage = viewChild.required('thanksMessage', { read: TemplateRef })
+  thanksMessageContainerRef = viewChild('thanksMessageContainer', { read: ViewContainerRef })
   fullscreenStatus = signal(false)
   answerInProgress = signal(false)
   animating = signal(false)
@@ -269,6 +283,10 @@ export class ChatComponent extends OnDestroyMixin(class {}) implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.ratingDone.set(true)
+        this.thanksMessageContainerRef()?.createEmbeddedView(this.thanksMessage())
+        setTimeout(() => {
+          this.thanksMessageContainerRef()?.clear()
+        }, 1500)
       })
   }
   handleSuggestionsQuestions(question: string) {

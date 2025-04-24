@@ -45,7 +45,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 7,
-    label: 'web_crawler',
+    label: 'report_generator',
     route: '/home/web-crawler',
     svg: 'WEB_CRAWLER',
     permissions: ['SEARCH'],

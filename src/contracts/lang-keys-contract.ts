@@ -390,4 +390,19 @@ export interface LangKeysContract {
   full_screen: string
   total_indexed_news: string
   indexed_sources_percentage: string
+  report_generator: string
+  thanks_for_feedback: string
+  bad_request: string
+  unauthorized: string
+  forbidden: string
+  not_found: string
+  conflict: string
+  unprocessable_entity: string
+  internal_server_error: string
+  bad_gateway: string
+  service_unavailable: string
+  network_error: string
+  unknown_error: string
+  operation_success: string
+  save_urls_successfully: string
 }

@@ -12,6 +12,7 @@ import { provideRouter, withComponentInputBinding, withViewTransitions } from '@
 import { provideInterceptors } from 'cast-response'
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
 import configInit from '../inits/config.init'
+import { successHandlerInterceptor } from '@/http-interceptors/success-handler.interceptor'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,12 +28,15 @@ export const appConfig: ApplicationConfig = {
         horizontalPosition: 'right',
         verticalPosition: 'top',
         duration: 2000,
-        panelClass: ['rounded-md', 'bg-primary', 'text-white', 'font-semibold'],
+        panelClass: ['rounded-lg', 'text-white'],
       },
     },
 
     configInit,
-    provideHttpClient(withFetch(), withInterceptors([errorCatchingInterceptor, apiKeyInterceptor, TokenInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([errorCatchingInterceptor, apiKeyInterceptor, TokenInterceptor, successHandlerInterceptor])
+    ),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideAnimationsAsync(),
