@@ -64,14 +64,16 @@ export class ButtonDirective {
     }
 
     const colorClasses = {
-      primary: 'bg-primary hover:bg-primary-700 text-primary-contrast focus:ring-primary',
-      accent: 'bg-accent hover:bg-accent-700 text-accent-contrast focus:ring-accent',
-      secondary: 'bg-secondary hover:bg-secondary-700 text-secondary-contrast focus:ring-secondary',
-      tertiary: 'bg-tertiary hover:bg-tertiary-700 text-tertiary-contrast focus:ring-tertiary',
-      'basic-primary': 'bg-transparent hover:bg-primary-100 text-primary focus:ring-primary',
-      'basic-accent': 'bg-transparent hover:bg-accent-100 text-accent focus:ring-accent',
-      'basic-secondary': 'bg-transparent hover:bg-secondary-100 text-secondary focus:ring-secondary',
-      'basic-tertiary': 'bg-transparent hover:bg-tertiary-100 text-tertiary focus:ring-tertiary',
+      primary: 'bg-primary hover:bg-primary-700 disabled:bg-primary text-primary-contrast focus:ring-primary',
+      accent: 'bg-accent hover:bg-accent-700 disabled:bg-accent text-accent-contrast focus:ring-accent',
+      secondary:
+        'bg-secondary hover:bg-secondary-700 disabled:bg-secondary text-secondary-contrast focus:ring-secondary',
+      tertiary: 'bg-tertiary hover:bg-tertiary-700 disabled:bg-tertiary text-tertiary-contrast focus:ring-tertiary',
+      'basic-primary': 'bg-transparent hover:bg-primary-100 disabled:bg-primary text-primary focus:ring-primary',
+      'basic-accent': 'bg-transparent hover:bg-accent-100 disabled:bg-accent text-accent focus:ring-accent',
+      'basic-secondary':
+        'bg-transparent hover:bg-secondary-100 disabled:bg-secondary text-secondary focus:ring-secondary',
+      'basic-tertiary': 'bg-transparent hover:bg-tertiary-100 disabled:bg-tertiary text-tertiary focus:ring-tertiary',
     }
 
     const shapes = {
@@ -87,15 +89,12 @@ export class ButtonDirective {
       high: 'shadow-md hover:shadow-lg',
     }
 
-    const disabledClasses = 'opacity-50 cursor-not-allowed'
-
     return [
       ...baseClasses,
       sizeClasses[this.size()],
       colorClasses[this.color()],
       shapes[this.shape()],
       this._isBasic() ? elevations['none'] : elevations[this.elevation()],
-      this.disabled() ? disabledClasses : '',
     ].join(' ')
   }
 }

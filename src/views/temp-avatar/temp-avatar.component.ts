@@ -16,6 +16,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { Component, computed, effect, ElementRef, inject, Injector, signal, viewChild } from '@angular/core'
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { Router } from '@angular/router'
+import { QRCodeComponent } from 'angularx-qrcode'
 import {
   AudioConfig,
   AutoDetectSourceLanguageConfig,
@@ -56,33 +58,10 @@ import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js'
     MatTooltipModule,
     ButtonDirective,
     TextWriterAnimatorDirective,
+    QRCodeComponent,
   ],
   templateUrl: './temp-avatar.component.html',
   styleUrl: './temp-avatar.component.scss',
-  animations: [
-    trigger('recordButton', [
-      state(
-        'InProgress',
-        style({
-          transform: 'scale(1)',
-          backgroundColor: 'gray',
-        })
-      ),
-      state(
-        'Started',
-        style({
-          transform: 'scale(1)',
-        })
-      ),
-      state(
-        'Stopped',
-        style({
-          transform: 'scale(0)',
-        })
-      ),
-      transition('* <=> *', [animate('150ms ease-in-out')]),
-    ]),
-  ],
 })
 export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
   baseElement = viewChild.required<ElementRef>('baseElement')
@@ -98,6 +77,7 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
   chatHistoryService = inject(ChatHistoryService)
   speechService = inject(SpeechService)
   injector = inject(Injector)
+  router = inject(Router)
 
   declare pc: RTCPeerConnection
   declare waveSurfer: WaveSurfer
@@ -105,6 +85,7 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
   declare recognizer: SpeechRecognizer
 
   readonly svgIcons = SVG_ICONS
+  readonly appColors = AppColors
 
   start$ = new ReplaySubject<void>(1)
   stop$ = new ReplaySubject<void>(1)
@@ -119,8 +100,7 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
     .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
 
   animationStatus = signal(false)
-
-  readonly appColors = AppColors
+  qrCodeOpened = false
 
   init$: Observable<unknown> = this.start$
     .asObservable()
@@ -397,6 +377,15 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
 
   isFullScreen() {
     return !!document.fullscreenElement
+  }
+
+  getQRData() {
+    return `${this.getOrigin()}/control?streamId=${this.store.streamId()}`
+  }
+
+  getOrigin() {
+    const idx = location.href.lastIndexOf(this.router.url)
+    return location.href.slice(0, idx)
   }
 
   private playIdle(): void {

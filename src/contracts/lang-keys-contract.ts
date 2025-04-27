@@ -405,4 +405,5 @@ export interface LangKeysContract {
   unknown_error: string
   operation_success: string
   save_urls_successfully: string
+  qr_code: string
 }

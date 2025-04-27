@@ -3,59 +3,6 @@
     <a class="flex-shrink" [routerLink]="['/home']">
       <img class="h-20" [src]="store.logoUrl()" alt="logo" />
     </a>
-    <button (click)="toggleMenu()" class="md:hidden">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#000000" viewBox="0 0 256 256">
-        <path
-          d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path>
-      </svg>
-    </button>
-
-    <!-- <nav
-      [@menu]="menuStatus"
-      class="fixed z-10 md:!h-auto overflow-hidden top-[112px] bg-gray-200 right-0 left-0 flex flex-col md:top-auto md:relative md:flex md:flex-row">
-      <ul
-        class="xs:flex xs:flex-col md:flex gap-1 [&_a:hover]:bg-primary [&_a:hover]:text-white md:[&_a]:border [&_a]:p-2 [&_a]:border-gray-300 [&_li_a_span]:max-sm:!inline [&_li_a_span]:max-sm:!opacity-100 [&_a]:rounded-full [&_li.active_a]:bg-primary [&_li.active_a]:text-white [&_li.active_a]:border-transparent [&_li]:duration-200 [&_li]:transition-all [&_li]:w-[42px] [&_li:hover]:w-[calc(42px_+_7rem)] [&_li.active]:w-[calc(42px_+_6rem)] [&_li]:max-sm:!w-full [&_li_a]:justify-evenly [&_li_a]:items-center">
-        @for (item of headerItems(); track $index) {
-          @let menuItem = menuItems[item];
-          @if (item === 2) {
-            <ng-container [ngTemplateOutlet]="chatAgent"></ng-container>
-          }
-          @if (item < menuItems.length) {
-            @if (!menuItem.permissions.length || hasPermission(menuItem.permissions)) {
-              <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                <a class="flex gap-1" [routerLink]="menuItem.route">
-                  <div [innerHTML]="SvgIcons[menuItem.svg] | sanitizer: 'html'"></div>
-                  <span class="text-sm" [ngClass]="{ '!text-xs': menuItem.label === 'hr_agent' }">{{
-                    lang.locals[menuItem.label]
-                  }}</span>
-                </a>
-              </li>
-            }
-          }
-        }
-
-        <ng-template #chatAgent>
-          <li [ngClass]="{ active: chatService.status() }">
-            <a (click)="openChatbot($event)" class="flex gap-1" href="#">
-              <svg class="size-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path
-                  d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z" />
-              </svg>
-              <span class="text-sm">{{ lang.locals.chat }}</span>
-            </a>
-          </li>
-        </ng-template>
-        <li routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a (click)="openSettings($event)" href="#" class="flex gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="currentColor" viewBox="0 0 256 256">
-              <path
-                d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path>
-            </svg>
-            <span class="text-sm">{{ lang.locals.settings }}</span>
-          </a>
-        </li>
-      </ul>
-    </nav> -->
     <div class="flex items-center justify-center gap-2">
       @if (userService.$isAuthenticated()) {
         <a routerLink="/home/avatar" appButton color="accent" shape="pill" class="!py-[2px]"

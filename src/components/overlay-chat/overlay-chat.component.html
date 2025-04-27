@@ -1,8 +1,7 @@
-<div id="chat-container" class="flex flex-col bg-black/40 w-full overflow-hidden">
+<div class="flex flex-col w-full max-h-full overflow-y-auto no-scrollbar overflow-x-hidden">
   <div
     #container
-    class="min-h-0 flex-auto flex flex-col w-full h-full relative overflow-hidden space-y-4 [&>.message.user]:justify-start [&>.message]:text-white"
-    [ngClass]="{ 'p-6': service.messages().length }">
+    class="flex-auto flex flex-col gap-1 w-full relative px-2 [&>.message.user]:justify-start [&>.message]:text-white">
     @for (message of service.messages(); track message.id) {
       <div class="message {{ message.role }}">
         @if (message.role === 'assistant') {

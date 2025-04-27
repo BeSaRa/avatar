@@ -1,29 +1,17 @@
-import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
+import { AppColors } from '@/constants/app-colors'
+import { SVG_ICONS } from '@/constants/svg-icons'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { SanitizerPipe } from '@/pipes/sanitizer.pipe'
 import { AvatarService } from '@/services/avatar.service'
 import { ChatHistoryService } from '@/services/chat-history.service'
 import { ChatService } from '@/services/chat.service'
 import { LocalService } from '@/services/local.service'
 import { SpeechService } from '@/services/speech.service'
 import { AppStore } from '@/stores/app.store'
-import { animate, state, style, transition, trigger } from '@angular/animations'
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
-import { AsyncPipe, NgClass } from '@angular/common'
-import {
-  Component,
-  effect,
-  ElementRef,
-  inject,
-  Injector,
-  input,
-  OnInit,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core'
+import { NgClass } from '@angular/common'
+import { Component, effect, inject, Injector, input, OnInit, output, signal } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
-import { MatRipple } from '@angular/material/core'
 import { MatTooltip } from '@angular/material/tooltip'
 import {
   AudioConfig,
@@ -35,50 +23,19 @@ import {
 import { delay, exhaustMap, filter, map, Subject, take, takeUntil, tap } from 'rxjs'
 import WaveSurfer from 'wavesurfer.js'
 import RecordPlugin from 'wavesurfer.js/plugins/record'
+import { SpinnerLoaderComponent } from '../spinner-loader/spinner-loader.component'
+import { ButtonDirective } from '@/directives/button.directive'
 
 @Component({
   selector: 'app-screen-control',
   standalone: true,
-  imports: [
-    CdkDrag,
-    CdkDragHandle,
-    NgClass,
-    MatRipple,
-    MatTooltip,
-    AvatarInterrupterBtnComponent,
-    ReactiveFormsModule,
-    AsyncPipe,
-  ],
+  imports: [NgClass, MatTooltip, ReactiveFormsModule, SpinnerLoaderComponent, SanitizerPipe, ButtonDirective],
   templateUrl: './screen-control.component.html',
   styleUrl: './screen-control.component.scss',
-  animations: [
-    trigger('recordButton', [
-      state(
-        'InProgress',
-        style({
-          transform: 'scale(1)',
-          backgroundColor: 'gray',
-        })
-      ),
-      state(
-        'Started',
-        style({
-          transform: 'scale(1)',
-        })
-      ),
-      state(
-        'Stopped',
-        style({
-          transform: 'scale(0)',
-        })
-      ),
-      transition('* <=> *', [animate('150ms ease-in-out')]),
-    ]),
-  ],
 })
 export class ScreenControlComponent extends OnDestroyMixin(class {}) implements OnInit {
   overlayChatComponent = input.required<OverlayChatComponent>()
-  waves = viewChild.required<ElementRef>('waves')
+  waves = input.required<HTMLElement>()
   store = inject(AppStore)
   chatService = inject(ChatService)
   chatHistoryService = inject(ChatHistoryService)
@@ -102,6 +59,9 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   lang = inject(LocalService)
 
+  readonly appColors = AppColors
+  readonly svgIcons = SVG_ICONS
+
   async ngOnInit(): Promise<void> {
     this.listenToAccept()
     this.listenToBotNameChange()
@@ -116,7 +76,7 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
     this.waveSurfer = new WaveSurfer({
       waveColor: 'white',
       progressColor: 'white',
-      container: this.waves().nativeElement,
+      container: this.waves(),
       height: 'auto',
     })
     this.recorder = this.waveSurfer.registerPlugin(RecordPlugin.create({ scrollingWaveform: false }))
@@ -239,5 +199,9 @@ export class ScreenControlComponent extends OnDestroyMixin(class {}) implements 
 
   clearChat() {
     this.chatService.messages.set([])
+  }
+
+  interruptAvatar() {
+    this.avatarService.interruptAvatar().pipe(take(1)).subscribe()
   }
 }

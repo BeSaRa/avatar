@@ -1,4 +1,4 @@
-<div #baseElement class="relative h-full w-full flex items-center justify-center bg-secondary-100 rounded-xl shadow">
+<div #baseElement class="relative h-full w-full flex items-center justify-center bg-secondary-100/80 rounded-xl shadow">
   <div class="flex flex-col items-center h-full justify-center absolute">
     @if (recognizedText()) {
       <span
@@ -52,7 +52,7 @@
             <span>{{ lang.locals.listening_ongoing }}</span>
           }
           @if (store.isRecordingStarted() && !recognizingStatus()) {
-            <div [innerHTML]="svgIcons.SEND | sanitizer: 'html'" class="size-6 text-primary"></div>
+            <div [innerHTML]="svgIcons.SEND | sanitizer: 'html'" class="size-6"></div>
             <span>{{ lang.locals.click_to_send }}</span>
           }
         </button>
@@ -73,6 +73,16 @@
         class="!h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
         <img [src]="'assets/icons/clear-chat.png'" class="size-6" alt="start" />
         {{ lang.locals.clear_chat_history }}
+      </button>
+      <button
+        [disabled]="!store.isStreamStarted()"
+        (click)="qrCodeOpened = true"
+        class="!h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
+        <svg fill="currentColor" class="size-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,3H21V9H15V3M17,5V7H19V5H17M3,3H9V9H3V3M5,5V7H7V5H5M3,15H9V21H3V15M5,17V19H7V17H5Z" />
+        </svg>
+        {{ lang.locals.qr_code }}
       </button>
       <button
         (click)="toggleFullScreen()"
@@ -101,11 +111,10 @@
           }"
           class="p-2 absolute end-2 pulse rounded-full"></div>
       </div>
-      <div [@recordButton]="store.recording()" class="w-24 h-7 overflow-x-hidden transition-all">
-        <div
-          [ngClass]="{ hidden: !store.isRecordingStarted() }"
-          class="-translate-x-1 w-full pointer-events-none h-full opacity-90"
-          #waves></div>
+      <div
+        [ngClass]="{ hidden: !store.isRecordingStarted() }"
+        class="w-28 h-6 overflow-hidden transition-all rounded-full border border-white/30">
+        <div class="w-full pointer-events-none h-full opacity-90" #waves></div>
       </div>
     </div>
 
@@ -164,6 +173,20 @@
         }
       </div>
     </div>
+    @if (qrCodeOpened && store.isStreamStarted()) {
+      <div (click)="qrCodeOpened = false" class="absolute w-full h-full flex items-center justify-center bg-black/80">
+        <div (click)="$event.stopPropagation()" class="relative flex flex-col justify-center items-center gap-2">
+          <qrcode [qrdata]="getQRData()"></qrcode>
+          <span class="p-1 text-white">streamId: {{ store.streamId() }}</span>
+          <button (click)="qrCodeOpened = false" class="w-10 h-10 p-1 text-white rounded-full bg-white/30">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
   </div>
 
   {{ init$ | async }}

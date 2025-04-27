@@ -80,6 +80,11 @@ const routes: Routes = [
     canDeactivate: [closeStreamGuard],
   },
   {
+    path: 'control',
+    loadComponent: () => import('@/views/control/control.component'),
+    pathMatch: 'full',
+  },
+  {
     path: '**',
     redirectTo: '',
   },
