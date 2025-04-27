@@ -1,16 +1,46 @@
-<div class="w-full h-full px-16 flex justify-start items-center gap-12">
-  <app-screen-control (recognizing$)="recognizing($event)" [overlayChatComponent]="overlayChatComponent" />
-  <div class="w-full flex flex-col items-center justify-center gap-4">
-    <div class="flex-1 w-full max-h-[95vh] overflow-y-auto">
-      <app-overlay-chat #overlayChatComponent class="w-full" />
+<div class="w-full h-full px-4 bg-secondary-100/80 rounded-xl flex justify-center items-center gap-12">
+  <div class="w-full md:w-[500px] h-full flex flex-col justify-between items-center">
+    <div class="py-4 relative max-w-[250px] text-2xl text-accent font-light flex justify-center items-center gap-4">
+      <img class="w-12 h-16" src="assets/icons/login-sparkles.svg" alt="login-sparkles" />
+      {{ lang.locals.login_greeting_message }}
     </div>
-
-    <div class="bg-black/40 text-white">{{ text() }}</div>
+    <div class="h-full w-full py-2 flex flex-col justify-between items-center gap-1 bg-accent/90 rounded-t-3xl">
+      <div class="w-36 h-6">
+        <div
+          [ngClass]="{ hidden: !store.isRecordingStarted() }"
+          class="w-full h-full overflow-hidden transition-all rounded-full border border-white border-white/30">
+          <div class="w-full pointer-events-none h-full opacity-90" #waves></div>
+        </div>
+      </div>
+      <div
+        class="h-full max-h-[300px] w-full flex flex-col items-center justify-center"
+        [ngClass]="{ '!justify-end': chatService.messages().length }">
+        <app-overlay-chat
+          #overlayChatComponent
+          class="w-full max-h-full"
+          [ngClass]="{ hidden: !chatService.messages().length }" />
+        <img
+          class="w-full md:w-[300px]"
+          src="assets/images/messages.png"
+          alt="messages"
+          [ngClass]="{ hidden: chatService.messages().length }" />
+      </div>
+      <div class="h-4 w-full flex items-center justify-center">
+        @if (text()) {
+          <span class="flex items-center justify-center bg-black/70 text-white text-xs rounded px-2">{{ text() }}</span>
+        }
+      </div>
+      <app-screen-control
+        (recognizing$)="recognizing($event)"
+        [overlayChatComponent]="overlayChatComponent"
+        [waves]="waves" />
+    </div>
   </div>
 </div>
 
 @if (isLoading) {
-  <div class="left-0 top-0 z-50 flex items-center justify-center w-full bg-black/60 h-full fixed">
+  <div
+    class="absolute left-0 top-0 w-full h-full z-50 flex items-center justify-center bg-black/60 overflow-hidden ltr:rounded-tl-xl rtl:rounded-tr-xl">
     <div class="lds-ellipsis">
       <div></div>
       <div></div>
@@ -19,17 +49,16 @@
     </div>
   </div>
 } @else if (!store.hasStream()) {
-  <div class="left-0 top-0 z-50 flex items-center justify-center w-full bg-black/80 h-full fixed">
-    <div class="flex flex-col items-center justify-center gap-8">
+  <div
+    class="absolute left-0 top-0 w-full h-full z-50 flex items-center justify-center bg-black/80 overflow-hidden ltr:rounded-tl-xl rtl:rounded-tr-xl">
+    <div class="flex flex-col items-center justify-center gap-4">
       <span class="max-w-[700px] font-bold text-white text-3xl">{{ lang.locals.scan_qr }}:</span>
-      <mat-form-field dir="ltr" class="w-full">
-        <mat-label>Stream ID</mat-label>
-        <input [formControl]="streamId" matInput />
-      </mat-form-field>
-      <button
-        (click)="saveStreamId()"
-        [disabled]="streamId.invalid"
-        class="-mt-10 bg-white w-full text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-white/90 disabled:bg-gray-400 disabled:cursor-not-allowed focus:ring-2 focus:ring-white focus:outline-none">
+      <input
+        placeholder="Stream ID*"
+        [formControl]="streamId"
+        dir="ltr"
+        class="rounded-md p-3 w-full text-xl border-2 border-accent-300 placeholder-accent-300 text-accent outline-none focus:border-accent transition-colors" />
+      <button appButton (click)="saveStreamId()" color="accent" size="2xl" [disabled]="streamId.invalid" class="w-full">
         {{ lang.locals.save }}
       </button>
     </div>

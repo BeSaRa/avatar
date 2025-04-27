@@ -1,0 +1,16 @@
+<a
+  [routerLink]="link()"
+  class="h-full relative flex p-8 rounded-lg border-2 hover:shadow-lg gap-4 transition-all {{ colorClasses[color()] }}"
+  [ngClass]="{
+    'flex-col justify-center items-start': isVertical(),
+    'justify-start items-center': !isVertical(),
+  }">
+  <div
+    class="arrow absolute top-2 end-2 p-2 rounded-full"
+    [innerHTML]="(lang.isLtr() ? svgIcons.ARROW_TOP_RIGHT : svgIcons.ARROW_TOP_LEFT) | sanitizer: 'html'"></div>
+  <div [innerHTML]="svgIcons[icon()] | sanitizer: 'html'" class="icon [&_svg]:!size-10"></div>
+  <div class="flex flex-col items-start justify-center gap-2">
+    <p class="title text-lg font-semibold">{{ title() }}</p>
+    <p class="desc">{{ description() }}</p>
+  </div>
+</a>
