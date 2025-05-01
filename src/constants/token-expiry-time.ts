@@ -1,1 +1,1 @@
-export const EXPIRY_MINUTES = 60
+export const EXPIRY_MINUTES = 30

@@ -143,14 +143,19 @@ export class StatisticsComponent {
     const values = Object.values(data) as number[]
     const labels = Object.keys(data)
 
+    // If all values are zero, inject a dummy slice (Chart.js requires > 0 to render)
+    const total = values.reduce((a, b) => a + b, 0)
+    const finalValues = total === 0 ? [1] : values
+    const finalLabels = total === 0 ? [this.lang.locals.no_data_to_preview] : labels
+
     return {
       type: 'pie',
       data: {
-        labels,
+        labels: finalLabels,
         datasets: [
           {
             label: this.lang.locals.indexed_sources_percentage,
-            data: values,
+            data: finalValues,
           },
         ],
       },
@@ -174,7 +179,7 @@ export class StatisticsComponent {
             },
             label: (context: TooltipItem<'pie'>) => {
               const label = context.label || ''
-              return [`${label}:${context.raw}%`]
+              return [`${label}:${this.lang.locals.no_data_to_preview ? 0 : context.raw}%`]
             },
           },
         },
@@ -195,11 +200,11 @@ export class StatisticsComponent {
           display: (context: Context) => {
             const dataset = context.dataset.data as number[]
             const value = dataset[context.dataIndex]
-            return !!value
+            return value > 0 || dataset.length === 1
           },
           formatter: (value: number, context: Context) => {
             const label = (context.chart.data.labels as string[])[context.dataIndex]
-            return [label, `${value}%`]
+            return [label, `${label === this.lang.locals.no_data_to_preview ? 0 : value}%`]
           },
         },
       },

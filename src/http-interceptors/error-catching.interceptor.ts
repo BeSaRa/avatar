@@ -60,7 +60,6 @@ const handelServerError = (
   error: HttpErrorResponse
 ) => {
   if (error.status === 401) {
-    router.navigate(['auth/login'])
     return
   }
   const apiUrl = error.url?.split('/').slice(-2).join('/') ?? ''
