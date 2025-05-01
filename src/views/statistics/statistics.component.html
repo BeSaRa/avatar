@@ -137,7 +137,10 @@
     <div
       class="relative overflow-hidden h-28 p-6 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition">
       <h2 class="text-gray-700 text-2xl font-semibold">{{ lang.locals.total_indexed_news }}</h2>
-      @if (numberOfIndexedNews$ | async; as numberOfIndexedNews) {
+      @let numberOfIndexedNews = numberOfIndexedNews$ | async;
+      @if (numberOfIndexedNews === null || numberOfIndexedNews === undefined) {
+        <div class="h-10 bg-gray-300 rounded animate-pulse mt-2"></div>
+      } @else {
         <p class="text-gray-900 text-4xl font-bold mt-2">{{ numberOfIndexedNews }}</p>
         <svg
           class="absolute w-40 h-32 top-0 rtl:left-0 right-0 m-2 opacity-50 mr-auto"
@@ -158,8 +161,6 @@
               fill="#bfbfbf"></path>
           </g>
         </svg>
-      } @else {
-        <div class="h-10 bg-gray-300 rounded animate-pulse mt-2"></div>
       }
     </div>
   </div>

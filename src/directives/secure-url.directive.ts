@@ -29,6 +29,8 @@ export class SecureUrlDirective extends OnDestroyMixin(class {}) {
             tap(secureUrl => this.doc.defaultView?.open(secureUrl, '_blank'))
           )
           .subscribe()
+      } else {
+        this.doc.defaultView?.open(href!, '_blank')
       }
     }
   }

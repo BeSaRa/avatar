@@ -17,7 +17,7 @@ export class LandingComponent {
   lang = inject(LocalService)
   chatService = inject(ChatService)
 
-  readonly menuItems = MENU_ITEMS
+  readonly menuItems = MENU_ITEMS.filter(el => el.label != 'home')
   readonly svgIcons = SVG_ICONS
 
   toggleChat() {
