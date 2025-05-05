@@ -1,13 +1,16 @@
 {
   "ENVIRONMENTS_URLS": {
-    "DEV": "https://elba-dev.azurewebsites.net/api",
-    "AQARAT_STG": "https://afnqcscbai01.azurewebsites.net/api",
+    "DEV": "https://apigatewaydev.aqarat.gov.qa/api-afnqcdcbai01",
+    "AQARAT_STG": "https://apigatewaystg.aqarat.gov.qa/api-afnqcscbai01",
     "AZURE": "https://elba-dev.azurewebsites.net/api",
     "RERA": "https://rera-api.azurewebsites.net/api"
   },
   "API_VERSION": "v1",
-  "BASE_ENVIRONMENT": "RERA",
-  "KUNA": "i-mEGilYdirGxQO_579aS_Y226Qq8Bi1SCwBehnp_jK_AzFu9Lhwig==",
+  "BASE_ENVIRONMENT": "DEV",
+  "OCP_APIM_KEY": {
+    "DEV": "976abc7031124bc1ad4761fcf2c37137",
+    "AQARAT_STG": "8e94f068c59143e888d528378d87b45a"
+  },
   "IDLE_AVATARS": [
     "gulf",
     "suit"
