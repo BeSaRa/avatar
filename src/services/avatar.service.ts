@@ -74,7 +74,7 @@ export class AvatarService {
   }
 
   updateVideo(text: string): Observable<{ status: string }> {
-    return this.http.post<{ status: string }>(this.urlService.URLS.AVATAR + '/update-video', {}, { params: { text } })
+    return this.http.post<{ status: string }>(this.urlService.URLS.AVATAR + '/update-video', { text })
   }
 
   retrieveVideo(): Observable<string> {
