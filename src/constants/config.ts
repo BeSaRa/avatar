@@ -4,7 +4,7 @@ export const Config = {
   ENVIRONMENTS_URLS: {},
   BASE_URL: '',
   API_VERSION: 'v1',
-  KUNA: '',
+  OCP_APIM_KEY: {} as Record<string, string>,
   EXTERNAL_PROTOCOLS: ['http', 'https'],
   IDLE_AVATARS: [] as string[],
 }

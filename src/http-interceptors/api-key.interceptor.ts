@@ -4,14 +4,11 @@ import { inject } from '@angular/core'
 
 export const apiKeyInterceptor: HttpInterceptorFn = (req, next) => {
   const configService = inject(ConfigService)
-
   return next(
     req.clone({
       setHeaders: {
-        ...(configService.CONFIG.BASE_ENVIRONMENT === 'AQARAT_STG'
-          ? {
-              'x-functions-key': configService.CONFIG.KUNA,
-            }
+        ...(configService.CONFIG.OCP_APIM_KEY[configService.CONFIG.BASE_ENVIRONMENT]
+          ? { 'Ocp-Apim-Subscription-Key': configService.CONFIG.OCP_APIM_KEY[configService.CONFIG.BASE_ENVIRONMENT] }
           : undefined),
       },
     })
