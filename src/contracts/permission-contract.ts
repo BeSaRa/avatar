@@ -6,6 +6,6 @@ export interface Permission {
   ar_name: string
   _id: string
   url: string
-  is_general: boolean
-  children: Permission[]
+  group_id: string
+  hide: boolean
 }
