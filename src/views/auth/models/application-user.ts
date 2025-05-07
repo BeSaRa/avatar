@@ -1,9 +1,9 @@
 import { signal } from '@angular/core'
 import { ALL_PERMISSIONS } from '../../../resources/all-permissions'
-import { UserPermission } from '../contracts/user-permission-contract'
+import { Permission } from '@/contracts/permission-contract'
 
 export class ApplicationUser {
-  private _permissions: UserPermission[] = []
+  private _permissions: Permission[] = []
   private _permissionsKeys: string[] = []
   private _refresh_token = signal<string>('')
   private _access_token = signal<string>('')
@@ -25,11 +25,11 @@ export class ApplicationUser {
     this._user_id.set(userId)
   }
 
-  set permissions(value: UserPermission[]) {
+  set permissions(value: Permission[]) {
     this._permissions = value
-    this._permissionsKeys = value.map(p => p._Permission__key)
+    this._permissionsKeys = value.map(p => p.key)
   }
-  get permissions(): UserPermission[] {
+  get permissions(): Permission[] {
     return this._permissions
   }
   get permissionsKeys(): string[] {

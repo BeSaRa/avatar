@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core'
 import { UrlService } from './url.service'
 import { Permission } from '@/contracts/permission-contract'
 import { Observable } from 'rxjs'
+import { PermissionGroupContract } from '@/contracts/permission-group-contract'
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,11 @@ export class PermissionsService {
   getAllPermission(): Observable<Permission[]> {
     const url = `${this.urlService.URLS.ADMIN}/permissions`
     return this.http.get<Permission[]>(url)
+  }
+
+  getPermissionGroups(): Observable<PermissionGroupContract[]> {
+    const url = `${this.urlService.URLS.ADMIN}/permission-groups`
+    return this.http.get<PermissionGroupContract[]>(url)
   }
 
   assignPermission(userId: string, permission: string[]) {

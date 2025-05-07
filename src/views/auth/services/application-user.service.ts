@@ -38,12 +38,7 @@ export class ApplicationUserService {
         })
       ),
       tap(res => localStorage.setItem(STORAGE_ITEMS.USER, JSON.stringify(res))),
-      tap(res =>
-        localStorage.setItem(
-          STORAGE_ITEMS.PERMISSIONS_KEYS,
-          JSON.stringify(res.permissions.map(p => p._Permission__key))
-        )
-      ),
+      tap(res => localStorage.setItem(STORAGE_ITEMS.PERMISSIONS_KEYS, JSON.stringify(res.permissions.map(p => p.key)))),
       tap(() => this.$isAuthenticated.set(true)),
       tap(() => this._router.navigate(['/home'])),
       tap(() =>
@@ -134,7 +129,6 @@ export class ApplicationUserService {
   checkAutoLogoutOnRefresh() {
     const expiryStr = localStorage.getItem(STORAGE_ITEMS.TOKEN_EXPIRY)
     if (!expiryStr) return
-
     const expiryTime = parseInt(expiryStr, 10)
     const now = Date.now()
 

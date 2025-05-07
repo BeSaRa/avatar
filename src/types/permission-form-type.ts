@@ -1,4 +1,5 @@
 import { Permission } from '@/contracts/permission-contract'
+import { PermissionGroupContract } from '@/contracts/permission-group-contract'
 import { inject } from '@angular/core'
 import { NonNullableFormBuilder } from '@angular/forms'
 
@@ -9,7 +10,7 @@ export function createPermissionForm() {
   })
 }
 
-export function createPermissionGroup(permission: Permission) {
+export function createPermissionGroup(permission: PermissionGroupContract) {
   const fb = inject(NonNullableFormBuilder)
   return fb.group({
     id: fb.control(permission._id),

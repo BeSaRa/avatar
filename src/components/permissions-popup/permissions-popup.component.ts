@@ -6,7 +6,7 @@ import { NgClass } from '@angular/common'
 import { Component, signal, inject, OnInit, runInInjectionContext, Injector } from '@angular/core'
 import { FormArray, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
-import { finalize, of, switchMap, tap } from 'rxjs'
+import { finalize, forkJoin, of, switchMap, tap } from 'rxjs'
 import { CheckboxComponent } from '../checkbox/checkbox.component'
 import {
   createPermissionForm,
@@ -14,6 +14,7 @@ import {
   PermissionChildGroup,
   PermissionGroup,
 } from '@/types/permission-form-type'
+import { PermissionGroupContract } from '@/contracts/permission-group-contract'
 
 @Component({
   selector: 'app-permissions-popup',
@@ -28,10 +29,12 @@ export class PermissionsPopupComponent implements OnInit {
   lang = inject(LocalService)
   ref = inject<MatDialogRef<PermissionsPopupComponent>>(MatDialogRef)
   data = inject<{ userId: string }>(MAT_DIALOG_DATA)
-  permissions = signal<Permission[]>([])
+  permissions = signal<PermissionGroupContract[]>([])
   permissionsForm = createPermissionForm()
   isLoading = signal(false)
   injector = inject(Injector)
+  permissionGroups$ = this.permissionsService.getPermissionGroups()
+  permissions$ = this.permissionsService.getAllPermission()
 
   get permissionsList() {
     return this.permissionsForm.get('permissions') as FormArray<PermissionGroup>
@@ -41,7 +44,7 @@ export class PermissionsPopupComponent implements OnInit {
     return this.permissionsList.at(parentIndex).get('children') as FormArray<PermissionChildGroup>
   }
 
-  preparePermissionsList(permissions: Permission[]) {
+  preparePermissionsList(permissions: PermissionGroupContract[]) {
     this.permissionsList.clear()
     permissions.forEach(permission =>
       runInInjectionContext(this.injector, () => this.permissionsList.push(createPermissionGroup(permission)))
@@ -54,23 +57,28 @@ export class PermissionsPopupComponent implements OnInit {
 
   getAllPermissions() {
     this.isLoading.set(true)
-    this.permissionsService
-      .getAllPermission()
+    forkJoin([this.permissionGroups$, this.permissions$])
       .pipe(
-        switchMap(allPermissions =>
+        switchMap(([permissionGroups, allPermissions]) =>
           this.data
-            ? this.getUserPermission(allPermissions)
-            : of(allPermissions).pipe(tap(allPermissions => this.preparePermissionsForm(allPermissions)))
+            ? this.getUserPermission(allPermissions, permissionGroups)
+            : of(allPermissions).pipe(
+                tap(allPermissions => this.preparePermissionsForm(allPermissions, permissionGroups))
+              )
         ),
         finalize(() => this.isLoading.set(false))
       )
       .subscribe()
   }
 
-  private preparePermissionsForm(allPermissions: Permission[], userPermissions: Permission[] = []): void {
-    allPermissions = this.categorizePermissions(allPermissions)
-    this.permissions.set(allPermissions)
-    this.preparePermissionsList(allPermissions)
+  private preparePermissionsForm(
+    allPermissions: Permission[],
+    permissionGroups: PermissionGroupContract[],
+    userPermissions: Permission[] = []
+  ): void {
+    this.categorizePermissions(allPermissions, permissionGroups)
+    this.permissions.set(permissionGroups)
+    this.preparePermissionsList(permissionGroups)
 
     allPermissions.forEach((permission, parentIndex) => {
       const isChecked = userPermissions.some(userPerm => userPerm._id === permission._id)
@@ -109,21 +117,16 @@ export class PermissionsPopupComponent implements OnInit {
     this.permissionsList.at(parentIndex).get('checked')?.patchValue(areAllChildrenChecked)
   }
 
-  categorizePermissions(data: Permission[]) {
-    const generalItems = data.filter(item => item.is_general)
-    const nonGeneralItems = data.filter(item => !item.is_general)
-
-    generalItems.forEach(general => {
-      general.children = nonGeneralItems.filter(nonGeneral => nonGeneral.key.includes(general.key))
+  categorizePermissions(permissions: Permission[], permissionGroups: PermissionGroupContract[]) {
+    permissionGroups.forEach(group => {
+      group.children = permissions.filter(permission => permission.group_id === group._id)
     })
-
-    return generalItems
   }
 
-  getUserPermission(allPermissions: Permission[]) {
+  getUserPermission(allPermissions: Permission[], permissionGroups: PermissionGroupContract[]) {
     return this.permissionsService.getUserPermission(this.data.userId).pipe(
       tap(userPermissions => {
-        this.preparePermissionsForm(allPermissions, userPermissions)
+        this.preparePermissionsForm(allPermissions, permissionGroups, userPermissions)
       })
     )
   }
