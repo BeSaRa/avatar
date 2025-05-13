@@ -2,13 +2,15 @@ import { inject, Injectable, signal } from '@angular/core'
 import { ApplicationUser } from '../models/application-user'
 import { UrlService } from '@/services/url.service'
 import { HttpClient } from '@angular/common/http'
-import { catchError, Observable, of, Subscription, tap, timer } from 'rxjs'
+import { catchError, map, mergeMap, Observable, of, Subscription, tap, timer } from 'rxjs'
 import { Router } from '@angular/router'
 import { STORAGE_ITEMS } from '@/constants/storage-items'
 import { CONFIGURATIONS } from '../../../resources/configurations'
 import { MessageService } from '@/services/message.service'
 import { LocalService } from '@/services/local.service'
 import { EXPIRY_MINUTES } from '@/constants/token-expiry-time'
+import { SpeechService } from '@/services/speech.service'
+import { AppStore } from '@/stores/app.store'
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,9 @@ export class ApplicationUserService {
   private readonly _router = inject(Router)
   private readonly messagesService = inject(MessageService)
   private readonly lang = inject(LocalService)
+  private readonly commonService = inject(SpeechService)
+  private readonly store = inject(AppStore)
+
   $applicationUser = signal<ApplicationUser>(new ApplicationUser())
   $isAuthenticated = signal<boolean>(false)
   declare logoutSubscription: Subscription
@@ -46,13 +51,13 @@ export class ApplicationUserService {
       ),
       tap(() => localStorage.setItem(STORAGE_ITEMS.USERNAME, username)),
       tap(() => this.setExpirationSession()),
-
+      mergeMap(user => this.handleSpeechToken(user)),
       catchError(() => {
         this.$isAuthenticated.set(false)
         this.messagesService.showError(`${this.lang.locals.login_failed}`)
         return of(new ApplicationUser())
       })
-    )
+    ) as Observable<ApplicationUser>
   }
   generateRefreshToken() {
     const url = `${this._urlService.URLS.USER}/refresh-token`
@@ -147,5 +152,15 @@ export class ApplicationUserService {
 
   getUsername() {
     return localStorage.getItem(STORAGE_ITEMS.USERNAME) ?? ''
+  }
+  private handleSpeechToken(user: ApplicationUser): Observable<ApplicationUser> {
+    return this.commonService.generateSpeechToken().pipe(
+      tap(token => this.store.updateSpeechToken(token)),
+      catchError(error => {
+        console.error('Error generating speech token:', error)
+        return of(null)
+      }),
+      map(() => user)
+    )
   }
 }
