@@ -26,6 +26,7 @@ import { RecorderComponent } from '../recorder/recorder.component'
 import { AvatarVideoComponent } from '../avatar-video/avatar-video.component'
 import { AvatarInterrupterBtnComponent } from '../avatar-interrupter-btn/avatar-interrupter-btn.component'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
+import { ChatService } from '@/services/chat.service'
 
 @Component({
   selector: 'app-chat-container',
@@ -44,10 +45,11 @@ import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
   ],
   templateUrl: './chat-container.component.html',
   styleUrl: './chat-container.component.scss',
+  providers: [ChatService],
 })
 export class ChatContainerComponent extends OnDestroyMixin(class {}) implements OnInit {
   lang = inject(LocalService)
-  chatService = inject(BaseChatService, { skipSelf: true })
+  chatService = inject(ChatService)
   injector = inject(Injector)
   document = inject(DOCUMENT)
   chatHistoryService = inject(ChatHistoryService)

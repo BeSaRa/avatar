@@ -3,8 +3,8 @@ import { SVG_ICONS } from '@/constants/svg-icons'
 import { LangKeysContract } from '@/contracts/lang-keys-contract'
 import { LocalService } from '@/services/local.service'
 import { CommonModule } from '@angular/common'
-import { Component, inject, ɵINPUT_SIGNAL_BRAND_WRITE_TYPE } from '@angular/core'
-import { RouterLink, RouterOutlet } from '@angular/router'
+import { Component, inject } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
 
 @Component({
   selector: 'app-admin',

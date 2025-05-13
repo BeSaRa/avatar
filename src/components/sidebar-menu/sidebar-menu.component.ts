@@ -1,14 +1,14 @@
-import { Component, inject } from '@angular/core'
-import { MENU_ITEMS } from '../../resources/menu-items'
 import { SVG_ICONS } from '@/constants/svg-icons'
-import { CommonModule } from '@angular/common'
-import { RouterModule } from '@angular/router'
 import { SanitizerPipe } from '@/pipes/sanitizer.pipe'
-import { MatTooltip } from '@angular/material/tooltip'
-import { LocalService } from '@/services/local.service'
 import { ChatService } from '@/services/chat.service'
+import { LocalService } from '@/services/local.service'
+import { MenuService } from '@/services/menu.service'
 import { ApplicationUserService } from '@/views/auth/services/application-user.service'
+import { CommonModule } from '@angular/common'
+import { Component, inject } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
+import { MatTooltip } from '@angular/material/tooltip'
+import { RouterModule } from '@angular/router'
 import { SettingsPopupComponent } from '../settings-popup/settings-popup.component'
 
 @Component({
@@ -23,18 +23,18 @@ export class SidebarMenuComponent {
   chatService = inject(ChatService)
   applicationUserService = inject(ApplicationUserService)
   dialog = inject(MatDialog)
+  menuService = inject(MenuService)
 
-  readonly menuItems = MENU_ITEMS
   readonly svgIcons = SVG_ICONS
 
   isOpened = false
 
   get shownItems() {
-    return this.menuItems.slice(0, 8)
+    return this.menuService.getMenuItems().slice(0, 8)
   }
 
   get hiddenItems() {
-    return this.menuItems.slice(8)
+    return this.menuService.getMenuItems().slice(8)
   }
 
   toggleFullMenu() {

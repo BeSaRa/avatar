@@ -32,6 +32,7 @@ import { ButtonDirective } from '@/directives/button.directive'
   imports: [NgClass, MatTooltip, ReactiveFormsModule, SpinnerLoaderComponent, SanitizerPipe, ButtonDirective],
   templateUrl: './screen-control.component.html',
   styleUrl: './screen-control.component.scss',
+  providers: [ChatService],
 })
 export class ScreenControlComponent extends OnDestroyMixin(class {}) implements OnInit {
   overlayChatComponent = input.required<OverlayChatComponent>()

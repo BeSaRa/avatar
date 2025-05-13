@@ -10,7 +10,8 @@ export class Message extends ClonerMixin(BaseMessage) {
 
   constructor(
     public override content = '',
-    public override role: MessageRoleType = 'user'
+    public override role: MessageRoleType = 'user',
+    public chatType: string | undefined = undefined
   ) {
     super()
   }
