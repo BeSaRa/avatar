@@ -8,6 +8,7 @@ export const Config = {
   OCP_APIM_KEY: {} as Record<string, string>,
   EXTERNAL_PROTOCOLS: ['http', 'https'],
   IS_OCP: false,
+  ENTITY_NAME: '',
   IDLE_AVATARS: [] as string[],
 }
 
