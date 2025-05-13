@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core'
-import { LocalService } from '@/services/local.service'
-import { RouterLink } from '@angular/router'
-import { ChatService } from '@/services/chat.service'
-import { MENU_ITEMS } from '../../resources/menu-items'
 import { SVG_ICONS } from '@/constants/svg-icons'
 import { SanitizerPipe } from '@/pipes/sanitizer.pipe'
+import { ChatService } from '@/services/chat.service'
+import { LocalService } from '@/services/local.service'
+import { MenuService } from '@/services/menu.service'
+import { Component, inject } from '@angular/core'
+import { RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-landing',
@@ -16,8 +16,8 @@ import { SanitizerPipe } from '@/pipes/sanitizer.pipe'
 export class LandingComponent {
   lang = inject(LocalService)
   chatService = inject(ChatService)
+  menuService = inject(MenuService)
 
-  readonly menuItems = MENU_ITEMS.filter(el => el.label != 'home')
   readonly svgIcons = SVG_ICONS
 
   toggleChat() {

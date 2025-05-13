@@ -27,6 +27,7 @@ import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.d
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { slideFromBottom } from '@/animations/fade-in-slide'
+import { ChatService } from '@/services/chat.service'
 
 @Component({
   selector: 'app-interactive-chat',

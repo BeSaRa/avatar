@@ -154,7 +154,6 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
     })
     merge(this.destroy$)
       .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2
-      .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
       .subscribe(() => {
         console.log('COMPONENT DESTROYED')
       })
@@ -206,7 +205,10 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
       .pipe(finalize(() => (this.isDownloading = false)))
       .subscribe(url => {
         if (url) {
-          window.open(url)
+          const downloadLink = document.createElement('a')
+          downloadLink.href = url
+          downloadLink.download = 'video-generator.mp4'
+          downloadLink.click()
         }
       })
   }

@@ -24,10 +24,13 @@ export abstract class BaseChatService {
   abstract messages: WritableSignal<Message[]>
   abstract status: WritableSignal<boolean>
   abstract conversationId: WritableSignal<string>
+  chatType?: string
 
-  sendMessage(content: string, bot: string): Observable<ChatMessageResultContract> {
+  sendMessage(content: string, bot: string, chatType?: string): Observable<ChatMessageResultContract> {
+    this.chatType = chatType ?? bot
+
     const url = `${this.urlService.URLS.CHAT}/${bot}`
-    this.messages.update(messages => [...messages, new Message(content, 'user')])
+    this.messages.update(messages => [...messages, new Message(content, 'user', chatType ?? bot)])
 
     return this.http
       .post<ChatMessageResultContract>(url, {
@@ -41,12 +44,13 @@ export abstract class BaseChatService {
           new Message().clone({
             content: err.message,
             role: 'error',
+            chatType: chatType ?? bot,
           })
           throw new Error(err)
         }),
         map(res => {
           res.message.content = formatString(formatText(res.message.content, res.message))
-          res.message = new Message().clone(res.message)
+          res.message = new Message().clone<Message>({ ...res.message, chatType: chatType ?? bot })
           this.conversationId.set(res.message.conversation_id)
           this.messages.update(messages => [...messages, res.message])
           return res

@@ -44,6 +44,7 @@ import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js'
   ],
   templateUrl: './ms-avatar.component.html',
   styleUrl: './ms-avatar.component.scss',
+  providers: [ChatService],
 })
 export default class MsAvatarComponent implements AfterViewInit {
   overlayChatComponent = viewChild.required<OverlayChatComponent>('overlayChatComponent')

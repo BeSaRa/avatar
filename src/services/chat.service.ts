@@ -10,4 +10,8 @@ export class ChatService extends BaseChatService {
   status = signal<boolean>(false)
   conversationId = signal<string>('')
   lang = inject(LocalService)
+
+  getFilteredMessages() {
+    return this.messages().filter(m => (this.chatType ? this.chatType === m.chatType : true))
+  }
 }

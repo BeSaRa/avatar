@@ -69,7 +69,7 @@ export const AppStore = signalStore(
       patchState(store, { recording: 'InProgress' })
     },
     updateStreamStatus: (status: 'Started' | 'Stopped' | 'InProgress' | 'Disconnecting' = 'Stopped') => {
-      patchState(store, { streamingStatus: status, streamId: status === 'Stopped' ? undefined : store.streamId() })
+      patchState(store, { streamingStatus: status })
     },
     updateIdleAvatar(idle: string) {
       patchState(store, { idleAvatar: idle })

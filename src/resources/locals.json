@@ -1630,5 +1630,9 @@
   "qr_code": {
     "ar": "مسح الرمز",
     "en": "QR code"
+  },
+  "you_dont_have_permission_to_access_this_page": {
+    "ar": "ليس لديك صلاحية الوصول لهذه الصفحة",
+    "en": "You don't have permission to access this page"
   }
 }

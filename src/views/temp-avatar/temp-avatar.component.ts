@@ -12,7 +12,6 @@ import { LocalService } from '@/services/local.service'
 import { SpeechService } from '@/services/speech.service'
 import { AppStore } from '@/stores/app.store'
 import { ignoreErrors } from '@/utils/utils'
-import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AsyncPipe, CommonModule } from '@angular/common'
 import { Component, computed, effect, ElementRef, inject, Injector, signal, viewChild } from '@angular/core'
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -62,6 +61,7 @@ import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js'
   ],
   templateUrl: './temp-avatar.component.html',
   styleUrl: './temp-avatar.component.scss',
+  providers: [ChatService],
 })
 export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
   baseElement = viewChild.required<ElementRef>('baseElement')
@@ -192,7 +192,6 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
     this.store.updateStreamStatus('Stopped')
     merge(this.destroy$)
       .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2
-      .pipe(switchMap(() => this.avatarService.closeStream().pipe(ignoreErrors())))
       .subscribe(() => {
         console.log('COMPONENT DESTROYED')
       })

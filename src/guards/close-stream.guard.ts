@@ -8,7 +8,7 @@ export const closeStreamGuard: CanDeactivateFn<unknown> = () => {
   const store = inject(AppStore)
   const avatarService = inject(AvatarService)
   const userService = inject(ApplicationUserService)
-  if (store.streamId()) {
+  if (store.streamId() && userService.$isAuthenticated()) {
     avatarService.closeStream().subscribe()
   }
   return userService.$isAuthenticated() ? confirm('Stream will be closed') : true
