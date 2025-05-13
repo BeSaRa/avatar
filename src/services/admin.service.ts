@@ -12,6 +12,7 @@ import { SocialMeidaSearchItem } from '@/types/social-media-search-type'
 import { SHOW_SNACKBAR } from '@/http-contexts/show-snackbar'
 import { SUCCESS_MESSAGE } from '@/http-contexts/success-message-token'
 import { MediaResultContract } from '@/contracts/media-result-contract'
+import { ConfigService } from './config.service'
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class AdminService {
   private readonly http = inject(HttpClient)
   private readonly urlService = inject(UrlService)
   private readonly fb = inject(NonNullableFormBuilder)
+  private readonly config = inject(ConfigService)
 
   crawlWeb(crawlerOptions: MediaCrawler) {
     const url = `${this.urlService.URLS.ADMIN}/crawler`
@@ -126,8 +128,9 @@ export class AdminService {
     const url = `${this.urlService.URLS.ADMIN}/get-subfolders-blobs/rera-media`
     return this.http.get<Record<string, string[]>>(url)
   }
-  getSettingsByEntityName(entityName = 'rera') {
-    const url = `${this.urlService.URLS.ADMIN}/settings/${entityName}`
+  getSettingsByEntityName() {
+    const enitity = this.config.CONFIG.ENTITY_NAME
+    const url = `${this.urlService.URLS.ADMIN}/settings/${enitity}`
     return this.http.get<SettingsContract[]>(url)
   }
   getCrawlingData() {
