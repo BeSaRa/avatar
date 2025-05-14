@@ -847,6 +847,10 @@
     "ar": "عدد التقارير",
     "en": "Number of reports"
   },
+  "scan_qr": {
+    "ar": "قم باستخدام الكاميرا لمسح الرمز الخاص بالشخصية أو قم بإدخاله بشكل يدوي في الحقل التالي",
+    "en": "Use camera to scan avatar QR code or enter it manually in the following field"
+  },
   "hr_agent": {
     "ar": "مساعد الموارد البشرية",
     "en": "HR Agent"
@@ -1462,5 +1466,173 @@
   "start_searching": {
     "ar": "البدء بالبحث",
     "en": "Start searching"
+  },
+  "idle_avatar": {
+    "ar": "الشخصية الافتراضية المؤقتة",
+    "en": "Idle avatar"
+  },
+  "schedule_days": {
+    "ar": "أيام الجدولة",
+    "en": "Schedule days"
+  },
+  "save_queries": {
+    "ar": "حفظ الاستعلامات",
+    "en": "Save Queries"
+  },
+  "most_indexed_urls": {
+    "en": "Most Indexed URLs",
+    "ar": "أكثر الروابط فهرسة"
+  },
+  "most_used_keywords": {
+    "en": "Most Used Keywords",
+    "ar": "أكثر الكلمات استخداماً"
+  },
+  "keywords_count": {
+    "en": "Keywords Count",
+    "ar": "عدد الكلمات"
+  },
+  "reset_zoom": {
+    "en": "Reset Zoom",
+    "ar": "إعادة تعيين التكبير"
+  },
+  "chart_zoom_tip": {
+    "en": "Tip: You can zoom in using scroll, drag, or pinch gestures.",
+    "ar": "نصيحة: يمكنك التكبير باستخدام عجلة الماوس أو السحب أو الإيماءات بالإصبعين على الشاشة."
+  },
+  "user_feedback_by_chatbot": {
+    "en": "User feedback by chat bot",
+    "ar": "آراء المستخدمين حسب بوت الدردشة"
+  },
+  "last_scheduled_date": {
+    "en": "Last Scheduled Date",
+    "ar": "آخر تاريخ تم جدولته"
+  },
+  "recurring_every": {
+    "en": "Recurring Every",
+    "ar": "يُجدول كل"
+  },
+  "save_urls": {
+    "en": "Save URLs",
+    "ar": "حفظ الروابط"
+  },
+  "legal_document_management": {
+    "en": "Leagl Document Management",
+    "ar": "إدارة الوثائق القانونية"
+  },
+  "legal_document_desc": {
+    "ar": "أضف، احذف، ونظّم المستندات والوثائق القانونية.",
+    "en": "Manage legal documents: add, delete, or organize."
+  },
+  "words_limit_is": {
+    "ar": "الحد الأقصى لعدد الكلمات هو:",
+    "en": "Maximum words limit is:"
+  },
+  "session_timeout": {
+    "ar": "انتهت صلاحية الجلسة, الرجاء تسجيل الدخول مرة اخرى",
+    "en": "Session timeout, please to login"
+  },
+  "aqarat_ai_portal": {
+    "ar": "بوابة عقارات للذكاء الاصطناعي",
+    "en": "Aqarat AI portal"
+  },
+  "login_greeting_message": {
+    "ar": "مرحباً بكم في حلول الذكاء الاصطناعي",
+    "en": "Welcome to Aqarat AI solutions"
+  },
+  "open_full_menu": {
+    "ar": "فتح كامل القائمة",
+    "en": "Open full menu"
+  },
+  "close_menu": {
+    "ar": "إغلاق القائمة",
+    "en": "Close menu"
+  },
+  "start": {
+    "ar": "تشغيل",
+    "en": "Start"
+  },
+  "stop": {
+    "ar": "إيقاف",
+    "en": "Stop"
+  },
+  "full_screen": {
+    "ar": "ملء الشاشة",
+    "en": "Full screen"
+  },
+  "total_indexed_news": {
+    "ar": "إجمالي عدد الأخبار المفهرسة",
+    "en": "Total number of indexed news"
+  },
+  "indexed_sources_percentage": {
+    "ar": "نسبة مصادر الأخبار المفهرسة",
+    "en": "The percentage of indexed news sources"
+  },
+  "report_generator": {
+    "ar": "مولد التقارير",
+    "en": "Report Generator"
+  },
+  "thanks_for_feedback": {
+    "ar": "Thanks for your feedback!\nشكرًا لملاحظاتك!",
+    "en": "Thanks for your feedback!\nشكرًا لملاحظاتك!"
+  },
+  "bad_request": {
+    "en": "Bad Request – Your request has invalid parameters.",
+    "ar": "طلب غير صالح - يحتوي طلبك على معلمات غير صحيحة."
+  },
+  "unauthorized": {
+    "en": "Unauthorized – Please log in to continue.",
+    "ar": "غير مصرح - يرجى تسجيل الدخول للمتابعة."
+  },
+  "forbidden": {
+    "en": "Forbidden – You don’t have permission to access this resource.",
+    "ar": "ممنوع - لا تملك الصلاحية للوصول إلى هذا المورد."
+  },
+  "not_found": {
+    "en": "Not Found – The requested resource could not be found.",
+    "ar": "غير موجود - لم يتم العثور على المورد المطلوب."
+  },
+  "conflict": {
+    "en": "Conflict – There’s a conflict with the current state of the resource.",
+    "ar": "تعارض - يوجد تعارض مع الحالة الحالية للمورد."
+  },
+  "unprocessable_entity": {
+    "en": "Unprocessable Entity – Validation failed for your input.",
+    "ar": "لا يمكن معالجة الكيان - فشل التحقق من صحة الإدخال."
+  },
+  "internal_server_error": {
+    "en": "Internal Server Error – Something went wrong on our end.",
+    "ar": "خطأ في الخادم - حدث خطأ ما في الخادم."
+  },
+  "bad_gateway": {
+    "en": "Bad Gateway – Invalid response from upstream server.",
+    "ar": "بوابة غير صالحة - استجابة غير صالحة من الخادم العلوي."
+  },
+  "service_unavailable": {
+    "en": "Service Unavailable – Please try again later.",
+    "ar": "الخدمة غير متوفرة - يرجى المحاولة لاحقًا."
+  },
+  "network_error": {
+    "en": "Network Error – Please check your internet connection.",
+    "ar": "خطأ في الشبكة - يرجى التحقق من اتصال الإنترنت."
+  },
+  "unknown_error": {
+    "en": "An unexpected error occurred.",
+    "ar": "حدث خطأ غير متوقع."
+  },
+  "operation_success": {
+    "en": "Success – Your request was completed successfully.",
+    "ar": "تم بنجاح - تم تنفيذ طلبك بنجاح."
+  },
+  "save_urls_successfully": {
+    "en": "Success – The URLs were saved successfully.",
+    "ar": "تم بنجاح - تم حفظ الروابط بنجاح."
+  },
+  "qr_code": {
+    "ar": "مسح الرمز",
+    "en": "QR code"
+  },
+  "you_dont_have_permission_to_access_this_page": {
+    "ar": "ليس لديك صلاحية الوصول لهذه الصفحة",
+    "en": "You don't have permission to access this page"
   }
 }

@@ -45,7 +45,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 7,
-    label: 'web_crawler',
+    label: 'report_generator',
     route: '/home/web-crawler',
     svg: 'WEB_CRAWLER',
     permissions: ['SEARCH'],
@@ -71,13 +71,13 @@ export const MENU_ITEMS: MenuItem[] = [
     svg: 'DOCUMENT',
     permissions: ['DOCUMENT_INTELLIGENCE'],
   },
-  {
-    id: 11,
-    label: 'avatar_chat',
-    route: '/avatar',
-    svg: 'AVATAR',
-    permissions: ['AVATAR'],
-  },
+  // {
+  //   id: 11,
+  //   label: 'avatar_chat',
+  //   route: '/avatar',
+  //   svg: 'AVATAR',
+  //   permissions: ['AVATAR'],
+  // },
   {
     id: 12,
     label: 'ms_avatar',
@@ -97,6 +97,13 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'video_generator',
     route: '/video-generator',
     svg: 'VIDEO_GENERATOR',
+    permissions: ['AVATAR'],
+  },
+  {
+    id: 15,
+    label: 'avatar_chat',
+    route: '/home/avatar',
+    svg: 'AVATAR',
     permissions: ['AVATAR'],
   },
 ]
