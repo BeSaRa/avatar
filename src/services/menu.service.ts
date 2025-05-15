@@ -12,7 +12,11 @@ export class MenuService {
 
   getMenuItems() {
     return this._menuItems.filter(item =>
-      item.permissions.length ? this.applicationUserService.$applicationUser().hasAllPermission(item.permissions) : true
+      item.permissions.length
+        ? item.haveSomeOfPermissions
+          ? this.applicationUserService.$applicationUser().hasAnyPermission(item.permissions)
+          : this.applicationUserService.$applicationUser().hasAllPermission(item.permissions)
+        : true
     )
   }
 

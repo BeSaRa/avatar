@@ -15,6 +15,7 @@
         </ng-template>
       </app-dropdown>
       <button
+        *appHasPermission="['FAQ_ADD_QUESTION']"
         type="button"
         (click)="addArchivedFAQs()"
         [disabled]="!selectedBotName.value"
@@ -25,6 +26,7 @@
     @if (selectedRawKey.size) {
       <div>
         <button
+          *appHasPermission="['FAQ_DELETE_QUESTION']"
           (click)="deleteSelectedFAQs()"
           @slideFromBottom
           type="button"
@@ -84,12 +86,14 @@
             </td>
             <td class="px-3 py-2 text-center">
               <button
+                *appHasPermission="['FAQ_UPDATE']"
                 type="button"
                 class="bg-primary/80 hover:bg-primary text-white px-3 py-1 text-xs rounded-md mx-4"
                 (click)="updateArchivedFAQs(faq)">
                 {{ lang.locals.edit }}
               </button>
               <button
+                *appHasPermission="['FAQ_DELETE_QUESTION']"
                 type="button"
                 class="bg-primary/80 hover:bg-primary text-white px-3 py-1 text-xs rounded-md"
                 (click)="deleteSelectedFAQs([faq])">

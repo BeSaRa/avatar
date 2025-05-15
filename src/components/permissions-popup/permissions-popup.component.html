@@ -52,7 +52,7 @@
                               'h-full bg-gray-100 p-3 rounded-lg shadow-md hover:bg-gray-200 transition cursor-pointer'
                             "
                             formControlName="checked"
-                            [id]="child._id"
+                            [id]="permission._id + child._id"
                             [label]="lang.currentLanguage === 'ar' ? child.ar_name : child.en_name">
                           </app-checkbox>
                         </ng-container>

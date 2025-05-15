@@ -52,11 +52,11 @@ export class ApplicationUser {
   hasPermission(permissionKey: keyof typeof ALL_PERMISSIONS): boolean {
     return this._permissionsKeys.includes(ALL_PERMISSIONS[permissionKey])
   }
-  hasAnyPermission(permissionKeys: (keyof typeof ALL_PERMISSIONS)[]): boolean {
+  hasAnyPermission(permissionKeys: readonly (keyof typeof ALL_PERMISSIONS)[]): boolean {
     return permissionKeys.some(item => this._permissionsKeys.includes(ALL_PERMISSIONS[item]))
   }
 
-  hasAllPermission(permissionKeys: (keyof typeof ALL_PERMISSIONS)[]): boolean {
+  hasAllPermission(permissionKeys: readonly (keyof typeof ALL_PERMISSIONS)[]): boolean {
     return permissionKeys.every(item => this._permissionsKeys.includes(ALL_PERMISSIONS[item]))
   }
 

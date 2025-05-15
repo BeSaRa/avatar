@@ -53,6 +53,7 @@
           @if (selectedItems.size > 0) {
             <!-- Delete Button -->
             <button
+              *appHasPermission="['STORAGE_DELETE_BLOB_BY_TITLE']"
               appIgnoreSelection
               (click)="deleteFiles()"
               @slideFromBottom
@@ -73,6 +74,7 @@
           }
           @if (isReraLegal()) {
             <button
+              *appHasPermission="['RUN_INDEXER']"
               appIgnoreSelection
               (click)="runIndexer()"
               @slideFromBottom
@@ -120,6 +122,7 @@
           @contentAnimation>
           @if (!isSubfolder() && breadcrumbs().length) {
             <button
+              *appHasPermission="['STORAGE_UPLOAD_BLOB']"
               type="button"
               class="flex flex-col items-center bg-transparent outline-none"
               (click)="openFileUploadDialog()">
@@ -144,6 +147,7 @@
                 <img [src]="'assets/images/folder-colored.svg'" alt="folder" class="w-20 h-auto" />
                 <span [title]="item" class="text-sm text-center text-gray-700 mt-2 truncate w-full">{{ item }}</span>
                 <button
+                  *appHasPermission="['STORAGE_DELETE_SUBFOLDER']"
                   (click)="deleteFolder(item)"
                   class="outline-none flex items-center justify-center border-2 border-gray-300 hover:scale-125 transition-all duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto absolute top-0 right-6 rounded-full size-6 bg-red-500 hover:bg-red-600">
                   <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
