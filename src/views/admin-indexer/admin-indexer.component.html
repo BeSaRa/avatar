@@ -31,6 +31,7 @@
             <td>
               <div class="flex gap-2">
                 <button
+                  *appHasPermission="['INDEX_INFO']"
                   (click)="toggleExpand(indexer)"
                   class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
                   @if (expandedIndex === indexer) {
@@ -69,6 +70,7 @@
             <!-- Actions -->
             <td class="px-3 py-2 text-center">
               <button
+                *appHasPermission="['RUN_INDEXER']"
                 (click)="resetAndRunIndexer(indexer)"
                 [disabled]="runningIndex === indexer"
                 class="bg-primary/80 text-white px-3 py-1 text-xs rounded-md hover:bg-primary disabled:opacity-50">

@@ -16,11 +16,19 @@ import { ConfirmationDialogDataContact } from '@/contracts/confirmation-dialog-d
 import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-popup.component'
 import { NgClass } from '@angular/common'
 import { EditFaqPopupComponent } from '../edit-faq-popup/edit-faq-popup.component'
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 
 @Component({
   selector: 'app-faq-list',
   standalone: true,
-  imports: [ReactiveFormsModule, CheckboxComponent, DropdownComponent, TemplateDirective, NgClass],
+  imports: [
+    ReactiveFormsModule,
+    CheckboxComponent,
+    DropdownComponent,
+    TemplateDirective,
+    NgClass,
+    HasPermissionDirective,
+  ],
   templateUrl: './faq-list.component.html',
   styleUrl: './faq-list.component.scss',
   animations: [slideFromBottom],

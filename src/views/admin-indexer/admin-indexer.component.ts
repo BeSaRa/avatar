@@ -7,11 +7,12 @@ import { expandCollapse } from '@/animations/expand-collapse'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 
 @Component({
   selector: 'app-admin-indexer',
   standalone: true,
-  imports: [ReactiveFormsModule, PerfectScrollDirective],
+  imports: [ReactiveFormsModule, PerfectScrollDirective, HasPermissionDirective],
   templateUrl: './admin-indexer.component.html',
   styleUrls: ['./admin-indexer.component.scss'],
   animations: [expandCollapse],

@@ -7,5 +7,6 @@ export interface MenuItem {
   label: keyof LangKeysContract
   svg: keyof typeof SVG_ICONS
   route: string
-  permissions: (keyof typeof ALL_PERMISSIONS)[]
+  permissions: readonly (keyof typeof ALL_PERMISSIONS)[]
+  haveSomeOfPermissions?: boolean
 }

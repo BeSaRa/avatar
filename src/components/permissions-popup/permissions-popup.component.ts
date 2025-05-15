@@ -79,24 +79,10 @@ export class PermissionsPopupComponent implements OnInit {
     this.categorizePermissions(allPermissions, permissionGroups)
     this.permissions.set(permissionGroups)
     this.preparePermissionsList(permissionGroups)
-
-    allPermissions.forEach((permission, parentIndex) => {
-      const isChecked = userPermissions.some(userPerm => userPerm._id === permission._id)
-
-      if (isChecked) {
-        this.updateGeneralPermission(permission)
-      } else {
-        this.updateChildPermissions(parentIndex, userPermissions)
-      }
+    allPermissions.forEach(permission => {
+      const parentIndex = this.permissionsList.controls.findIndex(ctrl => ctrl.value.id === permission._id)
+      this.updateChildPermissions(parentIndex, userPermissions)
     })
-  }
-
-  private updateGeneralPermission(userPermission: Permission): void {
-    const index = this.permissionsList.controls.findIndex(ctrl => ctrl.value.id === userPermission._id)
-    if (index !== -1) {
-      this.permissionsList.at(index).get('checked')?.patchValue(true)
-      this.getChildrenList(index).controls.forEach(ctrl => ctrl.get('checked')?.patchValue(true))
-    }
   }
 
   private updateChildPermissions(parentIndex: number, userPermissions: Permission[]): void {
@@ -134,7 +120,7 @@ export class PermissionsPopupComponent implements OnInit {
   private getCheckedPermissions(): string[] {
     return this.permissionsList
       .getRawValue()
-      .flatMap(el => [el.checked ? el.id : null, ...el.children.map(ch => (ch.checked ? ch.id : null))])
+      .flatMap(el => [...el.children.map(ch => (ch.checked ? ch.id : null))])
       .filter(Boolean) as string[]
   }
 

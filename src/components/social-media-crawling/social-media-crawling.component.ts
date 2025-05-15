@@ -1,3 +1,4 @@
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AdminService } from '@/services/admin.service'
@@ -13,7 +14,7 @@ import { catchError, finalize, takeUntil, tap } from 'rxjs'
 @Component({
   selector: 'app-social-media-crawling',
   standalone: true,
-  imports: [ReactiveFormsModule, PerfectScrollDirective, DatePipe, NgTemplateOutlet],
+  imports: [ReactiveFormsModule, PerfectScrollDirective, DatePipe, NgTemplateOutlet, HasPermissionDirective],
   templateUrl: './social-media-crawling.component.html',
   styleUrl: './social-media-crawling.component.scss',
 })

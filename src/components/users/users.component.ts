@@ -11,11 +11,12 @@ import { AddUserPopupComponent } from '../add-user-popup/add-user-popup.componen
 import { PermissionsPopupComponent } from '../permissions-popup/permissions-popup.component'
 import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-popup.component'
 import { ConfirmationDialogDataContact } from '@/contracts/confirmation-dialog-data-contract'
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, HasPermissionDirective],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })

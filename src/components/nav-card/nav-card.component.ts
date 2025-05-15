@@ -1,9 +1,11 @@
+/* eslint-disable max-len */
 import { Component, computed, inject, input } from '@angular/core'
 import { SVG_ICONS } from '@/constants/svg-icons'
 import { CommonModule } from '@angular/common'
 import { SanitizerPipe } from '@/pipes/sanitizer.pipe'
 import { RouterModule } from '@angular/router'
 import { LocalService } from '@/services/local.service'
+import { CardColor } from '@/constants/card-color-type'
 
 @Component({
   selector: 'app-nav-card',
@@ -13,16 +15,7 @@ import { LocalService } from '@/services/local.service'
   styleUrl: './nav-card.component.scss',
 })
 export class NavCardComponent {
-  color = input<
-    | 'primary'
-    | 'accent'
-    | 'secondary'
-    | 'tertiary'
-    | 'primary-outline'
-    | 'accent-outline'
-    | 'secondary-outline'
-    | 'tertiary-outline'
-  >('primary')
+  color = input<CardColor>('primary')
 
   icon = input.required<keyof typeof SVG_ICONS>()
   title = input.required<string>()
