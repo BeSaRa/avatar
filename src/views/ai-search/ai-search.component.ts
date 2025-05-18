@@ -73,7 +73,7 @@ export class AiSearchComponent extends OnDestroyMixin(class {}) implements OnIni
   searchToken = signal<string>('')
   searchResults$ = this.load()
   isTruncatedContent = signal<boolean[]>([])
-  readonly pageSizeOptions = [5, 10, 20, 30, 40, 50, 100]
+  readonly pageSizeOptions = [5, 10, 20, 30, 40, 50]
   readonly pageSize = DEFAULT_SEARCH_QUERY.page_size
   animateTrigger = signal<boolean>(false)
   storeEffect = effect(() => {

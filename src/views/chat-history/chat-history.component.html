@@ -71,6 +71,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <button
+      *appHasPermission="['CHAT_HISTORY_SENTIMENT']"
       [matTooltip]="lang.locals.sentiment_analysis_description"
       type="button"
       (click)="sentimentAnalyis()"
@@ -132,7 +133,9 @@
         <app-conversation-list [conversations]="conversations()" (onConversationSelect)="loadChat($event)" />
       </div>
       <!-- Right Panel -->
-      <div class="w-full lg:w-8/12 overflow-auto relative flex-auto h-1/2 lg:h-full">
+      <div
+        *appHasPermission="['CHAT_HISTORY_CHAT']"
+        class="w-full lg:w-8/12 overflow-auto relative flex-auto h-1/2 lg:h-full">
         @if (loaderChat$ | async) {
           <div
             class="absolute inset-0 flex items-center justify-center backdrop-blur-sm bg-white bg-opacity-50 z-10 h-100vh">

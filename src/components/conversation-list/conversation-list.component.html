@@ -92,6 +92,7 @@
   <ul class="max-w-md">
     @for (conversation of filteredConversations(); track $index; let i = $index) {
       <li
+        [appDisableIfNoPermission]="['CHAT_HISTORY_CHAT']"
         tabindex="1"
         (keyup.enter)="OnSelectConversation(conversation.conversation_id)"
         (click)="OnSelectConversation(conversation.conversation_id)"

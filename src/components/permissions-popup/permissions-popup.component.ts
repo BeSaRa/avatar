@@ -2,7 +2,7 @@ import { Permission } from '@/contracts/permission-contract'
 import { PerfectScrollDirective } from '@/directives/perfect-scroll.directive'
 import { LocalService } from '@/services/local.service'
 import { PermissionsService } from '@/services/permissions.service'
-import { NgClass } from '@angular/common'
+import { NgClass, NgTemplateOutlet } from '@angular/common'
 import { Component, signal, inject, OnInit, runInInjectionContext, Injector } from '@angular/core'
 import { FormArray, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
@@ -19,7 +19,7 @@ import { PermissionGroupContract } from '@/contracts/permission-group-contract'
 @Component({
   selector: 'app-permissions-popup',
   standalone: true,
-  imports: [ReactiveFormsModule, PerfectScrollDirective, MatDialogModule, NgClass, CheckboxComponent],
+  imports: [ReactiveFormsModule, PerfectScrollDirective, MatDialogModule, NgClass, CheckboxComponent, NgTemplateOutlet],
   templateUrl: './permissions-popup.component.html',
   styleUrl: './permissions-popup.component.scss',
 })
@@ -32,6 +32,7 @@ export class PermissionsPopupComponent implements OnInit {
   permissions = signal<PermissionGroupContract[]>([])
   permissionsForm = createPermissionForm()
   isLoading = signal(false)
+  isUpdateLoader = signal(false)
   injector = inject(Injector)
   permissionGroups$ = this.permissionsService.getPermissionGroups()
   permissions$ = this.permissionsService.getAllPermission()
@@ -125,12 +126,18 @@ export class PermissionsPopupComponent implements OnInit {
   }
 
   editPermissions(): void {
+    this.isUpdateLoader.set(true)
     const { userId } = this.data
     const checkedPermissionsIds = this.getCheckedPermissions()
 
     this.permissionsService
       .updatePermission(userId, checkedPermissionsIds)
-      .pipe(finalize(() => this.ref.close()))
+      .pipe(
+        finalize(() => {
+          this.ref.close()
+          this.isUpdateLoader.set(false)
+        })
+      )
       .subscribe()
   }
 

@@ -57,7 +57,7 @@ export default class AdminComponent {
       link: './users',
       icon: 'USERS',
       color: 'accent-outline',
-      permissions: ['SOCIAL_MEDIA'],
+      permissions: ['ADMIN_GET_ALL_USER'],
     },
     {
       title: 'web_crawler',
@@ -65,7 +65,7 @@ export default class AdminComponent {
       link: './crawler',
       icon: 'WEB_CRAWLER',
       color: 'secondary',
-      permissions: ['ADMIN_CRAWLER'],
+      permissions: ['MEDIA_CRAWL'],
     },
     {
       title: 'faq_manager',

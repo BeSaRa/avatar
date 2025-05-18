@@ -15,11 +15,12 @@ import {
 } from '@/contracts/statistics-contract'
 import { dateRangeValidator } from '@/utils/utils'
 import { Context } from 'chartjs-plugin-datalabels'
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [AsyncPipe, BaseChartDirective, ReactiveFormsModule],
+  imports: [AsyncPipe, BaseChartDirective, ReactiveFormsModule, HasPermissionDirective],
   templateUrl: './statistics.component.html',
 })
 export class StatisticsComponent {

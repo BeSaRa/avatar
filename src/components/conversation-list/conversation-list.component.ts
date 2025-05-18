@@ -1,3 +1,4 @@
+import { DisableIfNoPermissionDirective } from '@/directives/disable-if-no-permission.directive'
 import { FeedbackChat } from '@/enums/feedback-chat'
 import { Conversation } from '@/models/conversation'
 import { LocalService } from '@/services/local.service'
@@ -25,7 +26,7 @@ import { Subject, combineLatest, startWith, map, tap } from 'rxjs'
 @Component({
   selector: 'app-conversation-list',
   standalone: true,
-  imports: [NgClass, ReactiveFormsModule, OverlayModule, MatTooltip, DatePipe],
+  imports: [NgClass, ReactiveFormsModule, OverlayModule, MatTooltip, DatePipe, DisableIfNoPermissionDirective],
   templateUrl: './conversation-list.component.html',
   styleUrl: './conversation-list.component.scss',
 })

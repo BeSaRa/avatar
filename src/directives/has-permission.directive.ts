@@ -13,7 +13,10 @@ export class HasPermissionDirective {
   private ngIf = inject(NgIf, { host: true })
 
   appHasPermission = input.required<(keyof typeof ALL_PERMISSIONS)[]>()
-  showEffect = effect(() => {
-    this.ngIf.ngIf = this.appicationUser.hasAllPermission(this.appHasPermission()!)
-  })
+  showEffect = effect(
+    () => {
+      this.ngIf.ngIf = this.appicationUser.hasAllPermission(this.appHasPermission()!)
+    },
+    { allowSignalWrites: true }
+  )
 }
