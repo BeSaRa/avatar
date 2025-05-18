@@ -32,6 +32,10 @@ export class AdminService {
     const url = `${this.urlService.URLS.ADMIN}/get-containers`
     return this.http.get<{ containers: string[] }>(url).pipe(map(res => res.containers))
   }
+  getLegalContainers(): Observable<string[]> {
+    const url = `${this.urlService.URLS.ADMIN}/get-legal-containers`
+    return this.http.get<{ containers: string[] }>(url).pipe(map(res => res.containers))
+  }
 
   getSubfolder(containerName: string): Observable<string[]> {
     const url = `${this.urlService.URLS.ADMIN}/get-subfolders/${containerName}`
@@ -134,7 +138,7 @@ export class AdminService {
     return this.http.get<SettingsContract[]>(url)
   }
   getCrawlingData() {
-    return this.getSettingsByEntityName().pipe(map(el => el.at(0)!.media_settings.crawling_urls))
+    return this.getSettingsByEntityName().pipe(map(el => el.at(0)!.crawling_urls))
   }
   getXCrawlingData(): Observable<Partial<SocialMeidaSearchItem>[]> {
     return this.getSettingsByEntityName().pipe(

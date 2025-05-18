@@ -10,6 +10,7 @@ export interface SettingsContract {
   media_settings: MediaSettings
   access_token_valid_time: number
   refresh_token_valid_time: number
+  crawling_urls: CrawlUrlContract[]
 }
 
 export interface ChatbotSetting {
@@ -34,7 +35,6 @@ export interface MediaSettings {
   p_class: string[]
   img_class: string[]
   x_crawling: Partial<Omit<SocialMeidaSearchItem, 'id'>>[]
-  crawling_urls: CrawlUrlContract[]
 }
 
 export interface MediaSettingInfo {
