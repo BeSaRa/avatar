@@ -21,6 +21,7 @@ import { VideoInsightsComponent } from '../../components/video-insights/video-in
 import { secondsToTime } from '@/utils/insights.utils'
 import { SyncVideoAudioDirective } from '@/directives/sync-video-audio.directive'
 import { SupportedLanguageComponent } from '../../components/insights/supported-language/supported-language.component'
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 
 @Component({
   selector: 'app-video-analyzer',
@@ -32,6 +33,7 @@ import { SupportedLanguageComponent } from '../../components/insights/supported-
     VideoInsightsComponent,
     SyncVideoAudioDirective,
     SupportedLanguageComponent,
+    HasPermissionDirective,
   ],
   templateUrl: './video-analyzer.component.html',
   providers: [

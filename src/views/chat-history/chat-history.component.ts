@@ -13,6 +13,7 @@ import { HistoryMessage } from '@/models/history-message'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { MatTooltip } from '@angular/material/tooltip'
 import { SecureUrlDirective } from '@/directives/secure-url.directive'
+import { HasPermissionDirective } from '@/directives/has-permission.directive'
 
 @Component({
   selector: 'app-chat-history',
@@ -27,6 +28,7 @@ import { SecureUrlDirective } from '@/directives/secure-url.directive'
     OverlayModule,
     MatTooltip,
     SecureUrlDirective,
+    HasPermissionDirective,
   ],
   templateUrl: './chat-history.component.html',
   styleUrl: './chat-history.component.scss',

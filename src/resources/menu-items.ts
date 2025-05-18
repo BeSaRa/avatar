@@ -23,6 +23,7 @@ export const MENU_ITEMS: MenuItem[] = [
     route: '/home/search',
     svg: 'SEARCH',
     permissions: PERMISSION_GROUPS['SEARCH_GROUP'],
+    haveSomeOfPermissions: true,
   },
   {
     id: 4,
@@ -37,6 +38,7 @@ export const MENU_ITEMS: MenuItem[] = [
     route: '/home/interactive-chatbot',
     svg: 'BOT_ARM',
     permissions: PERMISSION_GROUPS['HR_AGENT_GROUP'],
+    haveSomeOfPermissions: true,
   },
   {
     id: 6,
@@ -44,6 +46,7 @@ export const MENU_ITEMS: MenuItem[] = [
     route: '/home/tasks-agent',
     svg: 'BOT_ARM_FILL',
     permissions: PERMISSION_GROUPS['TASK_AGENT_GROUP'],
+    haveSomeOfPermissions: true,
   },
   {
     id: 7,
@@ -58,13 +61,15 @@ export const MENU_ITEMS: MenuItem[] = [
     route: '/home/statistics',
     svg: 'POLL',
     permissions: PERMISSION_GROUPS['STATISTICS_GROUP'],
+    haveSomeOfPermissions: true,
   },
   {
     id: 9,
     label: 'video_analyzer',
     route: '/home/video_analyzer',
     svg: 'VIDEO_ANALYSIS',
-    permissions: PERMISSION_GROUPS['VIDEO_INDEXER_GROUP'],
+    permissions: ['VIDEO_INDEXER_GET_VIDEOS', 'VIDEO_INDEXER_UPLOAD_VIDEO'],
+    haveSomeOfPermissions: true,
   },
   {
     id: 10,
