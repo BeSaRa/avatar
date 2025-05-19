@@ -95,9 +95,6 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
   recognized$ = new Subject<void>()
   accept$ = new Subject<void>()
   recognizingStatus = signal<boolean>(false)
-  botNames$ = this.chatHistoryService
-    .getAllBotNames()
-    .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
 
   animationStatus = signal(false)
   qrCodeOpened = false
@@ -189,6 +186,10 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
     // trigger the start of stream
     // this.start$.next()
     // close when destroy component
+    this.chatHistoryService
+      .getAllBotNames()
+      .pipe(tap(names => this.chatService.botNameCtrl.patchValue(names[0])))
+      .subscribe()
     this.store.updateStreamStatus('Stopped')
     merge(this.destroy$)
       .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2

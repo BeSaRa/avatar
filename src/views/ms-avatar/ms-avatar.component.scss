@@ -1,0 +1,37 @@
+.message {
+  @apply relative flex flex-col text-xs;
+}
+
+.message.user {
+  @apply items-start;
+  & > div {
+    @apply bg-black/50 p-0.5 rounded-md rounded-tr-none;
+    &:after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 0;
+      width: 8px;
+      height: 8px;
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      background-color: inherit;
+    }
+  }
+}
+
+.message.assistant {
+  @apply items-end;
+  & > div {
+    @apply bg-black/20 p-0.5 rounded-md rounded-tl-none;
+    &:after {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 0;
+      background-color: inherit;
+      width: 8px;
+      height: 8px;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+  }
+}

@@ -1,14 +1,14 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
-import { inject, Injectable } from '@angular/core'
-import { UrlService } from './url.service'
-import { map, Observable } from 'rxjs'
-import { ConversationResultContract } from '@/contracts/conversation-result-contract'
 import { ChatResultContract } from '@/contracts/chat-result-contract'
-import { CastResponse } from 'cast-response'
+import { ConversationResultContract } from '@/contracts/conversation-result-contract'
+import { FeedbackChat } from '@/enums/feedback-chat'
 import { Conversation } from '@/models/conversation'
 import { HistoryMessage } from '@/models/history-message'
 import { formatString, formatText, ignoreErrors } from '@/utils/utils'
-import { FeedbackChat } from '@/enums/feedback-chat'
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { computed, inject, Injectable, signal } from '@angular/core'
+import { CastResponse } from 'cast-response'
+import { map, Observable, of, tap } from 'rxjs'
+import { UrlService } from './url.service'
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,8 @@ import { FeedbackChat } from '@/enums/feedback-chat'
 export class ChatHistoryService {
   private readonly http = inject(HttpClient)
   private readonly urlService = inject(UrlService)
+
+  private _botNames: string[] = []
 
   @CastResponse(() => Conversation)
   getAllConversations(botName?: string): Observable<Conversation[]> {
@@ -64,8 +66,11 @@ export class ChatHistoryService {
     const params = new HttpParams().set('conv_id', conversationId).set('feedback', feedback)
     return this.http.post<string>(url, null, { params: params })
   }
+
   getAllBotNames(): Observable<string[]> {
     const url = `${this.urlService.URLS.CHAT_HISTORY}/bot-names`
-    return this.http.get<string[]>(url)
+    return this._botNames.length
+      ? of(this._botNames)
+      : this.http.get<string[]>(url).pipe(tap(names => (this._botNames = names)))
   }
 }
