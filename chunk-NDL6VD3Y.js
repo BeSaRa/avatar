@@ -1,1 +1,0 @@
-var A={PRIMARY:"#6e1029",ACCENT:"#324e85",SECONDARY:"#a98a6c",TERTIARY:"#404041"};export{A as a};
