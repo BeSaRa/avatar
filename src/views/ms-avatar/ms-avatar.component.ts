@@ -1,17 +1,18 @@
 /* eslint-disable max-len */
-import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
 import { MsAvatarSettingsPopupComponent } from '@/components/ms-avatar-settings-popup/ms-avatar-settings-popup.component'
-import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
+import { SpinnerLoaderComponent } from '@/components/spinner-loader/spinner-loader.component'
+import { AppColors } from '@/constants/app-colors'
+import { SVG_ICONS } from '@/constants/svg-icons'
+import { ButtonDirective } from '@/directives/button.directive'
+import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.directive'
+import { SanitizerPipe } from '@/pipes/sanitizer.pipe'
 import { AvatarService } from '@/services/avatar.service'
 import { ChatHistoryService } from '@/services/chat-history.service'
 import { ChatService } from '@/services/chat.service'
 import { LocalService } from '@/services/local.service'
 import { SpeechService } from '@/services/speech.service'
-import { UrlService } from '@/services/url.service'
 import { AppStore } from '@/stores/app.store'
-import { CdkDragHandle } from '@angular/cdk/drag-drop'
 import { CommonModule } from '@angular/common'
-import { HttpClient } from '@angular/common/http'
 import {
   AfterViewInit,
   Component,
@@ -26,6 +27,8 @@ import {
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { Router } from '@angular/router'
+import { QRCodeComponent } from 'angularx-qrcode'
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk'
 import { catchError, delay, finalize, from, take, tap, throwError } from 'rxjs'
 import WaveSurfer from 'wavesurfer.js'
@@ -37,24 +40,25 @@ import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js'
   imports: [
     CommonModule,
     MatTooltipModule,
-    OverlayChatComponent,
-    AvatarInterrupterBtnComponent,
     ReactiveFormsModule,
-    CdkDragHandle,
+    SpinnerLoaderComponent,
+    SanitizerPipe,
+    QRCodeComponent,
+    TextWriterAnimatorDirective,
+    ButtonDirective,
   ],
   templateUrl: './ms-avatar.component.html',
   styleUrl: './ms-avatar.component.scss',
   providers: [ChatService],
 })
 export default class MsAvatarComponent implements AfterViewInit {
-  overlayChatComponent = viewChild.required<OverlayChatComponent>('overlayChatComponent')
+  baseElement = viewChild.required<ElementRef>('baseElement')
+  chatContainer = viewChild.required<ElementRef<HTMLDivElement>>('container')
   video = viewChild.required<ElementRef<HTMLVideoElement>>('video')
   audio = viewChild.required<ElementRef<HTMLAudioElement>>('audio')
   idleVideo = viewChild<ElementRef<HTMLVideoElement>>('idleVideo')
   waves = viewChild.required<ElementRef>('waves')
 
-  private readonly urlService = inject(UrlService)
-  private readonly http = inject(HttpClient)
   readonly store = inject(AppStore)
   readonly lang = inject(LocalService)
   private readonly speechService = inject(SpeechService)
@@ -63,10 +67,7 @@ export default class MsAvatarComponent implements AfterViewInit {
   private readonly chatHistoryService = inject(ChatHistoryService)
   private readonly injector = inject(Injector)
   private readonly dialog = inject(MatDialog)
-
-  botNames$ = this.chatHistoryService
-    .getAllBotNames()
-    .pipe(tap(bots => this.chatService.botNameCtrl.patchValue(bots.at(0)!)))
+  private readonly router = inject(Router)
 
   private videoFormat?: sdk.AvatarVideoFormat
   private avatarConfig?: sdk.AvatarConfig
@@ -109,7 +110,17 @@ export default class MsAvatarComponent implements AfterViewInit {
     Landscape: { width: 1920, height: 1080 },
   }
 
+  readonly svgIcons = SVG_ICONS
+  readonly appColors = AppColors
+
+  animationStatus = signal(false)
+  qrCodeOpened = false
+
   ngAfterViewInit(): void {
+    this.chatHistoryService
+      .getAllBotNames()
+      .pipe(tap(names => this.chatService.botNameCtrl.patchValue(names[0])))
+      .subscribe()
     this.start()
     this._initWaveSurfer()
   }
@@ -337,12 +348,11 @@ export default class MsAvatarComponent implements AfterViewInit {
       .pipe(delay(200))
       .subscribe(res => {
         this.speak(res.message.content)
-        const assistantList = this.overlayChatComponent().container().nativeElement.querySelectorAll('.assistant')
-        const intervalId = setInterval(() => assistantList[assistantList.length - 1].scrollIntoView(false), 200)
+        const assistantList = this.chatContainer().nativeElement.querySelectorAll('.assistant')
         const effectCallback = effect(
           () => {
-            if (!this.overlayChatComponent().animationStatus()) {
-              clearInterval(intervalId)
+            if (!this.animationStatus()) {
+              assistantList[assistantList.length - 1].scrollIntoView({ behavior: 'smooth' })
               effectCallback.destroy()
             }
           },
@@ -406,7 +416,7 @@ export default class MsAvatarComponent implements AfterViewInit {
       })
   }
 
-  stopSpeaking() {
+  interruptAvatar() {
     this.spokenTextQueue = []
     this.avatarSynthesizer?.stopSpeakingAsync().then(() => (this.isSpeaking = false))
   }
@@ -428,10 +438,27 @@ export default class MsAvatarComponent implements AfterViewInit {
       })
   }
 
+  toggleFullScreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().then()
+    } else {
+      this.baseElement().nativeElement.requestFullscreen().then()
+    }
+  }
+
+  getQRData() {
+    return `${this.getOrigin()}/control?streamId=${this.store.streamId()}`
+  }
+
+  getOrigin() {
+    const idx = location.href.lastIndexOf(this.router.url)
+    return location.href.slice(0, idx)
+  }
+
   private _goToEndOfChat() {
     setTimeout(() => {
-      const messagesList = this.overlayChatComponent().container().nativeElement.querySelectorAll('.user')
-      messagesList[messagesList.length - 1].scrollIntoView(true)
+      const messagesList = this.chatContainer().nativeElement.querySelectorAll('.user')
+      messagesList[messagesList.length - 1].scrollIntoView({ behavior: 'smooth' })
     }, 100)
   }
 

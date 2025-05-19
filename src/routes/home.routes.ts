@@ -1,4 +1,5 @@
 import { PermissionRouteData } from '@/contracts/permission-rout-data'
+import { AuthGuard } from '@/guards/auth.guard'
 import { closeStreamGuard } from '@/guards/close-stream.guard'
 import { PermissionGuard } from '@/guards/permission.guard'
 import { LandingComponent } from '@/views/landing/landing.component'
@@ -78,6 +79,14 @@ const routes: Routes = [
     loadComponent: () => import('@/views/temp-avatar/temp-avatar.component'),
     pathMatch: 'full',
     canActivate: [PermissionGuard.canActivate],
+    data: { permissions: ['AVATAR'], hasAnyPermission: false } as PermissionRouteData,
+    canDeactivate: [closeStreamGuard],
+  },
+  {
+    path: 'ms-avatar',
+    loadComponent: () => import('@/views/ms-avatar/ms-avatar.component'),
+    pathMatch: 'full',
+    canActivate: [AuthGuard, PermissionGuard.canActivate],
     data: { permissions: ['AVATAR'], hasAnyPermission: false } as PermissionRouteData,
     canDeactivate: [closeStreamGuard],
   },

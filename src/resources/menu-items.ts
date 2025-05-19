@@ -88,7 +88,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 12,
     label: 'ms_avatar',
-    route: '/ms-avatar',
+    route: '/home/ms-avatar',
     svg: 'MS_AVATAR',
     permissions: ['AVATAR'],
   },
