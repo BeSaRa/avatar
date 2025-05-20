@@ -50,12 +50,8 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
   isContainerLoading = signal(true)
   loading = signal(false)
   isLoadingIndexer = signal(false)
-  legalContainers$ = this.adminService
-    .getContainers()
-    .pipe(map(containers => containers.filter(container => container === 'rera-legal')))
-  containersExceptLegals$ = this.adminService
-    .getContainers()
-    .pipe(map(containers => containers.filter(container => !container.includes('legal'))))
+  legalContainers$ = this.adminService.getLegalContainers()
+  containersExceptLegals$ = this.adminService.getContainers()
   isReraLegal = signal(this.router.url.split('/').at(-1)!.includes('rera-legal-storage'))
   containers$ = iif(() => this.isReraLegal(), this.legalContainers$, this.containersExceptLegals$).pipe(
     takeUntil(this.destroy$),
