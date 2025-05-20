@@ -1634,5 +1634,9 @@
   "you_dont_have_permission_to_access_this_page": {
     "ar": "ليس لديك صلاحية الوصول لهذه الصفحة",
     "en": "You don't have permission to access this page"
+  },
+  "type_all_text_here": {
+    "ar": "اكتب كامل النص هنا...",
+    "en": "Type all text here..."
   }
 }

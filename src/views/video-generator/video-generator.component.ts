@@ -1,5 +1,7 @@
 import { AvatarInterrupterBtnComponent } from '@/components/avatar-interrupter-btn/avatar-interrupter-btn.component'
 import { SpinnerLoaderComponent } from '@/components/spinner-loader/spinner-loader.component'
+import { AppColors } from '@/constants/app-colors'
+import { ButtonDirective } from '@/directives/button.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
 import { LocalService } from '@/services/local.service'
@@ -37,6 +39,7 @@ import {
     SpinnerLoaderComponent,
     AvatarInterrupterBtnComponent,
     MatTooltipModule,
+    ButtonDirective,
   ],
   templateUrl: './video-generator.component.html',
   styleUrl: './video-generator.component.scss',
@@ -60,6 +63,8 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
   wordsLimitExceeded = false
 
   settingsOpened = false
+
+  readonly appColors = AppColors
 
   onlineStatus = computed(() => {
     this.lang.localChange() // just to track any change for the languages
@@ -168,10 +173,6 @@ export default class VideoGeneratorComponent extends OnDestroyMixin(class {}) im
       })
 
     this.start$.next()
-  }
-
-  toggleSettings() {
-    this.settingsOpened = !this.settingsOpened
   }
 
   interruptAvatar() {

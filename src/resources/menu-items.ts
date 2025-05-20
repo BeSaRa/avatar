@@ -102,7 +102,7 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 14,
     label: 'video_generator',
-    route: '/video-generator',
+    route: '/home/video-generator',
     svg: 'VIDEO_GENERATOR',
     permissions: PERMISSION_GROUPS['VIDEO_GENERATOR_GROUP'],
   },
