@@ -33,7 +33,7 @@ export class AdminService {
     return this.http.get<{ containers: string[] }>(url).pipe(map(res => res.containers))
   }
   getLegalContainers(): Observable<string[]> {
-    const url = `${this.urlService.URLS.ADMIN}/get-legal-containers`
+    const url = `${this.urlService.URLS.ADMIN}/get-secured-containers`
     return this.http.get<{ containers: string[] }>(url).pipe(map(res => res.containers))
   }
 
