@@ -407,4 +407,5 @@ export interface LangKeysContract {
   save_urls_successfully: string
   qr_code: string
   you_dont_have_permission_to_access_this_page: string
+  type_all_text_here: string
 }

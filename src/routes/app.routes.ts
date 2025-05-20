@@ -21,14 +21,6 @@ export const routes: Routes = [
   },
 
   {
-    path: 'video-generator',
-    loadComponent: () => import('@/views/video-generator/video-generator.component'),
-    pathMatch: 'full',
-    canActivate: [AuthGuard, PermissionGuard.canActivate],
-    data: { permissions: ['AVATAR'], hasAnyPermission: false } as PermissionRouteData,
-    canDeactivate: [closeStreamGuard],
-  },
-  {
     path: 'auth',
     loadComponent: () => import('@/views/auth/auth/auth.component'),
     loadChildren: () => import('@/routes/auth.routes'),

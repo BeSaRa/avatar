@@ -1,114 +1,108 @@
 <!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
-<div
-  id="video-wrapper"
-  class="relative flex flex-col justify-center items-center gap-2 h-[100vh] px-4 py-4 overflow-hidden">
-  <div class="flex flex-col items-end w-full md:w-[700px] h-full overflow-hidden justify-center relative rounded-md">
-    <div class="flex items-center gap-1 shadow-2xl shadow-white bg-black/20 p-1 absolute z-50 top-2 end-2 rounded-md">
-      <div
-        [ngClass]="{
-          'bg-red-600': store.isStreamStopped(),
-          'bg-green-700': store.isStreamStarted(),
-          'bg-orange-500': store.isStreamLoading(),
-        }"
-        class="p-4 rounded-full"></div>
-      <div
-        [ngClass]="{
-          'bg-red-600': store.isStreamStopped(),
-          'bg-green-700': store.isStreamStarted(),
-          'bg-orange-500': store.isStreamLoading(),
-        }"
-        class="p-4 absolute pulse rounded-full"></div>
-      <span class="text-white font-semibold">{{ onlineStatus() }}</span>
+<div class="relative p-4 h-full w-full flex flex-col gap-4 bg-secondary-100/80 rounded-xl shadow">
+  <div class="flex-1 grid grid-cols-7 gap-4">
+    <div class="col-span-4">
+      <div class="w-full h-full">
+        <textarea
+          (keydown.enter)="$event.preventDefault(); test()"
+          [placeholder]="lang.locals.type_all_text_here"
+          [formControl]="text"
+          type="text"
+          tabindex="1"
+          rows="3"
+          class="w-full h-full resize-none text-lg p-2 text-primary placeholder:text-primary-300 border-2 border-secondary-200 focus:border-secondary-300 rounded-lg bg-secondary-200/80 shadow-md outline-none"></textarea>
+      </div>
+      @if (wordsLimitExceeded) {
+        <p class="text-gray-300 font-semibold text-sm">*{{ lang.locals.words_limit_is }} 70</p>
+      }
     </div>
-    @if (store.isStreamStarted()) {
-      <div class="absolute z-50 top-2 start-2 w-10"><app-avatar-interrupter-btn /></div>
-    }
+    <div class="col-span-3 relative flex flex-col items-end h-full overflow-hidden justify-center rounded-md">
+      <div
+        class="absolute z-50 top-2 end-2 flex items-center gap-2 shadow-2xl shadow-white bg-black/20 py-1 px-2 rounded-full">
+        <span class="text-white text-sm font-semibold">{{ onlineStatus() }}</span>
+        <div
+          [ngClass]="{
+            'bg-red-600': store.isStreamStopped(),
+            'bg-green-700': store.isStreamStarted(),
+            'bg-orange-500': store.isStreamLoading(),
+          }"
+          class="p-2 rounded-full"></div>
+        <div
+          [ngClass]="{
+            'bg-red-600': store.isStreamStopped(),
+            'bg-green-700': store.isStreamStarted(),
+            'bg-orange-500': store.isStreamLoading(),
+          }"
+          class="p-2 absolute end-2 pulse rounded-full"></div>
+      </div>
 
-    <div class="relative w-full h-[500px] overflow-hidden">
-      <video
-        [hidden]="store.isStreamStopped() || store.isStreamLoading()"
-        autoplay
-        #video
-        class="absolute min-w-full min-h-full"></video>
-      <video #idleVideo [hidden]="store.isStreamStarted()" class="absolute min-w-full min-h-full">
-        <source [src]="store.idleAvatarUrl()" type="video/webm" />
-      </video>
+      <div class="absolute w-full h-full overflow-hidden">
+        <video [hidden]="store.isStreamStopped() || store.isStreamLoading()" autoplay #video class="w-full"></video>
+        <video #idleVideo [hidden]="store.isStreamStarted()" class="w-full">
+          <source [src]="store.idleAvatarUrl()" type="video/webm" />
+        </video>
+      </div>
     </div>
+
+    {{ init$ | async }}
   </div>
-  <div class="w-full md:w-[700px]">
-    <div class="w-full">
-      <textarea
-        (keydown.enter)="$event.preventDefault(); test()"
-        [formControl]="text"
-        type="text"
-        tabindex="1"
-        rows="3"
-        class="w-full resize-none text-lg p-2 text-gray-700 border border-gray-300 rounded-lg bg-gray-100 focus:ring-gray-400 focus:border-gray-400 focus:ring-4 outline-none ring-2 ring-gray-500"></textarea>
-    </div>
-    @if (wordsLimitExceeded) {
-      <p class="text-gray-300 font-semibold text-sm">*{{ lang.locals.words_limit_is }} 70</p>
-    }
-    <div class="flex justify-center items-center gap-4">
+
+  <div class="grid grid-cols-7 gap-4">
+    <div class="col-span-4 flex justify-start items-center gap-4">
       <button
+        appButton
+        size="lg"
+        color="accent"
+        class="w-40"
         (click)="test()"
-        [disabled]="!store.isStreamStarted() || isLoading || !text.value || wordsLimitExceeded"
-        class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 disabled:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
+        [disabled]="!store.isStreamStarted() || isLoading || !text.value || wordsLimitExceeded">
         @if (isLoading) {
-          <app-spinner-loader [width]="24" [borderWidth]="4" color="#374151"></app-spinner-loader>
+          <app-spinner-loader [width]="24" [borderWidth]="4" color="white"></app-spinner-loader>
         } @else {
           {{ lang.locals.test }}
         }
       </button>
       <button
+        appButton
+        size="lg"
+        class="w-40"
         (click)="updateAndDownload()"
-        [disabled]="isLoading || isDownloading || !text.value || wordsLimitExceeded"
-        class="bg-gray-300 w-1/2 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-400 disabled:bg-gray-400 focus:ring-2 focus:ring-gray-200 focus:outline-none">
+        [disabled]="isLoading || isDownloading || !text.value || wordsLimitExceeded">
         {{ lang.locals.download }}
       </button>
     </div>
-  </div>
-  {{ init$ | async }}
-</div>
-
-<div
-  class="bg-black/50 absolute left-0 top-1/2 rounded p-4 transition-transform"
-  [ngClass]="{ '-translate-x-full': !settingsOpened }"
-  id="settings">
-  <div class="relative flex flex-col">
-    <button
-      (click)="toggleSettings()"
-      [matTooltip]="lang.locals.settings"
-      class="absolute -top-2 -right-14 z-20 bg-black/50 rounded-r text-white"
-      aria-label="Settings">
-      <svg class="size-10" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <title>cog</title>
-        <path
-          d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-      </svg>
-    </button>
-    @if (store.isStreamLoading()) {
-      <button aria-label="close stream" class="text-white cursor-progress size-20 bg-orange-500 rounded-full">
-        <div class="pulse rounded-full w-full h-full bg-primary flex justify-center items-center">
-          <span>{{ onlineStatus() }}</span>
-        </div>
-      </button>
-    } @else {
+    <div class="col-span-3 flex justify-center items-center gap-4">
       <button
-        matRipple
-        (click)="toggleStream()"
-        aria-label="close stream"
-        [ngClass]="{ 'bg-green-700': store.isStreamStarted(), 'bg-red-600': store.isStreamStopped() }"
-        class="text-white size-20 rounded-full">
-        {{ onlineStatus() }}
+        [disabled]="store.isStreamLoading()"
+        (pointerdown)="toggleStream()"
+        class="!h-16 !w-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
+        @if (store.isStreamLoading()) {
+          <app-spinner-loader [color]="appColors.PRIMARY" [borderWidth]="2" [width]="20" />
+        } @else {
+          <img
+            [src]="store.isStreamStarted() ? 'assets/icons/stop.png' : 'assets/icons/start.png'"
+            class="size-6"
+            alt="start" />
+          {{ store.isStreamStarted() ? lang.locals.stop : lang.locals.start }}
+        }
       </button>
-    }
+      <button
+        [disabled]="!store.isStreamStarted()"
+        (click)="interruptAvatar()"
+        class="!h-16 !w-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
+        <span class="relative size-6">
+          <img [src]="'assets/icons/speak.png'" class="w-full h-full" alt="start" />
+          <img [src]="'assets/icons/stop.png'" class="absolute top-0 left-0 w-full h-full opacity-60" alt="start"
+        /></span>
+        {{ lang.locals.stop_talking }}
+      </button>
+    </div>
   </div>
 </div>
-
 @if (isDownloading) {
   <div
-    class="absolute top-0 left-0 w-full h-full bg-black/75 z-50 flex items-center justify-center gap-2 text-gray-200">
+    class="absolute left-0 top-0 w-full h-full z-50 flex items-center justify-center gap-2 bg-black/60 overflow-hidden ltr:rounded-tl-xl rtl:rounded-tr-xl">
     <span class="font-medium text-2xl">{{ lang.locals.video_generating_and_downloading_progress }}</span>
     <span class="flex text-6xl">
       <span class="animate-[bounce_1s_ease-in-out_infinite]">.</span>
