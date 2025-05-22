@@ -22,10 +22,11 @@ import {
 } from '@angular/forms'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { catchError, finalize, takeUntil, tap } from 'rxjs'
-import html2pdf from 'html2pdf.js'
 import { CrawlerUrl, MediaCrawler } from '@/models/media-crawler'
 import { GenerteReportContract } from '@/contracts/generate-report-contract'
 import { ChipsInputComponent } from '@/components/chips-input/chips-input.component'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 @Component({
   selector: 'app-web-crawler-report',
@@ -210,18 +211,55 @@ export class WebCrawlerReportComponent extends OnDestroyMixin(class {}) {
   }
 
   downloadPdf() {
-    const el = document.getElementById('pdf-content')
-    // Configuration options
-    const options = {
-      margin: 5,
-      filename: `${this.reportName()}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      pagebreak: {
-        mode: ['avoid-all'],
-      },
-      jsPDF: { orientation: 'portrait' },
-    }
-    // Generate the PDF
-    html2pdf().from(el).set(options).save()
+    const data = document.getElementById('pdf-content')
+    if (!data) return
+
+    const pdf = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4',
+    })
+
+    const margin = 15
+
+    const pdfWidth = pdf.internal.pageSize.getWidth() - margin * 2
+    const pdfHeight = pdf.internal.pageSize.getHeight() - margin * 2
+
+    html2canvas(data, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: data.scrollWidth,
+    }).then(canvas => {
+      const imgData = canvas.toDataURL('image/jpeg', 1.0)
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width
+
+      let heightLeft = imgHeight
+      let position = margin
+
+      pdf.addImage(imgData, 'JPEG', margin, position, pdfWidth, imgHeight)
+      heightLeft -= pdfHeight
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + margin
+        pdf.addPage()
+        pdf.addImage(imgData, 'JPEG', margin, position, pdfWidth, imgHeight)
+        heightLeft -= pdfHeight
+      }
+
+      const totalPages = pdf.getNumberOfPages()
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i)
+        pdf.setFontSize(8)
+        const text = `${i} / ${totalPages}`
+        pdf.text(text, pdf.internal.pageSize.getWidth() - margin, pdf.internal.pageSize.getHeight() - 5, {
+          align: 'right',
+        })
+      }
+
+      pdf.save(`${this.reportName()}.pdf`)
+    })
   }
 }
