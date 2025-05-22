@@ -408,4 +408,6 @@ export interface LangKeysContract {
   qr_code: string
   you_dont_have_permission_to_access_this_page: string
   type_all_text_here: string
+  filter: string
+  clear: string
 }

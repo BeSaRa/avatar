@@ -1,10 +1,10 @@
 // statistics.component.ts
-import { Component, inject, viewChild } from '@angular/core'
+import { Component, inject, OnInit, viewChild } from '@angular/core'
 import { AsyncPipe } from '@angular/common'
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { ChartConfiguration, TooltipItem } from 'chart.js'
 import { BaseChartDirective } from 'ng2-charts'
-import { map, startWith, switchMap, debounceTime, tap } from 'rxjs'
+import { map, Observable } from 'rxjs'
 import { AdminService } from '@/services/admin.service'
 import { LocalService } from '@/services/local.service'
 import { WebCrawlerService } from '@/services/web-crawler.service'
@@ -13,66 +13,63 @@ import {
   MostUsedKeywordsContract,
   NewsPercentageContract,
 } from '@/contracts/statistics-contract'
-import { dateRangeValidator } from '@/utils/utils'
+import { dateRangeValidator, markAllControlsAsTouchedAndDirty } from '@/utils/utils'
 import { Context } from 'chartjs-plugin-datalabels'
 import { HasPermissionDirective } from '@/directives/has-permission.directive'
+import { ButtonDirective } from '@/directives/button.directive'
+import { StatisticsData } from '@/contracts/statisctics-data-contract'
 
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [AsyncPipe, BaseChartDirective, ReactiveFormsModule, HasPermissionDirective],
+  imports: [AsyncPipe, BaseChartDirective, ReactiveFormsModule, HasPermissionDirective, ButtonDirective],
   templateUrl: './statistics.component.html',
 })
-export class StatisticsComponent {
+export class StatisticsComponent implements OnInit {
   lang = inject(LocalService)
   adminService = inject(AdminService)
   crawlingService = inject(WebCrawlerService)
   fb = inject(NonNullableFormBuilder)
 
-  reportCount$ = this.adminService.getReportsCount()
-  urlCount$ = this.adminService.getUrlsCount()
-
   mostIndexedChart = viewChild('indexedChart', { read: BaseChartDirective })
   mostUsedKeywordsChart = viewChild('keywordsChart', { read: BaseChartDirective })
 
-  indexedForm = this.fb.group(
+  rangeForm = this.fb.group(
     { from_date: [''], to_date: [''] },
     { validators: dateRangeValidator([['from_date', 'to_date']], ['DateInvalidRangeIndexed']) }
   )
 
-  keywordsForm = this.fb.group(
-    { from_date: [''], to_date: [''] },
-    { validators: dateRangeValidator([['from_date', 'to_date']], ['DateInvalidRangeKeyword']) }
-  )
+  statistics$!: Observable<StatisticsData>
 
-  numberOfIndexedNews$ = this.crawlingService.getTotalNumberOfIndexedNews().pipe(tap(console.log))
+  ngOnInit(): void {
+    this.loadStatistics()
+  }
 
-  newsPercentage$ = this.crawlingService.getIndexedNewsPercentage().pipe(
-    map(data => ({
-      title: this.lang.locals.indexed_sources_percentage,
-      chart: this.getNewsPercentageChartConfig(data),
-    }))
-  )
+  loadStatistics() {
+    const { from_date, to_date } = this.rangeForm.value
+    if (this.rangeForm.invalid) {
+      markAllControlsAsTouchedAndDirty(this.rangeForm)
+      return
+    }
 
-  mostIndexedUrl$ = this.indexedForm.valueChanges.pipe(
-    startWith(this.indexedForm.value),
-    debounceTime(300),
-    switchMap(({ from_date, to_date }) => this.crawlingService.getMostIndexedStatistics(from_date, to_date)),
-    map(data => ({
-      title: this.lang.locals.most_indexed_urls,
-      chart: this.getChartConfig(data),
-    }))
-  )
-
-  mostUsedKeywords$ = this.keywordsForm.valueChanges.pipe(
-    startWith(this.keywordsForm.value),
-    debounceTime(300),
-    switchMap(({ from_date, to_date }) => this.crawlingService.getMostUsedKeywordStatistics(from_date, to_date)),
-    map(data => ({
-      title: this.lang.locals.most_used_keywords,
-      chart: this.getKeywordChartConfig(data),
-    }))
-  )
+    this.statistics$ = this.crawlingService.getStatistics(from_date!, to_date!).pipe(
+      map(({ mostIndexed, mostKeywords, newsPercentage, totalIndexed }) => ({
+        mostIndexedChart: {
+          title: this.lang.locals.most_indexed_urls,
+          chart: this.getChartConfig(mostIndexed),
+        },
+        mostUsedKeywordsChart: {
+          title: this.lang.locals.most_used_keywords,
+          chart: this.getKeywordChartConfig(mostKeywords),
+        },
+        newsPercentageChart: {
+          title: this.lang.locals.indexed_sources_percentage,
+          chart: this.getNewsPercentageChartConfig(newsPercentage),
+        },
+        totalIndexedNewsCount: totalIndexed,
+      }))
+    )
+  }
 
   getChartConfig(data: MostIndexedUrlsContract[]): ChartConfiguration {
     const urlCountMap = new Map<string, { count: number; dates: Set<string> }>()

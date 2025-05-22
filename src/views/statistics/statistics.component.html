@@ -1,4 +1,68 @@
 <div class="w-full mx-auto p-2">
+  <div class="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 mb-4">
+    <form
+      [formGroup]="rangeForm"
+      (ngSubmit)="loadStatistics()"
+      (reset)="loadStatistics()"
+      class="flex flex-row items-center gap-4 w-full text-gray-700">
+      <!-- from_date -->
+      <div class="w-full md:w-2/5">
+        <div class="flex flex-col">
+          <label for="from_date" class="text-sm font-medium">{{ lang.locals.start_time }}</label>
+          <input
+            type="date"
+            formControlName="from_date"
+            class="h-10 rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="rangeForm.errors?.['DateInvalidRangeIndexed'] && rangeForm.touched" />
+        </div>
+        <div class="text-xs min-h-[1.25rem] text-red-500 mt-1">
+          @if (
+            rangeForm.errors?.['DateInvalidRangeIndexed'] &&
+            (rangeForm.get('from_date')?.touched || rangeForm.get('to_date')?.touched)
+          ) {
+            {{ lang.locals.date_range_error }}
+          }
+        </div>
+      </div>
+
+      <!-- to_date -->
+      <div class="w-full md:w-2/5">
+        <div class="flex flex-col">
+          <label for="to_date" class="text-sm font-medium">{{ lang.locals.end_time }}</label>
+          <input
+            type="date"
+            formControlName="to_date"
+            class="h-10 rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
+            [class.border-red-500]="rangeForm.errors?.['DateInvalidRangeIndexed'] && rangeForm.touched" />
+        </div>
+        <div class="text-xs min-h-[1.25rem] text-red-500 mt-1">
+          @if (
+            rangeForm.errors?.['DateInvalidRangeIndexed'] &&
+            (rangeForm.get('from_date')?.touched || rangeForm.get('to_date')?.touched)
+          ) {
+            {{ lang.locals.date_range_error }}
+          }
+        </div>
+      </div>
+      <!-- Buttons -->
+      <div class="flex gap-2 w-full md:w-1/5">
+        <button [disabled]="rangeForm.invalid" type="submit" appButton size="sm" class="w-1/2 h-10 rounded-lg">
+          {{ lang.locals.filter }}
+        </button>
+        <button
+          [disabled]="rangeForm.invalid"
+          type="reset"
+          appButton
+          color="accent"
+          size="sm"
+          class="w-1/2 h-10 rounded-lg">
+          {{ lang.locals.clear }}
+        </button>
+      </div>
+    </form>
+  </div>
+  @let statistics = statistics$ | async;
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Most Indexed URLs Chart -->
     <div
@@ -6,48 +70,16 @@
       class="col-span-1 p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 class="text-2xl font-semibold text-gray-700 mb-1">{{ lang.locals.most_indexed_urls }}</h2>
       <p class="text-xs text-gray-500 mb-3">{{ lang.locals.chart_zoom_tip }}</p>
-
-      <form [formGroup]="indexedForm" class="flex flex-col md:flex-row gap-4 mb-4 text-gray-700">
-        <div class="flex flex-col flex-auto">
-          <label for="from_date" class="text-sm font-medium">{{ lang.locals.start_time }}</label>
-          <input
-            type="date"
-            formControlName="from_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
-            [class.border-red-500]="indexedForm.errors?.['DateInvalidRangeIndexed'] && indexedForm.touched" />
-          @if (
-            indexedForm.errors?.['DateInvalidRangeIndexed'] &&
-            (indexedForm.get('from_date')?.touched || indexedForm.get('to_date')?.touched)
-          ) {
-            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
-          }
-        </div>
-        <div class="flex flex-col flex-auto">
-          <label for="to_date" class="text-sm font-medium">{{ lang.locals.end_time }}</label>
-          <input
-            type="date"
-            formControlName="to_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
-            [class.border-red-500]="indexedForm.errors?.['DateInvalidRangeIndexed'] && indexedForm.touched" />
-          @if (
-            indexedForm.errors?.['DateInvalidRangeIndexed'] &&
-            (indexedForm.get('from_date')?.touched || indexedForm.get('to_date')?.touched)
-          ) {
-            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
-          }
-        </div>
-      </form>
-
-      @if (mostIndexedUrl$ | async; as statistics) {
+      @if (statistics) {
         <div style="display: block">
           <canvas
             baseChart
             #indexedChart
             class="max-h-56"
-            [type]="statistics.chart.type"
-            [datasets]="statistics.chart.data.datasets"
-            [labels]="statistics.chart.data.labels"
-            [options]="statistics.chart.options">
+            [type]="statistics.mostIndexedChart.chart.type"
+            [datasets]="statistics.mostIndexedChart.chart.data.datasets"
+            [labels]="statistics.mostIndexedChart.chart.data.labels"
+            [options]="statistics.mostIndexedChart.chart.options">
           </canvas>
         </div>
         <button (click)="resetIndexedZoom()" class="mt-2 text-sm text-blue-500 hover:underline">
@@ -64,48 +96,16 @@
       class="col-span-1 p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 class="text-2xl font-semibold text-gray-700 mb-1">{{ lang.locals.most_used_keywords }}</h2>
       <p class="text-xs text-gray-500 mb-3">{{ lang.locals.chart_zoom_tip }}</p>
-
-      <form [formGroup]="keywordsForm" class="flex flex-col md:flex-row gap-4 mb-4 text-gray-700">
-        <div class="flex flex-col flex-auto">
-          <label for="from_date" class="text-sm font-medium">{{ lang.locals.start_time }}</label>
-          <input
-            type="date"
-            formControlName="from_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
-            [class.border-red-500]="keywordsForm.errors?.['DateInvalidRangeKeyword'] && keywordsForm.touched" />
-          @if (
-            keywordsForm.errors?.['DateInvalidRangeKeyword'] &&
-            (keywordsForm.get('from_date')?.touched || keywordsForm.get('to_date')?.touched)
-          ) {
-            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
-          }
-        </div>
-        <div class="flex flex-col flex-auto">
-          <label for="to_date" class="text-sm font-medium">{{ lang.locals.end_time }}</label>
-          <input
-            type="date"
-            formControlName="to_date"
-            class="rounded-md p-2 border-2 border-gray-300 outline-none focus:border-primary"
-            [class.border-red-500]="keywordsForm.errors?.['DateInvalidRangeKeyword'] && keywordsForm.touched" />
-          @if (
-            keywordsForm.errors?.['DateInvalidRangeKeyword'] &&
-            (keywordsForm.get('from_date')?.touched || keywordsForm.get('to_date')?.touched)
-          ) {
-            <span class="text-red-500 text-xs">{{ lang.locals.date_range_error }}</span>
-          }
-        </div>
-      </form>
-
-      @if (mostUsedKeywords$ | async; as statistics) {
+      @if (statistics) {
         <div style="display: block">
           <canvas
             baseChart
             #keywordsChart
             class="max-h-56"
-            [type]="statistics.chart.type"
-            [datasets]="statistics.chart.data.datasets"
-            [labels]="statistics.chart.data.labels"
-            [options]="statistics.chart.options">
+            [type]="statistics.mostUsedKeywordsChart.chart.type"
+            [datasets]="statistics.mostUsedKeywordsChart.chart.data.datasets"
+            [labels]="statistics.mostUsedKeywordsChart.chart.data.labels"
+            [options]="statistics.mostUsedKeywordsChart.chart.options">
           </canvas>
         </div>
         <button (click)="resetKeywordsZoom()" class="mt-2 text-sm text-blue-500 hover:underline">
@@ -121,17 +121,16 @@
       *appHasPermission="['MEDIA_STATISTICS_NEWS_PERCENTAGE']"
       class="col-span-1 p-8 bg-white rounded-2xl shadow-lg border border-gray-200">
       <h2 class="text-2xl font-semibold text-gray-700 mb-1">{{ lang.locals.indexed_sources_percentage }}</h2>
-
-      @if (newsPercentage$ | async; as statistics) {
+      @if (statistics) {
         <div style="display: block">
           <canvas
             baseChart
             #keywordsChart
             class="max-h-56"
-            [type]="statistics.chart.type"
-            [datasets]="statistics.chart.data.datasets"
-            [labels]="statistics.chart.data.labels"
-            [options]="statistics.chart.options">
+            [type]="statistics.newsPercentageChart.chart.type"
+            [datasets]="statistics.newsPercentageChart.chart.data.datasets"
+            [labels]="statistics.newsPercentageChart.chart.data.labels"
+            [options]="statistics.newsPercentageChart.chart.options">
           </canvas>
         </div>
       } @else {
@@ -144,11 +143,10 @@
       *appHasPermission="['MEDIA_STATISTICS_NEWS_CARDS']"
       class="relative overflow-hidden h-28 p-6 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition">
       <h2 class="text-gray-700 text-2xl font-semibold">{{ lang.locals.total_indexed_news }}</h2>
-      @let numberOfIndexedNews = numberOfIndexedNews$ | async;
-      @if (numberOfIndexedNews === null || numberOfIndexedNews === undefined) {
+      @if (statistics === null || statistics === undefined) {
         <div class="h-10 bg-gray-300 rounded animate-pulse mt-2"></div>
       } @else {
-        <p class="text-gray-900 text-4xl font-bold mt-2">{{ numberOfIndexedNews }}</p>
+        <p class="text-gray-900 text-4xl font-bold mt-2">{{ statistics.totalIndexedNewsCount }}</p>
         <svg
           class="absolute w-40 h-32 top-0 rtl:left-0 right-0 m-2 opacity-50 mr-auto"
           viewBox="0 0 24 24"
