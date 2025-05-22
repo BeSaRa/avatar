@@ -1638,5 +1638,13 @@
   "type_all_text_here": {
     "ar": "اكتب كامل النص هنا...",
     "en": "Type all text here..."
+  },
+  "filter": {
+    "ar": "فلترة",
+    "en": "Filter"
+  },
+  "clear": {
+    "ar": "مسح",
+    "en": "Clear"
   }
 }

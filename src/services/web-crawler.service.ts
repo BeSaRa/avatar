@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core'
 import { UrlService } from './url.service'
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { MediaResultContract } from '@/contracts/media-result-contract'
-import { Observable } from 'rxjs'
+import { combineLatest, Observable } from 'rxjs'
 import { ChatMessageResultContract } from '@/contracts/chat-message-result-contract'
 import { MediaCrawler } from '@/models/media-crawler'
 import { GenerteReportContract } from '@/contracts/generate-report-contract'
@@ -35,36 +35,43 @@ export class WebCrawlerService {
     return this.http.post<MediaResultContract>(url, crawlingData)
   }
 
-  getMostIndexedStatistics(fromDate?: string, toDate?: string) {
-    const url = `${this.urlService.URLS.MEDIA}/indexed-urls`
+  private buildParams(fromDate?: string, toDate?: string): HttpParams {
     let params = new HttpParams()
-    if (fromDate) {
-      params = params.set('from_date', fromDate)
-    }
-    if (toDate) {
-      params = params.set('to_date', toDate)
-    }
-    return this.http.get<MostIndexedUrlsContract[]>(url, { params })
+    if (fromDate) params = params.set('from_date', fromDate)
+    if (toDate) params = params.set('to_date', toDate)
+    return params
+  }
+
+  getMostIndexedStatistics(fromDate?: string, toDate?: string) {
+    return this.http.get<MostIndexedUrlsContract[]>(`${this.urlService.URLS.MEDIA}/indexed-urls`, {
+      params: this.buildParams(fromDate, toDate),
+    })
   }
 
   getMostUsedKeywordStatistics(fromDate?: string, toDate?: string) {
-    const url = `${this.urlService.URLS.MEDIA}/used-keywords`
-    let params = new HttpParams()
-    if (fromDate) {
-      params = params.set('from_date', fromDate)
-    }
-    if (toDate) {
-      params = params.set('to_date', toDate)
-    }
-    return this.http.get<MostUsedKeywordsContract[]>(url, { params })
+    return this.http.get<MostUsedKeywordsContract[]>(`${this.urlService.URLS.MEDIA}/used-keywords`, {
+      params: this.buildParams(fromDate, toDate),
+    })
   }
 
-  getIndexedNewsPercentage() {
-    const url = `${this.urlService.URLS.MEDIA}/news-percentage`
-    return this.http.get<NewsPercentageContract>(url)
+  getIndexedNewsPercentage(fromDate?: string, toDate?: string) {
+    return this.http.get<NewsPercentageContract>(`${this.urlService.URLS.MEDIA}/news-percentage`, {
+      params: this.buildParams(fromDate, toDate),
+    })
   }
-  getTotalNumberOfIndexedNews() {
-    const url = `${this.urlService.URLS.MEDIA}/news-cards`
-    return this.http.get<number>(url)
+
+  getTotalNumberOfIndexedNews(fromDate?: string, toDate?: string) {
+    return this.http.get<number>(`${this.urlService.URLS.MEDIA}/news-cards`, {
+      params: this.buildParams(fromDate, toDate),
+    })
+  }
+
+  getStatistics(fromDate?: string, toDate?: string) {
+    return combineLatest({
+      mostIndexed: this.getMostIndexedStatistics(fromDate, toDate),
+      mostKeywords: this.getMostUsedKeywordStatistics(fromDate, toDate),
+      newsPercentage: this.getIndexedNewsPercentage(fromDate, toDate),
+      totalIndexed: this.getTotalNumberOfIndexedNews(fromDate, toDate),
+    })
   }
 }
