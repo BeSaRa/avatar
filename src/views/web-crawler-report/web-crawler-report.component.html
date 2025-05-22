@@ -103,7 +103,9 @@
     <!-- Report Display -->
     @if (reportUrl()) {
       <div class="bg-gray-300 border-2 relative border-gray-500 rounded-md p-4 m-2" [@fadeInSlideUp]="animateTrigger()">
-        <p class="whitespace-break-spaces" id="pdf-content" [innerHTML]="reportTxt()"></p>
+        <div id="pdf-content">
+          <div id="print-style" [innerHTML]="reportTxt()"></div>
+        </div>
         <button
           type="button"
           (click)="downloadPdf()"
