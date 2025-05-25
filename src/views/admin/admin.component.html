@@ -7,22 +7,22 @@
         *appHasPermission="pages[index].permissions"
         class="w-full"
         [ngClass]="{ 'h-full': isVertical(index) }"
-        [color]="pages[index].color"
-        [title]="lang.locals[pages[index].title]"
-        [description]="lang.locals[pages[index].desc]"
-        [icon]="pages[index].icon"
-        [link]="pages[index].link"
+        [color]="pages[index].color!"
+        [title]="lang.locals[pages[index].label]"
+        [description]="lang.locals[pages[index].desc!]"
+        [icon]="pages[index].svg"
+        [link]="pages[index].route"
         shape="vertical" />
       @if (index + 1 < pages.length) {
         <app-nav-card
           *appHasPermission="pages[index + 1].permissions"
           class="w-full"
           [ngClass]="{ 'h-full': isVertical(index) }"
-          [color]="pages[index + 1].color"
-          [title]="lang.locals[pages[index + 1].title]"
-          [description]="lang.locals[pages[index + 1].desc]"
-          [icon]="pages[index + 1].icon"
-          [link]="pages[index + 1].link"
+          [color]="pages[index + 1].color!"
+          [title]="lang.locals[pages[index + 1].label]"
+          [description]="lang.locals[pages[index + 1].desc!]"
+          [icon]="pages[index + 1].svg"
+          [link]="pages[index + 1].route"
           shape="vertical" />
       }
     </div>

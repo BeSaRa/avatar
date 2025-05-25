@@ -1,5 +1,6 @@
 import { MenuItem } from '@/contracts/menu-item-contract'
 import { PERMISSION_GROUPS } from './all-permissions'
+import { ADMIN_MENU_ITEMS } from './admin-menu-items'
 
 export const MENU_ITEMS: MenuItem[] = [
   {
@@ -16,6 +17,7 @@ export const MENU_ITEMS: MenuItem[] = [
     svg: 'SUIT_CASE',
     permissions: PERMISSION_GROUPS['ADMIN_GROUP'],
     haveSomeOfPermissions: true,
+    children: ADMIN_MENU_ITEMS,
   },
   {
     id: 3,
