@@ -94,7 +94,7 @@
 <div class="flex h-[75vh] max-h-[75vh] bg-transparent w-full p-4 overflow-hidden">
   <!-- Main Content -->
   <div class="relative z-20 flex flex-col bg-gray-100 rounded-lg w-full overflow-hidden">
-    <div class="flex items-center sticky top-0 p-2 bg-white rounded-lg shadow-md z-20">
+    <!-- <div class="flex items-center sticky top-0 p-2 bg-white rounded-lg shadow-md z-20">
       <div class="w-1/2">
         <button
           (click)="addUrl()"
@@ -138,7 +138,7 @@
           </button>
         </div>
       }
-    </div>
+    </div> -->
 
     <div appPerfectScroll [perfectScrollOptions]="{ suppressScrollX: true }" class="p-4 overflow-auto max-h-[60vh]">
       <!-- Card -->
@@ -146,11 +146,11 @@
         <div class="flex items-center my-6">
           <div class="flex-grow border-t border-gray-300"></div>
           <span class="mx-4 text-gray-500 font-medium whitespace-nowrap">
-            {{ lang.locals.recurring_every }} ({{ crawlUrl.key }})</span
+            {{ lang.locals.recurring_every }} ({{ crawlUrl.key }}) {{ lang.locals.day }}</span
           >
           <div class="flex-grow border-t border-gray-300"></div>
         </div>
-        <div class="grid grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           @for (url of crawlUrl.value; track $index; let urlIndex = $index) {
             <app-url-summary-card
               [crawlerSettingGroupForm]="url!"

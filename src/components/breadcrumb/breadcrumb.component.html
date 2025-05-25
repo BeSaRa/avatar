@@ -1,0 +1,16 @@
+@defer (when pathRoutes().length > 0) {
+  <div class="flex items-center gap-2 text-primary text-xl font-semibold">
+    @let routes = pathRoutes();
+
+    @for (item of routes; track $index) {
+      <a class="text-primary hover:text-primary-400 transition-all" [routerLink]="item.route">
+        {{ lang.locals[item.label] }}
+      </a>
+      @if ($index !== routes.length - 1) {
+        <span>></span>
+      }
+    }
+  </div>
+} @placeholder {
+  <div class="animate-pulse text-primary">Loading breadcrumbs...</div>
+}

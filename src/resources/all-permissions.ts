@@ -151,4 +151,4 @@ export const PERMISSION_GROUPS = {
     ...extractGroupIncludes('USER'),
     ...extractGroup('STORAGE'),
   ],
-} as const
+}
