@@ -9,7 +9,7 @@ export function createUrlGroup() {
   const fb = inject(NonNullableFormBuilder)
 
   return fb.group({
-    link: fb.control('', [Validators.required, Validators.pattern(URL_PATTERN)]),
+    link: fb.control({ value: '', disabled: true }, [Validators.required, Validators.pattern(URL_PATTERN)]),
     headers: fb.array<KeyValuePairGroup>([]),
     cookies: fb.array<KeyValuePairGroup>([]),
     payload: fb.array<KeyValuePairGroup>([]),
