@@ -3,7 +3,7 @@ export interface MostIndexedUrlsContract {
   RowKey: string
   Most_indexed_URL: string
   Count: number
-  IndexDate: string
+  Date: string
 }
 
 export interface MostUsedKeywordsContract {
@@ -11,7 +11,7 @@ export interface MostUsedKeywordsContract {
   RowKey: string
   'Most-used-keywords': string
   Count: number
-  IndexDate: string
+  date: string
 }
 
 export interface NewsPercentageContract {

@@ -75,7 +75,7 @@ export class StatisticsComponent implements OnInit {
     const urlCountMap = new Map<string, { count: number; dates: Set<string> }>()
     data.forEach(item => {
       const url = decodeURIComponent(item.Most_indexed_URL)
-      const date = item.IndexDate
+      const date = item.Date
       const entry = urlCountMap.get(url) || { count: 0, dates: new Set<string>() }
       entry.count += item.Count
       entry.dates.add(date)
@@ -108,7 +108,7 @@ export class StatisticsComponent implements OnInit {
     const keywordMap = new Map<string, { count: number; dates: Set<string> }>()
     data.forEach(item => {
       const keyword = item['Most-used-keywords'].trim()
-      const date = item.IndexDate
+      const date = item.date
       const entry = keywordMap.get(keyword) || { count: 0, dates: new Set<string>() }
       entry.count += item.Count
       entry.dates.add(date)
@@ -212,6 +212,9 @@ export class StatisticsComponent implements OnInit {
 
   getChartOptions(): ChartConfiguration['options'] {
     return {
+      font: {
+        size: 18,
+      },
       responsive: true,
       indexAxis: 'y',
       plugins: {
