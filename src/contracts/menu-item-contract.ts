@@ -9,6 +9,7 @@ export interface MenuItem {
   desc?: keyof LangKeysContract
   color?: CardColor
   svg: keyof typeof SVG_ICONS
+  imgUrl?: string
   route: string
   permissions: (keyof typeof ALL_PERMISSIONS)[]
   haveSomeOfPermissions?: boolean
