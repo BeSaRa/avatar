@@ -14,7 +14,19 @@ import {
   NgModel,
   ValidationErrors,
 } from '@angular/forms'
-import { catchError, filter, MonoTypeOperatorFunction, Observable, of, scan } from 'rxjs'
+import { UrlTree, NavigationEnd, DefaultUrlSerializer, UrlSegment } from '@angular/router'
+import {
+  catchError,
+  filter,
+  map,
+  MonoTypeOperatorFunction,
+  Observable,
+  of,
+  OperatorFunction,
+  pairwise,
+  scan,
+  startWith,
+} from 'rxjs'
 
 export function markAllControlsAsTouchedAndDirty(control: AbstractControl) {
   const markRecursive = (control: AbstractControl): void => {
@@ -75,6 +87,26 @@ export function ignoreErrors<T>(debug = false): MonoTypeOperatorFunction<T> {
   }
 }
 
+function getPrimaryPath(url: string): string {
+  const serializer = new DefaultUrlSerializer()
+  const parsed: UrlTree = serializer.parse(url)
+  const segments: UrlSegment[] = parsed.root.children['primary']?.segments || []
+  return '/' + segments.map(s => s.path).join('/')
+}
+export function ignoreQueryAndFragmentChange<T extends 'event' | 'path'>(options: {
+  emit: T
+}): OperatorFunction<NavigationEnd, T extends 'event' ? NavigationEnd : string> {
+  return ((source$: Observable<NavigationEnd>) =>
+    source$.pipe(
+      map(e => ({ event: e, path: getPrimaryPath(e.urlAfterRedirects) })),
+      startWith({ event: {} as NavigationEnd, path: '' }),
+      pairwise(),
+      filter(([prev, curr]) => prev.path !== curr.path),
+      map(
+        ([, curr]) => (options.emit === 'path' ? curr.path : curr.event) as T extends 'event' ? NavigationEnd : string
+      )
+    )) as OperatorFunction<NavigationEnd, T extends 'event' ? NavigationEnd : string>
+}
 /**
  * chunk provided array by given bulk size
  * @param arr
