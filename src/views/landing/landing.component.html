@@ -3,9 +3,15 @@
     <a
       [routerLink]="item.route"
       class="flex flex-col justify-center items-center py-6 gap-6 bg-secondary-100/70 rounded-xl transition-all hover:bg-secondary-100 hover:shadow-lg">
-      <div
-        [innerHTML]="svgIcons[item.svg] | sanitizer: 'html'"
-        class="p-2 bg-white text-primary rounded-full [&_svg]:!size-10"></div>
+      @if (item.imgUrl) {
+        <div class="p-2 bg-white rounded-full flex items-center justify-center w-16 h-16">
+          <img [src]="item.imgUrl" alt="{{ item.label }}" class="w-10 h-10 object-contain" />
+        </div>
+      } @else {
+        <div
+          [innerHTML]="svgIcons[item.svg] | sanitizer: 'html'"
+          class="p-2 bg-white text-primary rounded-full [&_svg]:!size-10"></div>
+      }
       <p class="text-xl text-accent">{{ lang.locals[item.label] }}</p>
     </a>
   }

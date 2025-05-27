@@ -9,7 +9,7 @@
           [matTooltip]="lang.locals[item.label]"
           matTooltipPosition="after"
           class="[&.active]:text-primary hover:text-primary transition-all">
-          <div [innerHTML]="svgIcons[item.svg] | sanitizer: 'html'"></div
+          <div class="icon-container" [innerHTML]="svgIcons[item.svg] | sanitizer: 'html'"></div
         ></a>
       }
       <button
@@ -17,7 +17,7 @@
         matTooltipPosition="after"
         (click)="toggleChat()"
         class="hover:text-primary transition-all">
-        <div [innerHTML]="svgIcons.CHAT | sanitizer: 'html'"></div>
+        <div class="icon-container" [innerHTML]="svgIcons.CHAT | sanitizer: 'html'"></div>
       </button>
       <button
         [matTooltip]="isOpened ? lang.locals.close_menu : lang.locals.open_full_menu"

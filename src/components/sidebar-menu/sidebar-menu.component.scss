@@ -1,3 +1,7 @@
 :host {
   @apply h-full shadow;
 }
+
+.icon-container:hover svg {
+  color: #5a0d21;
+}
