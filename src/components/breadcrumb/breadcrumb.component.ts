@@ -1,6 +1,7 @@
 import { MenuItem } from '@/contracts/menu-item-contract'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { LocalService } from '@/services/local.service'
+import { ignoreQueryAndFragmentChange } from '@/utils/utils'
 import { Component, computed, effect, inject, input, signal } from '@angular/core'
 import { NavigationEnd, Router, RouterLink } from '@angular/router'
 import { filter, takeUntil, tap } from 'rxjs'
@@ -20,7 +21,7 @@ export class BreadcrumbComponent extends OnDestroyMixin(class {}) {
 
   private _routesMenuMap: Record<string, MenuItem> = {}
 
-  private readonly url = signal(this._router.url)
+  private readonly url = signal('')
 
   readonly pathRoutes = computed(() => {
     return this.url()
@@ -34,7 +35,8 @@ export class BreadcrumbComponent extends OnDestroyMixin(class {}) {
     this._router.events
       .pipe(
         filter(e => e instanceof NavigationEnd),
-        tap(() => this.url.set(this._router.url)),
+        ignoreQueryAndFragmentChange({ emit: 'path' }),
+        tap(path => this.url.set(path)),
         takeUntil(this.destroy$)
       )
       .subscribe(() => {
