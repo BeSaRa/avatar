@@ -63,7 +63,7 @@
   </div>
   @let statistics = statistics$ | async;
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 gap-6">
     <!-- Most Indexed URLs Chart -->
     <div
       *appHasPermission="['MEDIA_STATISTICS__INDEXED_URLS']"
@@ -75,7 +75,7 @@
           <canvas
             baseChart
             #indexedChart
-            class="max-h-56"
+            class="max-h-72"
             [type]="statistics.mostIndexedChart.chart.type"
             [datasets]="statistics.mostIndexedChart.chart.data.datasets"
             [labels]="statistics.mostIndexedChart.chart.data.labels"
@@ -101,7 +101,7 @@
           <canvas
             baseChart
             #keywordsChart
-            class="max-h-56"
+            class="max-h-72"
             [type]="statistics.mostUsedKeywordsChart.chart.type"
             [datasets]="statistics.mostUsedKeywordsChart.chart.data.datasets"
             [labels]="statistics.mostUsedKeywordsChart.chart.data.labels"
@@ -126,7 +126,7 @@
           <canvas
             baseChart
             #keywordsChart
-            class="max-h-56"
+            class="max-h-72"
             [type]="statistics.newsPercentageChart.chart.type"
             [datasets]="statistics.newsPercentageChart.chart.data.datasets"
             [labels]="statistics.newsPercentageChart.chart.data.labels"
