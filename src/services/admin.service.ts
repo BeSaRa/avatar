@@ -39,7 +39,7 @@ export class AdminService {
 
   getSubfolder(containerName: string): Observable<string[]> {
     const url = `${this.urlService.URLS.ADMIN}/get-subfolders/${containerName}`
-    return this.http.post<{ subfolders: string[] }>(url, null).pipe(map(res => res.subfolders))
+    return this.http.post<{ subfolders: string[] }>(url, null).pipe(map(res => res?.subfolders ?? []))
   }
   deleteSubfolder(containerName: string, subfolderName: string) {
     const url = `${this.urlService.URLS.ADMIN}/delete-subfolder`
@@ -52,7 +52,7 @@ export class AdminService {
     return this.http.delete(url, { params: params })
   }
   deleteByListOfTitles(containerName: string, subfolderName: string, fileNames: string[]) {
-    const url = `${this.urlService.URLS.ADMIN}/delete-blob-by-list-of-titles`
+    const url = `${this.urlService.URLS.ADMIN}/delete-blob-by-list-of-titles/${containerName}`
     const params = new HttpParams().appendAll({ container_name: containerName, subfolder_name: subfolderName })
     return this.http.delete(url, { params: params, body: fileNames })
   }
@@ -62,7 +62,8 @@ export class AdminService {
     return this.http.post<{ blobs: string[] }>(url, null, { params: param }).pipe(map(res => res.blobs))
   }
   uploadBlobs(files: File[], uploadBlobsOptions: UploadBlobsOptions) {
-    const url = `${this.urlService.URLS.ADMIN}/upload-blobs`
+    const { container_name: containerName } = uploadBlobsOptions
+    const url = `${this.urlService.URLS.ADMIN}/upload-blobs/${containerName}`
     const params = new HttpParams({ fromObject: uploadBlobsOptions })
     const formData = new FormData()
     files.forEach(file => {
@@ -72,7 +73,7 @@ export class AdminService {
   }
 
   downloadBlob(containerName: string, bolbName: string) {
-    const url = `${this.urlService.URLS.ADMIN}/download-blob`
+    const url = `${this.urlService.URLS.ADMIN}/download-blob/${containerName}`
     const params = new HttpParams().set('container_name', containerName).set('blob_name', bolbName)
     return this.http.post<MediaResultContract<string>>(url, null, { params })
   }
