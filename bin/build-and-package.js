@@ -152,7 +152,7 @@ while (true) {
   let baseHref = ''
   if (wantsBaseHref === 'y' || wantsBaseHref === 'yes') {
     baseHref = readline.question('Enter base href (must start and end with /): ').trim()
-    if (!baseHref.startsWith('/') || !baseHref.endsWith('/')) {
+    if (!baseHref.endsWith('/')) {
       console.error('❌ Invalid base href. Must start and end with "/"')
       continue
     }
