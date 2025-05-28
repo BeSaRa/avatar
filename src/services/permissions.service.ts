@@ -38,7 +38,7 @@ export class PermissionsService {
     return this.http.delete(url, { params: params, body: permissions })
   }
   getUserPermission(userId: string): Observable<Permission[]> {
-    const url = `${this.urlService.URLS.ADMIN}/user/${userId}/permissions`
+    const url = `${this.urlService.URLS.ADMIN}/user/permissions/${userId}`
     return this.http.get<Permission[]>(url)
   }
 }
