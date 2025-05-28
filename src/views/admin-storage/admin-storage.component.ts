@@ -320,6 +320,7 @@ export class AdminStorageComponent extends OnDestroyMixin(class {}) {
           const link = this.document.createElement('a')
           link.href = fileUrl ?? ''
           link.download = blobName
+          link.target = '_blank'
           document.body.appendChild(link)
           link.click()
           document.body.removeChild(link)
