@@ -1,6 +1,6 @@
 <div #baseElement class="relative h-full w-full flex items-center justify-center bg-secondary-100/80 rounded-xl shadow">
   <div class="flex flex-col items-center h-full justify-center absolute">
-    @if (recognizedText()) {
+    @if (recognizedText() && !qrCodeOpened) {
       <span
         class="absolute w-[90%] z-10 bottom-1/2 left-1/2 -translate-x-1/2 bg-black/70 text-white text-sm rounded px-2 py-1"
         >{{ recognizedText() }}</span
@@ -8,7 +8,7 @@
     }
     <div class="absolute -start-20 top-1/2 -translate-y-1/2 !w-16 flex flex-col gap-2">
       <button
-        [disabled]="store.isStreamLoading()"
+        [disabled]="store.isStreamLoading() || qrCodeOpened"
         (pointerdown)="toggleStream()"
         class="!h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
         @if (store.isStreamLoading()) {
@@ -28,7 +28,7 @@
           (click)="rejectText()"
           appButton
           shape="pill"
-          [ngClass]="{ '-start-10 opacity-100': store.isRecordingStarted() }"
+          [ngClass]="{ '-start-10 opacity-100': store.isRecordingStarted() && !qrCodeOpened }"
           class="!p-1 !absolute top-1/2 -translate-y-1/2 opacity-0 transition-all duration-300">
           <svg class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
@@ -36,7 +36,7 @@
           </svg>
         </button>
         <button
-          [disabled]="store.isRecordingLoading() || recognizingStatus()"
+          [disabled]="store.isRecordingLoading() || recognizingStatus() || qrCodeOpened"
           (click)="toggleRecording()"
           class="relative w-full !h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
           @if (store.isRecordingLoading()) {
@@ -58,7 +58,7 @@
         </button>
       </div>
       <button
-        [disabled]="!store.isStreamStarted()"
+        [disabled]="!store.isStreamStarted() || qrCodeOpened"
         (click)="interruptAvatar()"
         class="!h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
         <span class="relative size-6">
@@ -68,15 +68,14 @@
         {{ lang.locals.stop_talking }}
       </button>
       <button
-        [disabled]="!chatService.messages().length"
+        [disabled]="!chatService.messages().length || qrCodeOpened"
         (click)="clearChat()"
         class="!h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
         <img [src]="'assets/icons/clear-chat.png'" class="size-6" alt="start" />
         {{ lang.locals.clear_chat_history }}
       </button>
       <button
-        [disabled]="!store.isStreamStarted()"
-        (click)="qrCodeOpened = true"
+        (click)="openQRCode()"
         class="!h-16 flex flex-col items-center justify-center bg-white rounded-md shadow text-primary text-xs transition-all hover:bg-white/70 disabled:opacity-50 disabled:cursor-not-allowed">
         <svg fill="currentColor" class="size-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path
@@ -123,62 +122,71 @@
       <source [src]="store.idleAvatarUrl()" type="video/webm" />
     </video>
 
-    <div class="absolute bottom-0 w-full max-h-[45%] overflow-y-auto no-scrollbar overflow-x-hidden">
-      <div
-        #container
-        class="min-h-0 flex-auto flex flex-col gap-1 w-full h-full relative overflow-hidden py-1 px-2 [&>.message.user]:justify-start [&>.message]:text-white">
-        @for (message of chatService.messages(); track message.id) {
-          <div class="message {{ message.role }}">
-            @if (message.role === 'assistant') {
-              <div
-                appTextWriterAnimator
-                (animating)="animationStatus.set($event)"
-                class="whitespace-pre-wrap break-words"
-                [text]="message.content"></div>
-            } @else {
-              <div class="whitespace-pre-wrap break-words" [innerHtml]="message.content"></div>
-            }
+    @if (!qrCodeOpened) {
+      <div class="absolute bottom-0 w-full max-h-[45%] overflow-y-auto no-scrollbar overflow-x-hidden">
+        <div
+          #container
+          class="min-h-0 flex-auto flex flex-col gap-1 w-full h-full relative overflow-hidden py-1 px-2 [&>.message.user]:justify-start [&>.message]:text-white">
+          @for (message of chatService.messages(); track message.id) {
+            <div class="message {{ message.role }}">
+              @if (message.role === 'assistant') {
+                <div
+                  appTextWriterAnimator
+                  (animating)="animationStatus.set($event)"
+                  class="whitespace-pre-wrap break-words"
+                  [text]="message.content"></div>
+              } @else {
+                <div class="whitespace-pre-wrap break-words" [innerHtml]="message.content"></div>
+              }
 
-            @if (message.context && message.context.citations.length) {
-              <div>
-                <!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
-                <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
-                <div class="icon-with-title" (click)="linkRef.hidden = !linkRef.hidden">
-                  <i
-                    class="mdi"
-                    [ngClass]="{
-                      'mdi-chevron-down': linkRef.hidden,
-                      'mdi-chevron-up': !linkRef.hidden,
-                    }"></i>
-                  <span class="title">References</span>
-                </div>
-                <!-- eslint-enable @angular-eslint/template/click-events-have-key-events -->
+              @if (message.context && message.context.citations.length) {
+                <div>
+                  <!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+                  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+                  <div class="icon-with-title" (click)="linkRef.hidden = !linkRef.hidden">
+                    <i
+                      class="mdi"
+                      [ngClass]="{
+                        'mdi-chevron-down': linkRef.hidden,
+                        'mdi-chevron-up': !linkRef.hidden,
+                      }"></i>
+                    <span class="title">References</span>
+                  </div>
+                  <!-- eslint-enable @angular-eslint/template/click-events-have-key-events -->
 
-                <div #linkRef hidden>
-                  @for (link of message.context.citations; track $index) {
-                    <div dir="auto">
-                      <div class="d-inline">
-                        <small class="px-1 text-primary">
-                          doc {{ $index + 1 }} <i class="mdi mdi-link-variant"></i
-                        ></small>
+                  <div #linkRef hidden>
+                    @for (link of message.context.citations; track $index) {
+                      <div dir="auto">
+                        <div class="d-inline">
+                          <small class="px-1 text-primary">
+                            doc {{ $index + 1 }} <i class="mdi mdi-link-variant"></i
+                          ></small>
+                        </div>
+                        <!--                    (click)="openDocModal(docModal, link)" -->
+                        <a class="d-inline citation-link" style="cursor: pointer">{{ link.filepath }}</a>
                       </div>
-                      <!--                    (click)="openDocModal(docModal, link)" -->
-                      <a class="d-inline citation-link" style="cursor: pointer">{{ link.filepath }}</a>
-                    </div>
-                  }
+                    }
+                  </div>
                 </div>
-              </div>
-            }
-          </div>
-        }
+              }
+            </div>
+          }
+        </div>
       </div>
-    </div>
-    @if (qrCodeOpened && store.isStreamStarted()) {
-      <div (click)="qrCodeOpened = false" class="absolute w-full h-full flex items-center justify-center bg-black/80">
-        <div (click)="$event.stopPropagation()" class="relative flex flex-col justify-center items-center gap-2">
-          <qrcode [qrdata]="getQRData()"></qrcode>
-          <span class="p-1 text-white">streamId: {{ store.streamId() }}</span>
-          <button (click)="qrCodeOpened = false" class="w-10 h-10 p-1 text-white rounded-full bg-white/30">
+    }
+    @if (qrCodeOpened) {
+      <div class="absolute w-full h-full flex items-center justify-center bg-black/80">
+        <div class="relative flex flex-col justify-center items-center gap-2">
+          @if (store.clientId()) {
+            <qrcode [qrdata]="getQRData()"></qrcode>
+            <div class="flex flex-col items-center justify-center">
+              <span class="text-white text-lg">Client Id</span>
+              <span class="px-1 text-white text-center">{{ store.clientId() }}</span>
+            </div>
+          } @else {
+            <app-spinner-loader class="inline-block mb-8" [borderWidth]="4" color="white" [width]="100" />
+          }
+          <button (click)="closeQR()" class="w-10 h-10 p-1 text-white rounded-full bg-white/30">
             <svg fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />

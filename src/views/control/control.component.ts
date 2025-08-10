@@ -1,6 +1,5 @@
 import { OverlayChatComponent } from '@/components/overlay-chat/overlay-chat.component'
 import { ScreenControlComponent } from '@/components/screen-control/screen-control.component'
-import { SpinnerLoaderComponent } from '@/components/spinner-loader/spinner-loader.component'
 import { ButtonDirective } from '@/directives/button.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
 import { AvatarService } from '@/services/avatar.service'
@@ -12,7 +11,7 @@ import { CommonModule, Location } from '@angular/common'
 import { AfterViewInit, Component, inject, signal } from '@angular/core'
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
-import { catchError, finalize, Observable, of, switchMap, tap, timer } from 'rxjs'
+import { catchError, finalize, Observable, of } from 'rxjs'
 
 @Component({
   selector: 'app-control',
@@ -54,51 +53,51 @@ export default class ControlComponent extends OnDestroyMixin(class {}) implement
   readonly lang = inject(LocalService)
   readonly chatService = inject(ChatService)
 
-  streamId = new FormControl('', [Validators.required])
+  clientId = new FormControl('', [Validators.required])
   isLoading = false
 
   text = signal('')
 
   ngAfterViewInit(): void {
-    this.streamId.setValue(this._route.snapshot.queryParamMap.get('streamId'))
-    this.store.updateStreamId(this.streamId.value ?? '')
-    this._checkStreamId().subscribe()
-    this._checkStreamRecursivley().subscribe()
+    this.clientId.setValue(this._route.snapshot.queryParamMap.get('clientId'))
+    this.store.updateClientId(this.clientId.value ?? '')
+    this._connectStream().subscribe()
+    // this._checkStreamRecursivley().subscribe()
   }
 
-  private _checkStreamId(showLoader = true): Observable<unknown> {
-    if (!this.store.hasStream()) return of(null)
+  private _connectStream(showLoader = true): Observable<unknown> {
+    if (!this.store.clientId()) return of(null)
     if (showLoader) this.isLoading = true
-    return this._avatarService.checkStreamStatus().pipe(
+    return this._avatarService.startStream('life-size', true, this.store.clientId()).pipe(
       finalize(() => (this.isLoading = false)),
       catchError(() => {
-        this._clearStreamId()
+        this._clearClientId()
         return of(null)
       })
     )
   }
 
-  private _checkStreamRecursivley(): Observable<unknown> {
-    return this._checkStreamId(false).pipe(
-      switchMap(() => {
-        return timer(60000).pipe(tap(() => this._checkStreamRecursivley().subscribe()))
-      })
-    )
-  }
+  // private _checkStreamRecursivley(): Observable<unknown> {
+  //   return this._checkStreamId(false).pipe(
+  //     switchMap(() => {
+  //       return timer(60000).pipe(tap(() => this._checkStreamRecursivley().subscribe()))
+  //     })
+  //   )
+  // }
 
-  private _clearStreamId() {
-    this.store.updateStreamId('')
+  private _clearClientId() {
+    this.store.updateClientId('')
     const currentUrl = this._router.parseUrl(this._router.url)
     currentUrl.queryParams = {}
     this._location.replaceState(currentUrl.toString())
   }
 
-  saveStreamId() {
-    this.store.updateStreamId(this.streamId.value ?? '')
+  saveClientId() {
+    this.store.updateClientId(this.clientId.value ?? '')
     const currentUrl = this._router.parseUrl(this._router.url)
-    currentUrl.queryParams = this.streamId.value ? { streamId: this.streamId.value } : {}
+    currentUrl.queryParams = this.clientId.value ? { clientId: this.clientId.value } : {}
     this._location.replaceState(currentUrl.toString())
-    this._checkStreamId().subscribe()
+    this._connectStream().subscribe()
   }
 
   recognizing(value: string) {

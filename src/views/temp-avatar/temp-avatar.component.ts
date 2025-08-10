@@ -1,6 +1,7 @@
 import { SpinnerLoaderComponent } from '@/components/spinner-loader/spinner-loader.component'
 import { AppColors } from '@/constants/app-colors'
 import { SVG_ICONS } from '@/constants/svg-icons'
+import { StreamResultContract } from '@/contracts/stream-result-contract'
 import { ButtonDirective } from '@/directives/button.directive'
 import { TextWriterAnimatorDirective } from '@/directives/text-writer-animator.directive'
 import { OnDestroyMixin } from '@/mixins/on-destroy-mixin'
@@ -13,7 +14,18 @@ import { SpeechService } from '@/services/speech.service'
 import { AppStore } from '@/stores/app.store'
 import { ignoreErrors } from '@/utils/utils'
 import { AsyncPipe, CommonModule } from '@angular/common'
-import { Component, computed, effect, ElementRef, inject, Injector, signal, viewChild } from '@angular/core'
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { Router } from '@angular/router'
 import { QRCodeComponent } from 'angularx-qrcode'
@@ -33,12 +45,15 @@ import {
   map,
   merge,
   Observable,
+  of,
   ReplaySubject,
   Subject,
   switchMap,
   take,
   takeUntil,
+  takeWhile,
   tap,
+  throwError,
 } from 'rxjs'
 import WaveSurfer from 'wavesurfer.js'
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js'
@@ -63,7 +78,7 @@ import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js'
   styleUrl: './temp-avatar.component.scss',
   providers: [ChatService],
 })
-export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
+export default class TempAvatarComponent extends OnDestroyMixin(class {}) implements OnInit, AfterViewInit {
   baseElement = viewChild.required<ElementRef>('baseElement')
   waves = viewChild.required<ElementRef>('waves')
   video = viewChild.required<ElementRef<HTMLVideoElement>>('video')
@@ -98,15 +113,21 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
 
   animationStatus = signal(false)
   qrCodeOpened = false
+  connectTrials = 5
 
   init$: Observable<unknown> = this.start$
     .asObservable()
-    .pipe(tap(() => this.store.updateStreamStatus('InProgress')))
+    .pipe(
+      tap(() => {
+        this.store.updateStreamStatus('InProgress')
+        this.store.updateStreamId('')
+      })
+    )
     .pipe(takeUntil(this.destroy$))
     .pipe(
       exhaustMap(() =>
         this.avatarService
-          .startStream('life-size')
+          .startStream('life-size', false)
           .pipe(
             catchError(err => {
               this.store.updateStreamStatus('Stopped') //1
@@ -118,52 +139,8 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
     )
     .pipe(
       switchMap(response => {
-        const {
-          data: {
-            webrtcData: { offer, iceServers },
-          },
-        } = response
-
-        this.pc = new RTCPeerConnection({
-          iceServers,
-          iceTransportPolicy: 'relay',
-        })
-        this.pc.addEventListener('icecandidate', event => {
-          if (event.candidate) {
-            this.avatarService.sendCandidate(event.candidate).subscribe()
-          }
-        })
-
-        this.pc.addEventListener('icegatheringstatechange', event => {
-          if (
-            (event.target as unknown as RTCPeerConnection).iceGatheringState == 'complete' &&
-            this.video().nativeElement.paused
-          ) {
-            this.video().nativeElement.play().then()
-            this.store.updateStreamStatus('Started')
-          }
-        })
-
-        this.pc.addEventListener('track', event => {
-          this.video().nativeElement.srcObject = event.streams[0]
-        })
-
-        this.pc.addEventListener('connectionstatechange', evt => {
-          const connectionState = (evt.target as unknown as RTCPeerConnection).connectionState
-          if (connectionState === 'connected') {
-            this.store.updateStreamStatus('Started')
-          }
-          if (connectionState === 'disconnected') {
-            this.store.updateStreamStatus('Stopped')
-          }
-        })
-
-        return from(
-          this.pc.setRemoteDescription(new RTCSessionDescription(offer as unknown as RTCSessionDescriptionInit))
-        )
-          .pipe(switchMap(() => from(this.pc.createAnswer())))
-          .pipe(switchMap(answer => from(this.pc.setLocalDescription(answer)).pipe(map(() => answer))))
-          .pipe(switchMap(answer => this.avatarService.sendAnswer(answer)))
+        if (!this.qrCodeOpened && !this.store.hasStream()) return this._prepareStream(response)
+        return of(null)
       })
     )
     .pipe(map(() => ''))
@@ -186,13 +163,17 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
     // trigger the start of stream
     // this.start$.next()
     // close when destroy component
+
     this.chatHistoryService
       .getAllBotNames()
       .pipe(tap(names => this.chatService.botNameCtrl.patchValue(names[0])))
       .subscribe()
     this.store.updateStreamStatus('Stopped')
     merge(this.destroy$)
-      .pipe(tap(() => this.store.updateStreamStatus('Stopped'))) // 2
+      .pipe(
+        tap(() => this.store.updateStreamStatus('Stopped')),
+        tap(() => this.store.updateClientId(''))
+      ) // 2
       .subscribe(() => {
         console.log('COMPONENT DESTROYED')
       })
@@ -217,12 +198,55 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
 
   ngAfterViewInit(): void {
     this.playIdle()
-    // effect(
-    //   () => {
-    //     new PerfectScrollbar(this.chatContainer().nativeElement, {})
-    //   },
-    //   { injector: this.injector }
-    // )
+  }
+
+  private _prepareStream(streamResult: StreamResultContract) {
+    this.store.updateStreamId(streamResult.data.id)
+
+    const {
+      data: {
+        webrtcData: { offer, iceServers },
+      },
+    } = streamResult
+
+    this.pc = new RTCPeerConnection({
+      iceServers,
+      iceTransportPolicy: 'relay',
+    })
+    this.pc.addEventListener('icecandidate', event => {
+      if (event.candidate) {
+        this.avatarService.sendCandidate(event.candidate).subscribe()
+      }
+    })
+
+    this.pc.addEventListener('icegatheringstatechange', event => {
+      if (
+        (event.target as unknown as RTCPeerConnection).iceGatheringState == 'complete' &&
+        this.video().nativeElement.paused
+      ) {
+        this.video().nativeElement.play().then()
+        this.store.updateStreamStatus('Started')
+      }
+    })
+
+    this.pc.addEventListener('track', event => {
+      this.video().nativeElement.srcObject = event.streams[0]
+    })
+
+    this.pc.addEventListener('connectionstatechange', evt => {
+      const connectionState = (evt.target as unknown as RTCPeerConnection).connectionState
+      if (connectionState === 'connected') {
+        this.store.updateStreamStatus('Started')
+      }
+      if (connectionState === 'disconnected') {
+        this.store.updateStreamStatus('Stopped')
+      }
+    })
+
+    return from(this.pc.setRemoteDescription(new RTCSessionDescription(offer as unknown as RTCSessionDescriptionInit)))
+      .pipe(switchMap(() => from(this.pc.createAnswer())))
+      .pipe(switchMap(answer => from(this.pc.setLocalDescription(answer)).pipe(map(() => answer))))
+      .pipe(switchMap(answer => this.avatarService.sendAnswer(answer)))
   }
 
   toggleStream() {
@@ -380,12 +404,47 @@ export default class TempAvatarComponent extends OnDestroyMixin(class {}) {
   }
 
   getQRData() {
-    return `${this.getOrigin()}/control?streamId=${this.store.streamId()}`
+    return `${this.getOrigin()}/control?clientId=${this.store.clientId()}`
   }
 
   getOrigin() {
     const idx = location.href.lastIndexOf(this.router.url)
     return location.href.slice(0, idx)
+  }
+
+  openQRCode() {
+    this.qrCodeOpened = true
+    if (this.store.hasStream()) this.stop$.next()
+    else this.store.updateStreamStatus('Stopped')
+
+    this.avatarService
+      .connect()
+      .pipe(
+        switchMap(client_id => {
+          return this.avatarService.startListener(client_id)
+        })
+      )
+      .pipe(
+        take(1),
+        takeWhile(() => this.qrCodeOpened),
+        tap(() => this.clearChat()),
+        tap(res => this.closeQR(res)),
+        tap(() => (this.connectTrials = 5)),
+        catchError(err => {
+          this.store.updateClientId('')
+          if (this.connectTrials) this.openQRCode()
+          else this.connectTrials = 5
+          return throwError(() => err)
+        })
+      )
+      .subscribe()
+  }
+
+  closeQR(streamResult?: StreamResultContract) {
+    this.qrCodeOpened = false
+    if (streamResult) {
+      this._prepareStream(streamResult).subscribe()
+    }
   }
 
   private playIdle(): void {

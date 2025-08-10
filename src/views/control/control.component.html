@@ -48,17 +48,17 @@
       <div></div>
     </div>
   </div>
-} @else if (!store.hasStream()) {
+} @else if (!store.clientId()) {
   <div
     class="absolute left-0 top-0 w-full h-full z-50 flex items-center justify-center bg-black/80 overflow-hidden ltr:rounded-tl-xl rtl:rounded-tr-xl">
     <div class="flex flex-col items-center justify-center gap-4">
       <span class="max-w-[700px] font-bold text-white text-3xl">{{ lang.locals.scan_qr }}:</span>
       <input
-        placeholder="Stream ID*"
-        [formControl]="streamId"
+        placeholder="Client ID*"
+        [formControl]="clientId"
         dir="ltr"
         class="rounded-md p-3 w-full text-xl border-2 border-accent-300 placeholder-accent-300 text-accent outline-none focus:border-accent transition-colors" />
-      <button appButton (click)="saveStreamId()" color="accent" size="2xl" [disabled]="streamId.invalid" class="w-full">
+      <button appButton (click)="saveClientId()" color="accent" size="2xl" [disabled]="clientId.invalid" class="w-full">
         {{ lang.locals.save }}
       </button>
     </div>

@@ -3,8 +3,8 @@ import { NO_ACCESS_TOKEN } from '@/http-contexts/no-access-token'
 import { UrlService } from '@/services/url.service'
 import { AppStore } from '@/stores/app.store'
 import { HttpClient, HttpContext, HttpHeaders, HttpParams } from '@angular/common/http'
-import { inject, Injectable } from '@angular/core'
-import { Observable, of, switchMap, tap, timer } from 'rxjs'
+import { inject, Injectable, NgZone } from '@angular/core'
+import { map, Observable, of, switchMap, tap, timer } from 'rxjs'
 import { ConfigService } from './config.service'
 
 @Injectable({
@@ -15,12 +15,13 @@ export class AvatarService {
   private readonly http = inject(HttpClient)
   private readonly store = inject(AppStore)
   private readonly config = inject(ConfigService)
+  private readonly zone = inject(NgZone)
 
   constructor() {
     if (!this.store.idleAvatar()) this.store.updateIdleAvatar(this.config.CONFIG.IDLE_AVATARS[0])
   }
 
-  startStream(size?: 'life-size'): Observable<StreamResultContract> {
+  startStream(size?: 'life-size', updateStreamId = true, clientId?: string): Observable<StreamResultContract> {
     return this.http
       .post<StreamResultContract>(
         this.urlService.URLS.AVATAR + '/start-stream',
@@ -32,10 +33,46 @@ export class AvatarService {
                   size: 'life-size',
                 }
               : undefined),
+            ...(clientId
+              ? {
+                  client_id: clientId,
+                }
+              : undefined),
           },
         }
       )
-      .pipe(tap(res => this.store.updateStreamId(res.data.id)))
+      .pipe(tap(res => updateStreamId && this.store.updateStreamId(res.data.id)))
+  }
+
+  connect(): Observable<string> {
+    if (this.store.clientId()) {
+      return of(this.store.clientId())
+    }
+    return this.http.post<{ client_id: string }>(this.urlService.URLS.AVATAR + '/connect', null).pipe(
+      map(res => res.client_id),
+      tap(id => this.store.updateClientId(id))
+    )
+  }
+
+  startListener(clientId: string) {
+    return new Observable<StreamResultContract>(observer => {
+      const eventSource = new EventSource(this.urlService.URLS.AVATAR + `/start-listener/${clientId}`)
+
+      eventSource.onmessage = event => {
+        this.zone.run(() => {
+          observer.next(JSON.parse(event.data))
+        })
+      }
+
+      eventSource.onerror = error => {
+        this.zone.run(() => {
+          observer.error(error)
+        })
+        eventSource.close()
+      }
+
+      return () => eventSource.close()
+    })
   }
 
   closeStream(): Observable<StreamResultContract> {
